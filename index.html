@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitCraft // The Interactive Git Blog</title>
+    <title>EduByte // Tech & AI Insights</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,15 +12,16 @@
             theme: {
                 extend: {
                     colors: {
-                        git: {
-                            orange: '#F05032',
-                            dark: '#0d1117',
-                            card: '#161b22',
-                            border: '#30363d',
-                            green: '#2ea44f'
+                        tech: {
+                            cyan: '#00f2fe',
+                            blue: '#4facfe',
+                            dark: '#090d16',
+                            card: '#111827',
+                            border: '#1f2937'
                         }
                     },
                     fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                         mono: ['Fira Code', 'monospace']
                     }
                 }
@@ -32,315 +33,241 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0d1117;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #30363d;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #F05032;
-        }
-        .glow-orange {
-            box-shadow: 0 0 20px rgba(240, 80, 50, 0.3);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+        .glow-cyan { box-shadow: 0 0 25px rgba(0, 242, 254, 0.2); }
     </style>
 </head>
-<body class="bg-git-dark text-slate-200 font-mono antialiased selection:bg-git-orange selection:text-white min-h-screen flex flex-col justify-between">
+<body class="bg-tech-dark text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- Hero Matrix Background Canvas -->
+    <canvas id="heroCanvas" class="absolute top-0 left-0 w-full h-[500px] pointer-events-none opacity-20 z-0"></canvas>
 
     <!-- Header Navigation -->
-    <header class="border-b border-git-border bg-git-dark/80 backdrop-blur sticky top-0 z-50">
+    <header class="border-b border-tech-border bg-tech-dark/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer group" onclick="scrollToTop()">
-                <div class="p-2 bg-git-orange/10 rounded-lg group-hover:bg-git-orange/20 transition">
-                    <i data-lucide="git-branch" class="w-6 h-6 text-git-orange"></i>
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToTop()">
+                <div class="p-2 bg-gradient-to-r from-tech-cyan to-tech-blue rounded-lg text-black font-bold">
+                    <i data-lucide="cpu" class="w-6 h-6 text-slate-950"></i>
                 </div>
-                <span class="font-bold text-xl tracking-wider text-white">GIT<span class="text-git-orange">CRAFT</span></span>
+                <span class="font-extrabold text-xl tracking-wider text-white">EDU<span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan to-tech-blue">BYTE</span></span>
             </div>
             
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#visualizer" class="hover:text-git-orange transition flex items-center gap-2"><i data-lucide="git-graph" class="w-4 h-4"></i> Visualizer</a>
-                <a href="#articles" class="hover:text-git-orange transition flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Articles</a>
-                <a href="#terminal" class="hover:text-git-orange transition flex items-center gap-2"><i data-lucide="terminal" class="w-4 h-4"></i> CLI Playground</a>
+                <a href="#articles" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="newspaper" class="w-4 h-4"></i> Articles</a>
+                <a href="https://edubyte-tech.blogspot.com/" target="_blank" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="external-link" class="w-4 h-4"></i> Blogspot Hub</a>
             </nav>
 
-            <button onclick="triggerCommitAnimation()" class="bg-git-orange hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-md shadow-lg hover:shadow-orange-500/20 transition flex items-center gap-2 text-sm">
-                <i data-lucide="git-commit" class="w-4 h-4"></i>
-                <span>Quick Commit</span>
-            </button>
+            <a href="https://edubyte-tech.blogspot.com/" target="_blank" class="bg-gradient-to-r from-tech-cyan to-tech-blue hover:opacity-90 text-slate-950 font-bold px-4 py-2 rounded-md shadow-lg transition flex items-center gap-2 text-sm">
+                <span>Visit Blog</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="relative px-6 py-20 max-w-7xl mx-auto text-center overflow-hidden">
-        <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-git-orange/10 rounded-full blur-3xl pointer-events-none"></div>
-        <span class="text-git-orange border border-git-orange/30 bg-git-orange/10 px-3 py-1 rounded-full text-xs tracking-wide uppercase inline-block mb-4">Version Control Mastery</span>
-        <h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-            Master Git with Interactive <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-git-orange to-amber-400">Visuals & Terminal Magic</span>
-        </h1>
-        <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-10">
-            Welcome to GitCraft! Dive deep into branching strategies, rebase workflows, and internal mechanics through interactive tutorials.
-        </p>
-
-        <!-- Dynamic Git Graph Canvas Container -->
-        <div id="visualizer" class="bg-git-card border border-git-border rounded-xl p-6 shadow-2xl relative">
-            <div class="flex items-center justify-between mb-4 border-b border-git-border pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 bg-red-500 rounded-full"></span>
-                    <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                    <span class="w-3 h-3 bg-green-500 rounded-full"></span>
-                    <span class="ml-2 text-xs text-slate-400">interactive-tree.git</span>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="addCommit('main')" class="text-xs bg-git-border hover:bg-slate-700 text-white px-3 py-1.5 rounded transition">+ Commit Main</button>
-                    <button onclick="addCommit('feature')" class="text-xs bg-git-orange hover:bg-orange-600 text-white px-3 py-1.5 rounded transition">+ Commit Feature</button>
-                    <button onclick="resetGraph()" class="text-xs border border-git-border text-slate-400 hover:text-white px-3 py-1.5 rounded transition">Reset</button>
-                </div>
-            </div>
-            
-            <canvas id="gitCanvas" class="w-full h-48 bg-git-dark rounded-lg cursor-pointer"></canvas>
-            <div class="mt-2 text-xs text-slate-500 text-left">💡 Click buttons above to push commits dynamically into the interactive canvas.</div>
+    <!-- Animated Intro Hero Section -->
+    <section class="relative px-6 py-20 max-w-7xl mx-auto text-center z-10">
+        <div id="hero-badge" class="inline-flex items-center gap-2 text-tech-cyan border border-tech-cyan/30 bg-tech-cyan/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase mb-6 glow-cyan">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Exploring AI & Next-Gen Tech
         </div>
-    </section>
-
-    <!-- Articles Grid Section -->
-    <section id="articles" class="px-6 py-16 max-w-7xl mx-auto">
-        <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-            <i data-lucide="book" class="text-git-orange"></i> Featured Blog Posts
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Article Card 1 -->
-            <article class="article-card bg-git-card border border-git-border rounded-xl p-6 hover:border-git-orange transition group flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                        <span class="bg-slate-800 text-git-orange border border-git-orange/20 px-2.5 py-0.5 rounded">Advanced</span>
-                        <span>5 min read</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white group-hover:text-git-orange transition mb-3">Demystifying Git Rebase vs Merge</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        Stop fearing git rebase! Learn how rewriting commit history cleanly can supercharge team productivity and keep logs linear.
-                    </p>
-                </div>
-                <a href="#" class="inline-flex items-center text-sm font-semibold text-git-orange hover:underline gap-1">Read Article <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-            </article>
-
-            <!-- Article Card 2 -->
-            <article class="article-card bg-git-card border border-git-border rounded-xl p-6 hover:border-git-orange transition group flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                        <span class="bg-slate-800 text-green-400 border border-green-500/20 px-2.5 py-0.5 rounded">Beginner</span>
-                        <span>3 min read</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white group-hover:text-git-orange transition mb-3">Under the Hood: Git Objects</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        Explore Blobs, Trees, Commits, and Annotated Tags. Understand how Git works under the `.git` folder hood.
-                    </p>
-                </div>
-                <a href="#" class="inline-flex items-center text-sm font-semibold text-git-orange hover:underline gap-1">Read Article <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-            </article>
-
-            <!-- Article Card 3 -->
-            <article class="article-card bg-git-card border border-git-border rounded-xl p-6 hover:border-git-orange transition group flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                        <span class="bg-slate-800 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded">Intermediate</span>
-                        <span>7 min read</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white group-hover:text-git-orange transition mb-3">Emergency Room: Git Reflog</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        Accidentally deleted a branch or lost commits? Learn how `git reflog` acts as your ultimate safety net to restore history.
-                    </p>
-                </div>
-                <a href="#" class="inline-flex items-center text-sm font-semibold text-git-orange hover:underline gap-1">Read Article <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-            </article>
-        </div>
-    </section>
-
-    <!-- Interactive Terminal Playground -->
-    <section id="terminal" class="px-6 py-16 max-w-4xl mx-auto">
-        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <i data-lucide="terminal" class="text-git-orange"></i> Interactive Git Terminal
-        </h2>
         
-        <div class="bg-git-card border border-git-border rounded-xl overflow-hidden shadow-2xl">
-            <div class="bg-slate-900 px-4 py-3 border-b border-git-border flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
-                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
-                </div>
-                <span class="text-xs text-slate-400 font-mono">bash - git-playground</span>
-            </div>
-            
-            <div id="terminal-body" class="p-4 h-64 overflow-y-auto font-mono text-sm bg-slate-950/80 space-y-2">
-                <div class="text-slate-400">Welcome to GitCraft Interactive CLI. Type <span class="text-git-orange font-bold">'help'</span> to view available commands.</div>
-            </div>
+        <h1 id="hero-title" class="text-4xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            Deciphering <span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan via-sky-400 to-tech-blue">Artificial Intelligence</span> <br/>& Modern Technology
+        </h1>
+        
+        <p id="hero-desc" class="text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+            Welcome to EduByte. Dive into tutorials, artificial intelligence breakdowns, hardware innovations, and practical tech guides.
+        </p>
+    </section>
 
-            <div class="border-t border-git-border bg-slate-900 p-2 flex items-center">
-                <span class="text-git-orange font-bold px-2">$</span>
-                <input type="text" id="terminal-input" placeholder="Try 'git status' or 'git log'..." class="bg-transparent border-none outline-none text-white w-full text-sm font-mono focus:ring-0">
-            </div>
+    <!-- Articles & Blog Feed Section -->
+    <section id="articles" class="px-6 py-12 max-w-7xl mx-auto z-10 w-full">
+        <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Tech & AI Posts
+        </h2>
+
+        <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Article Cards rendered via JS -->
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-git-border bg-git-dark py-8 px-6 text-center text-xs text-slate-500">
-        <p>© 2026 GitCraft Blog. Built with TailwindCSS & GSAP.</p>
+    <footer class="border-t border-tech-border bg-tech-dark py-8 px-6 text-center text-xs text-slate-500 z-10">
+        <p>© 2026 EduByte Tech. Powered by <a href="https://edubyte-tech.blogspot.com/" class="text-tech-cyan hover:underline" target="_blank">edubyte-tech.blogspot.com</a></p>
     </footer>
 
     <!-- JavaScript Logic -->
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Canvas & Visualization Logic
-        const canvas = document.getElementById('gitCanvas');
+        // Canvas AI Matrix / Digital Rain Animation
+        const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
-        
-        // Resize canvas correctly
         function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth - 48;
-            canvas.height = 180;
-            drawGitTree();
+            canvas.width = window.innerWidth;
+            canvas.height = 500;
         }
+        resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        let mainCommits = [{x: 50, y: 60, hash: 'a1b2c3d'}];
-        let featureCommits = [];
+        const chars = '01AI-TECH-EDUBYTE-FUTURE';
+        const fontSize = 14;
+        const columns = Math.floor(window.innerWidth / fontSize);
+        const drops = Array(columns).fill(1);
 
-        function drawGitTree() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(9, 13, 22, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f2fe';
+            ctx.font = fontSize + 'px monospace';
 
-            // Draw Main Branch Line
-            ctx.beginPath();
-            ctx.strokeStyle = '#2ea44f';
-            ctx.lineWidth = 4;
-            ctx.moveTo(50, 60);
-            ctx.lineTo(50 + (mainCommits.length - 1) * 70, 60);
-            ctx.stroke();
-
-            // Draw Main Commits
-            mainCommits.forEach((commit, i) => {
-                ctx.beginPath();
-                ctx.arc(50 + i * 70, 60, 12, 0, Math.PI * 2);
-                ctx.fillStyle = '#2ea44f';
-                ctx.fill();
-                ctx.lineWidth = 3;
-                ctx.strokeStyle = '#ffffff';
-                ctx.stroke();
-            });
-
-            // Draw Feature Branch Line
-            if (featureCommits.length > 0) {
-                ctx.beginPath();
-                ctx.strokeStyle = '#F05032';
-                ctx.lineWidth = 4;
-                ctx.moveTo(120, 60);
-                ctx.lineTo(160, 120);
-                ctx.lineTo(160 + (featureCommits.length - 1) * 70, 120);
-                ctx.stroke();
-
-                featureCommits.forEach((commit, i) => {
-                    ctx.beginPath();
-                    ctx.arc(160 + i * 70, 120, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = '#F05032';
-                    ctx.fill();
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.stroke();
-                });
-            }
-        }
-
-        function addCommit(branch) {
-            if (branch === 'main' && mainCommits.length < 9) {
-                mainCommits.push({x: 50 + mainCommits.length * 70, y: 60});
-            } else if (branch === 'feature' && featureCommits.length < 7) {
-                featureCommits.push({x: 160 + featureCommits.length * 70, y: 120});
-            }
-            drawGitTree();
-        }
-
-        function resetGraph() {
-            mainCommits = [{x: 50, y: 60}];
-            featureCommits = [];
-            drawGitTree();
-        }
-
-        // Terminal Interactive Command Line Logic
-        const terminalInput = document.getElementById('terminal-input');
-        const terminalBody = document.getElementById('terminal-body');
-
-        const commands = {
-            'help': 'Available commands: <span class="text-yellow-400">git status</span>, <span class="text-yellow-400">git log</span>, <span class="text-yellow-400">git branch</span>, <span class="text-yellow-400">clear</span>',
-            'git status': 'On branch <span class="text-green-400">main</span><br/>Your branch is up to date with \'origin/main\'.<br/>nothing to commit, working tree clean',
-            'git log': '<span class="text-yellow-400">commit a1b2c3d4e5 (HEAD -> main)</span><br/>Author: Dev <dev@gitcraft.com><br/>Date: Today<br/>&nbsp;&nbsp;&nbsp;&nbsp;feat: initialized interactive Git blog playground',
-            'git branch': '* <span class="text-green-400">main</span><br/>&nbsp;&nbsp;feature/visualizer<br/>&nbsp;&nbsp;fix/terminal-bug'
-        };
-
-        terminalInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = terminalInput.value.trim().toLowerCase();
-                
-                // Append output
-                const userLine = document.createElement('div');
-                userLine.innerHTML = `<span class="text-git-orange">$</span> ${terminalInput.value}`;
-                terminalBody.appendChild(userLine);
-
-                if (cmd === 'clear') {
-                    terminalBody.innerHTML = '';
-                } else if (commands[cmd]) {
-                    const responseLine = document.createElement('div');
-                    responseLine.className = 'text-slate-300 ml-2';
-                    responseLine.innerHTML = commands[cmd];
-                    terminalBody.appendChild(responseLine);
-                } else {
-                    const errorLine = document.createElement('div');
-                    errorLine.className = 'text-red-400 ml-2';
-                    errorLine.innerText = `zsh: command not found: ${cmd}. Type 'help' for available commands.`;
-                    terminalBody.appendChild(errorLine);
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
-
-                terminalInput.value = '';
-                terminalBody.scrollTop = terminalBody.scrollHeight;
+                drops[i]++;
             }
+        }
+        setInterval(drawMatrix, 33);
+
+        // GSAP Animations
+        window.addEventListener('DOMContentLoaded', () => {
+            gsap.from('#hero-badge', { duration: 1, y: -20, opacity: 0, ease: 'power3.out' });
+            gsap.from('#hero-title', { duration: 1.2, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
+            gsap.from('#hero-desc', { duration: 1, y: 20, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            renderArticles();
         });
 
-        // Animations using GSAP
-        window.addEventListener('DOMContentLoaded', () => {
-            resizeCanvas();
+        // Blog Posts Data linked to Blogspot
+        const blogPosts = [
+            {
+                id: 'post-1',
+                title: 'Understanding Large Language Models & Prompt Engineering',
+                category: 'AI & ML',
+                readTime: '5 min read',
+                desc: 'An in-depth breakdown of how LLMs interpret parameters and how to craft efficient prompts for complex workflows.',
+                link: 'https://edubyte-tech.blogspot.com/'
+            },
+            {
+                id: 'post-2',
+                title: 'The Future of Autonomous Agents in Software Engineering',
+                category: 'Tech Trends',
+                readTime: '7 min read',
+                desc: 'Exploring how AI coding assistants and autonomous agents are shaping developer workflows in 2026.',
+                link: 'https://edubyte-tech.blogspot.com/'
+            },
+            {
+                id: 'post-3',
+                title: 'Cybersecurity Best Practices for Cloud Infrastructures',
+                category: 'Cloud & Security',
+                readTime: '4 min read',
+                desc: 'Essential steps for securing API keys, zero-trust architectures, and preventing data exposure.',
+                link: 'https://edubyte-tech.blogspot.com/'
+            }
+        ];
 
-            // Animate Hero Header
-            gsap.from('#hero-title', {
-                duration: 1,
+        // Storage helpers for Views, Likes, Comments
+        function getPostData(postId) {
+            const saved = localStorage.getItem('edubyte_' + postId);
+            return saved ? JSON.parse(saved) : { views: 120, likes: 24, comments: [] };
+        }
+
+        function savePostData(postId, data) {
+            localStorage.setItem('edubyte_' + postId, JSON.stringify(data));
+        }
+
+        // Render Articles Grid
+        function renderArticles() {
+            const container = document.getElementById('blog-grid');
+            container.innerHTML = '';
+
+            blogPosts.forEach(post => {
+                const data = getPostData(post.id);
+                const card = document.createElement('article');
+                card.className = 'bg-tech-card border border-tech-border rounded-xl p-6 flex flex-col justify-between hover:border-tech-cyan/50 transition-all duration-300 shadow-xl';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                            <span class="bg-tech-border text-tech-cyan px-2.5 py-1 rounded font-mono">${post.category}</span>
+                            <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> ${data.views} views</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white hover:text-tech-cyan transition mb-3">
+                            <a href="${post.link}" target="_blank" onclick="incrementView('${post.id}')">${post.title}</a>
+                        </h3>
+                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">${post.desc}</p>
+                    </div>
+
+                    <div class="border-t border-tech-border pt-4">
+                        <div class="flex items-center justify-between text-sm mb-4">
+                            <button onclick="addLike('${post.id}')" class="flex items-center gap-1.5 text-slate-300 hover:text-red-400 transition font-mono">
+                                <i data-lucide="heart" class="w-4 h-4 text-red-500"></i>
+                                <span id="likes-${post.id}">${data.likes}</span>
+                            </button>
+                            <a href="${post.link}" target="_blank" onclick="incrementView('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
+                                Read on Blogspot <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+
+                        <!-- Comment System -->
+                        <div class="mt-4 bg-tech-dark/50 p-3 rounded-lg border border-tech-border">
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
+                                <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (${data.comments.length})
+                            </h4>
+                            <div id="comments-list-${post.id}" class="space-y-1.5 max-h-24 overflow-y-auto mb-2 text-xs text-slate-400">
+                                ${data.comments.length === 0 ? '<p class="italic">No comments yet. Be the first!</p>' : ''}
+                                ${data.comments.map(c => `<div class="bg-tech-card p-1.5 rounded border border-tech-border"><strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-tech-card border border-tech-border text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-tech-cyan">
+                                <button onclick="postComment('${post.id}')" class="bg-tech-cyan text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-sky-400 transition">Post</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+            
+            gsap.from('#blog-grid article', {
+                duration: 0.8,
                 y: 30,
                 opacity: 0,
-                ease: 'power3.out'
+                stagger: 0.15,
+                ease: 'power2.out'
             });
+        }
 
-            // Animate Article Cards
-            gsap.from('.article-card', {
-                duration: 0.8,
-                y: 40,
-                opacity: 0,
-                stagger: 0.2,
-                ease: 'power2.out',
-                delay: 0.3
-            });
-        });
+        function incrementView(postId) {
+            const data = getPostData(postId);
+            data.views += 1;
+            savePostData(postId, data);
+        }
 
-        function triggerCommitAnimation() {
-            addCommit('main');
-            gsap.fromTo("#visualizer", 
-                { scale: 0.99 }, 
-                { scale: 1, duration: 0.3, ease: "bounce.out" }
-            );
+        function addLike(postId) {
+            const data = getPostData(postId);
+            data.likes += 1;
+            savePostData(postId, data);
+            document.getElementById(`likes-${postId}`).innerText = data.likes;
+        }
+
+        function postComment(postId) {
+            const input = document.getElementById(`input-${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const data = getPostData(postId);
+            data.comments.push({ user: 'Reader', text: text });
+            savePostData(postId, data);
+            input.value = '';
+            renderArticles();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         function scrollToTop() {
