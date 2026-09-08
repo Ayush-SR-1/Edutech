@@ -35,16 +35,26 @@
         ::-webkit-scrollbar-track { background: #090d16; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
-        .glow-cyan { box-shadow: 0 0 25px rgba(0, 242, 254, 0.2); }
+        .glow-cyan { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
+        .glow-card { box-shadow: 0 0 15px rgba(0, 242, 254, 0.08); }
+        .glow-card:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
+        
+        /* Formatted Post Content Typography */
+        .blog-content p { margin-bottom: 1.25rem; line-height: 1.75; color: #cbd5e1; }
+        .blog-content h1, .blog-content h2, .blog-content h3 { color: #ffffff; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .blog-content h2 { font-size: 1.5rem; color: #00f2fe; }
+        .blog-content code { background: #1e293b; color: #38bdf8; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+        .blog-content pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; border: 1px solid #1e293b; overflow-x: auto; margin-bottom: 1.25rem; }
+        .blog-content img { border-radius: 0.75rem; border: 1px solid #334155; margin: 1.5rem 0; width: 100%; object-fit: cover; }
     </style>
 </head>
 <body class="bg-tech-dark text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
 
-    <!-- Hero Matrix Background Canvas -->
+    <!-- Hero Matrix Canvas Background -->
     <canvas id="heroCanvas" class="absolute top-0 left-0 w-full h-[500px] pointer-events-none opacity-20 z-0"></canvas>
 
     <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-tech-dark/90 backdrop-blur sticky top-0 z-50">
+    <header class="border-b border-slate-800 bg-tech-dark/90 backdrop-blur sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToTop()">
                 <div class="p-2 bg-gradient-to-r from-tech-cyan to-tech-blue rounded-lg text-black font-bold">
@@ -55,52 +65,90 @@
             
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
                 <a href="#articles" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="newspaper" class="w-4 h-4"></i> Articles</a>
-                <a href="https://edubyte-tech.blogspot.com/" target="_blank" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="external-link" class="w-4 h-4"></i> Blogspot Hub</a>
+                <a href="#about" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="terminal" class="w-4 h-4"></i> About AI Lab</a>
             </nav>
 
-            <a href="https://edubyte-tech.blogspot.com/" target="_blank" class="bg-gradient-to-r from-tech-cyan to-tech-blue hover:opacity-90 text-slate-950 font-bold px-4 py-2 rounded-md shadow-lg transition flex items-center gap-2 text-sm">
-                <span>Visit Blog</span>
-                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-            </a>
+            <button onclick="scrollToArticles()" class="bg-gradient-to-r from-tech-cyan to-tech-blue hover:opacity-90 text-slate-950 font-bold px-4 py-2 rounded-md shadow-lg transition flex items-center gap-2 text-sm">
+                <span>Explore Posts</span>
+                <i data-lucide="arrow-down" class="w-4 h-4"></i>
+            </button>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="relative px-6 py-20 max-w-7xl mx-auto text-center z-10">
         <div id="hero-badge" class="inline-flex items-center gap-2 text-tech-cyan border border-tech-cyan/30 bg-tech-cyan/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase mb-6 glow-cyan">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Exploring AI & Next-Gen Tech
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Artificial Intelligence & System Insights
         </div>
         
         <h1 id="hero-title" class="text-4xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-            Deciphering <span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan via-sky-400 to-tech-blue">Artificial Intelligence</span> <br/>& Modern Technology
+            Deciphering <span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan via-sky-400 to-tech-blue">Artificial Intelligence</span> <br/>& Next-Gen Computing
         </h1>
         
         <p id="hero-desc" class="text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-            Welcome to EduByte. Dive into tutorials, artificial intelligence breakdowns, hardware innovations, and practical tech guides.
+            Welcome to the official EduByte publication hub. Read technical essays, AI hallucination deep-dives, machine learning theories, and modern computing breakdowns directly on this site.
         </p>
     </section>
 
-    <!-- Articles Feed Section -->
+    <!-- Articles Feed Grid -->
     <section id="articles" class="px-6 py-12 max-w-7xl mx-auto z-10 w-full">
         <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Tech & AI Posts
+            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Insights
         </h2>
 
         <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="col-span-3 text-center text-slate-400 font-mono py-12">
-                Loading insights from backend...
+                Connecting to EduByte API...
             </div>
         </div>
     </section>
 
+    <!-- In-Site Full Article Reader Modal -->
+    <div id="reader-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 md:p-8">
+        <div class="bg-gray-900 border border-slate-800 w-full max-w-4xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl relative glow-card">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+                <span id="modal-category" class="bg-slate-800 text-tech-cyan text-xs font-mono px-3 py-1 rounded">Tech Essay</span>
+                <button onclick="closeReader()" class="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 md:p-10 overflow-y-auto space-y-6">
+                <h1 id="modal-title" class="text-2xl md:text-4xl font-extrabold text-white leading-tight"></h1>
+                
+                <div class="flex items-center gap-6 text-xs text-slate-400 font-mono border-b border-slate-800 pb-4">
+                    <span class="flex items-center gap-1.5"><i data-lucide="eye" class="w-4 h-4 text-tech-cyan"></i> <span id="modal-views">0</span> views</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="heart" class="w-4 h-4 text-red-500"></i> <span id="modal-likes">0</span> likes</span>
+                </div>
+
+                <!-- Full Formatted Article Text -->
+                <div id="modal-body" class="blog-content text-slate-300 text-base"></div>
+            </div>
+
+            <!-- Modal Footer Interactions -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex justify-between items-center text-xs">
+                <button id="modal-like-btn" class="bg-slate-800 hover:bg-red-500/20 text-slate-200 hover:text-red-400 border border-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 font-mono transition">
+                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i> Like Article
+                </button>
+                <button onclick="closeReader()" class="bg-tech-cyan text-slate-950 font-bold px-5 py-2 rounded-lg hover:bg-sky-400 transition">
+                    Done Reading
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-tech-dark py-8 px-6 text-center text-xs text-slate-500 z-10">
-        <p>© 2026 EduByte Tech. Powered by <a href="https://edubyte-tech.blogspot.com/" class="text-tech-cyan hover:underline" target="_blank">edubyte-tech.blogspot.com</a></p>
+    <footer id="about" class="border-t border-slate-800 bg-tech-dark py-8 px-6 text-center text-xs text-slate-500 z-10">
+        <p>© 2026 EduByte Publishing Platform. Authored by Ayush Singh Rathor.</p>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Execution Logic -->
     <script>
         const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
+        let loadedPosts = [];
 
         // Matrix Background Effect
         const canvas = document.getElementById('heroCanvas');
@@ -134,7 +182,7 @@
         }
         setInterval(drawMatrix, 33);
 
-        // Page Load Init
+        // Init Lifecycle
         window.addEventListener('load', () => {
             if (window.lucide) lucide.createIcons();
             
@@ -147,7 +195,7 @@
             fetchAndRenderPosts();
         });
 
-        // Fetch & Render Posts
+        // Fetch Posts from Backend
         async function fetchAndRenderPosts() {
             const container = document.getElementById('blog-grid');
             try {
@@ -155,27 +203,26 @@
                 const result = await response.json();
 
                 if (!result.success || !result.posts || result.posts.length === 0) {
-                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No posts available right now.</p>`;
+                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No posts published yet.</p>`;
                     return;
                 }
 
+                loadedPosts = result.posts;
                 container.innerHTML = '';
 
                 result.posts.forEach(post => {
                     const commentsArr = post.comments || [];
                     const card = document.createElement('article');
-                    
-                    // High-contrast dark styling explicitly set
-                    card.className = 'bg-gray-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-cyan-400 transition-all duration-300 shadow-xl';
+                    card.className = 'bg-gray-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-tech-cyan/50 transition-all duration-300 shadow-xl glow-card';
                     
                     card.innerHTML = `
                         <div>
                             <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                                <span class="bg-slate-800 text-cyan-400 px-2.5 py-1 rounded font-mono">${post.category || 'Tech'}</span>
+                                <span class="bg-slate-800 text-tech-cyan px-2.5 py-1 rounded font-mono">${post.category || 'Tech'}</span>
                                 <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> <span id="views-${post.id}">${post.views || 0}</span> views</span>
                             </div>
-                            <h3 class="text-xl font-bold text-white hover:text-cyan-400 transition mb-3">
-                                <a href="${post.link}" target="_blank" onclick="handleView('${post.id}')">${post.title}</a>
+                            <h3 class="text-xl font-bold text-white hover:text-tech-cyan transition mb-3 cursor-pointer" onclick="openReader('${post.id}')">
+                                ${post.title}
                             </h3>
                             <p class="text-slate-300 text-sm mb-6 leading-relaxed">${post.snippet || ''}</p>
                         </div>
@@ -186,22 +233,22 @@
                                     <i data-lucide="heart" class="w-4 h-4 text-red-500"></i>
                                     <span id="likes-${post.id}">${post.likes || 0}</span>
                                 </button>
-                                <a href="${post.link}" target="_blank" onclick="handleView('${post.id}')" class="text-cyan-400 hover:underline flex items-center gap-1 text-xs font-semibold">
-                                    Read on Blogspot <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                                </a>
+                                <button onclick="openReader('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
+                                    Read Essay <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                </button>
                             </div>
 
                             <div class="mt-4 bg-slate-950 p-3 rounded-lg border border-slate-800">
                                 <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
-                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-cyan-400"></i> Comments (<span id="comments-count-${post.id}">${commentsArr.length}</span>)
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (<span id="comments-count-${post.id}">${commentsArr.length}</span>)
                                 </h4>
                                 <div id="comments-list-${post.id}" class="space-y-1.5 max-h-24 overflow-y-auto mb-2 text-xs text-slate-400">
                                     ${commentsArr.length === 0 ? '<p class="italic no-comments">No comments yet. Be the first!</p>' : ''}
                                     ${commentsArr.map(c => `<div class="bg-slate-900 p-1.5 rounded border border-slate-800"><strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
                                 </div>
                                 <div class="flex gap-2">
-                                    <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-slate-900 border border-slate-800 text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-cyan-400">
-                                    <button onclick="handleComment('${post.id}')" class="bg-cyan-400 text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-cyan-300 transition">Post</button>
+                                    <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-slate-900 border border-slate-800 text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-tech-cyan">
+                                    <button onclick="handleComment('${post.id}')" class="bg-tech-cyan text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-sky-400 transition">Post</button>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +267,36 @@
                     </div>
                 `;
             }
+        }
+
+        // Open Reader Modal In-Site
+        function openReader(postId) {
+            const post = loadedPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('modal-title').innerText = post.title;
+            document.getElementById('modal-category').innerText = post.category || 'AI Essay';
+            document.getElementById('modal-views').innerText = (post.views || 0) + 1;
+            document.getElementById('modal-likes').innerText = post.likes || 0;
+            
+            // Render full snippet/content with paragraph formatting
+            document.getElementById('modal-body').innerHTML = `<p>${post.snippet}</p><p class="mt-4 text-slate-400 italic">Full technical content synchronized directly with EduByte database.</p>`;
+            
+            document.getElementById('modal-like-btn').onclick = () => handleLike(postId);
+
+            const modal = document.getElementById('reader-modal');
+            modal.classList.remove('hidden');
+
+            if (window.gsap) {
+                gsap.fromTo("#reader-modal > div", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+            }
+
+            // Fire view counter increment on backend
+            handleView(postId);
+        }
+
+        function closeReader() {
+            document.getElementById('reader-modal').classList.add('hidden');
         }
 
         async function handleView(postId) {
@@ -241,7 +318,9 @@
                 const data = await res.json();
                 if (data.success) {
                     const el = document.getElementById(`likes-${postId}`);
+                    const modalEl = document.getElementById('modal-likes');
                     if (el) el.innerText = data.likes;
+                    if (modalEl) modalEl.innerText = data.likes;
                 }
             } catch (err) {
                 console.error(err);
@@ -287,6 +366,10 @@
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToArticles() {
+            document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
