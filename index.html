@@ -89,7 +89,9 @@
         </h2>
 
         <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Article Cards rendered dynamically via JS API -->
+            <div class="col-span-3 text-center text-slate-400 font-mono py-12">
+                Loading insights from backend...
+            </div>
         </div>
     </section>
 
@@ -102,9 +104,7 @@
     <script>
         const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
 
-        lucide.createIcons();
-
-        // Canvas AI Matrix / Digital Rain Animation
+        // Initialize Matrix Canvas
         const canvas = document.getElementById('heroCanvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() {
@@ -136,11 +136,16 @@
         }
         setInterval(drawMatrix, 33);
 
-        // GSAP Animations
-        window.addEventListener('DOMContentLoaded', () => {
-            gsap.from('#hero-badge', { duration: 1, y: -20, opacity: 0, ease: 'power3.out' });
-            gsap.from('#hero-title', { duration: 1.2, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
-            gsap.from('#hero-desc', { duration: 1, y: 20, opacity: 0, ease: 'power3.out', delay: 0.4 });
+        // Main Initialization
+        window.addEventListener('load', () => {
+            if (window.lucide) lucide.createIcons();
+            
+            if (window.gsap) {
+                gsap.from('#hero-badge', { duration: 1, y: -20, opacity: 0, ease: 'power3.out' });
+                gsap.from('#hero-title', { duration: 1.2, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
+                gsap.from('#hero-desc', { duration: 1, y: 20, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            }
+
             fetchAndRenderPosts();
         });
 
@@ -151,8 +156,8 @@
                 const response = await fetch(`${API_BASE}/posts`);
                 const result = await response.json();
 
-                if (!result.success || !result.posts) {
-                    container.innerHTML = `<p class="text-slate-400">Unable to load posts at this time.</p>`;
+                if (!result.success || !result.posts || result.posts.length === 0) {
+                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No posts available at this moment.</p>`;
                     return;
                 }
 
@@ -185,7 +190,6 @@
                                 </a>
                             </div>
 
-                            <!-- Live Comment System -->
                             <div class="mt-4 bg-tech-dark/50 p-3 rounded-lg border border-tech-border">
                                 <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
                                     <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (<span id="comments-count-${post.id}">${commentsArr.length}</span>)
@@ -204,21 +208,19 @@
                     container.appendChild(card);
                 });
 
-                lucide.createIcons();
+                if (window.lucide) lucide.createIcons();
 
-                gsap.from('#blog-grid article', {
-                    duration: 0.8,
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.15,
-                    ease: 'power2.out'
-                });
             } catch (err) {
-                console.error('Failed to load live posts:', err);
+                console.error('Failed to load posts:', err);
+                container.innerHTML = `
+                    <div class="col-span-3 text-center border border-red-900/50 bg-red-950/20 p-6 rounded-xl">
+                        <p class="text-red-400 font-semibold mb-1">Failed to fetch backend data</p>
+                        <p class="text-slate-400 text-xs">${err.message}</p>
+                    </div>
+                `;
             }
         }
 
-        // Live API view counter
         async function handleView(postId) {
             try {
                 const res = await fetch(`${API_BASE}/posts/${postId}/view`, { method: 'POST' });
@@ -232,7 +234,6 @@
             }
         }
 
-        // Live API like counter
         async function handleLike(postId) {
             try {
                 const res = await fetch(`${API_BASE}/posts/${postId}/like`, { method: 'POST' });
@@ -246,7 +247,6 @@
             }
         }
 
-        // Live API comment submission
         async function handleComment(postId) {
             const input = document.getElementById(`input-${postId}`);
             const text = input.value.trim();
