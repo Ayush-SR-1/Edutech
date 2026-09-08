@@ -89,7 +89,7 @@
         </h2>
 
         <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Article Cards rendered via JS -->
+            <!-- Article Cards rendered dynamically via JS API -->
         </div>
     </section>
 
@@ -100,6 +100,8 @@
 
     <!-- JavaScript Logic -->
     <script>
+        const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
+
         lucide.createIcons();
 
         // Canvas AI Matrix / Digital Rain Animation
@@ -139,131 +141,143 @@
             gsap.from('#hero-badge', { duration: 1, y: -20, opacity: 0, ease: 'power3.out' });
             gsap.from('#hero-title', { duration: 1.2, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
             gsap.from('#hero-desc', { duration: 1, y: 20, opacity: 0, ease: 'power3.out', delay: 0.4 });
-            renderArticles();
+            fetchAndRenderPosts();
         });
 
-        // Blog Posts Data linked to Blogspot
-        const blogPosts = [
-            {
-                id: 'post-1',
-                title: 'Understanding Large Language Models & Prompt Engineering',
-                category: 'AI & ML',
-                readTime: '5 min read',
-                desc: 'An in-depth breakdown of how LLMs interpret parameters and how to craft efficient prompts for complex workflows.',
-                link: 'https://edubyte-tech.blogspot.com/'
-            },
-            {
-                id: 'post-2',
-                title: 'The Future of Autonomous Agents in Software Engineering',
-                category: 'Tech Trends',
-                readTime: '7 min read',
-                desc: 'Exploring how AI coding assistants and autonomous agents are shaping developer workflows in 2026.',
-                link: 'https://edubyte-tech.blogspot.com/'
-            },
-            {
-                id: 'post-3',
-                title: 'Cybersecurity Best Practices for Cloud Infrastructures',
-                category: 'Cloud & Security',
-                readTime: '4 min read',
-                desc: 'Essential steps for securing API keys, zero-trust architectures, and preventing data exposure.',
-                link: 'https://edubyte-tech.blogspot.com/'
-            }
-        ];
-
-        // Storage helpers for Views, Likes, Comments
-        function getPostData(postId) {
-            const saved = localStorage.getItem('edubyte_' + postId);
-            return saved ? JSON.parse(saved) : { views: 120, likes: 24, comments: [] };
-        }
-
-        function savePostData(postId, data) {
-            localStorage.setItem('edubyte_' + postId, JSON.stringify(data));
-        }
-
-        // Render Articles Grid
-        function renderArticles() {
+        // Fetch Live Posts from Render Backend
+        async function fetchAndRenderPosts() {
             const container = document.getElementById('blog-grid');
-            container.innerHTML = '';
+            try {
+                const response = await fetch(`${API_BASE}/posts`);
+                const result = await response.json();
 
-            blogPosts.forEach(post => {
-                const data = getPostData(post.id);
-                const card = document.createElement('article');
-                card.className = 'bg-tech-card border border-tech-border rounded-xl p-6 flex flex-col justify-between hover:border-tech-cyan/50 transition-all duration-300 shadow-xl';
-                card.innerHTML = `
-                    <div>
-                        <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                            <span class="bg-tech-border text-tech-cyan px-2.5 py-1 rounded font-mono">${post.category}</span>
-                            <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> ${data.views} views</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white hover:text-tech-cyan transition mb-3">
-                            <a href="${post.link}" target="_blank" onclick="incrementView('${post.id}')">${post.title}</a>
-                        </h3>
-                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">${post.desc}</p>
-                    </div>
+                if (!result.success || !result.posts) {
+                    container.innerHTML = `<p class="text-slate-400">Unable to load posts at this time.</p>`;
+                    return;
+                }
 
-                    <div class="border-t border-tech-border pt-4">
-                        <div class="flex items-center justify-between text-sm mb-4">
-                            <button onclick="addLike('${post.id}')" class="flex items-center gap-1.5 text-slate-300 hover:text-red-400 transition font-mono">
-                                <i data-lucide="heart" class="w-4 h-4 text-red-500"></i>
-                                <span id="likes-${post.id}">${data.likes}</span>
-                            </button>
-                            <a href="${post.link}" target="_blank" onclick="incrementView('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
-                                Read on Blogspot <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                            </a>
-                        </div>
+                container.innerHTML = '';
 
-                        <!-- Comment System -->
-                        <div class="mt-4 bg-tech-dark/50 p-3 rounded-lg border border-tech-border">
-                            <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
-                                <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (${data.comments.length})
-                            </h4>
-                            <div id="comments-list-${post.id}" class="space-y-1.5 max-h-24 overflow-y-auto mb-2 text-xs text-slate-400">
-                                ${data.comments.length === 0 ? '<p class="italic">No comments yet. Be the first!</p>' : ''}
-                                ${data.comments.map(c => `<div class="bg-tech-card p-1.5 rounded border border-tech-border"><strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
+                result.posts.forEach(post => {
+                    const commentsArr = post.comments || [];
+                    const card = document.createElement('article');
+                    card.className = 'bg-tech-card border border-tech-border rounded-xl p-6 flex flex-col justify-between hover:border-tech-cyan/50 transition-all duration-300 shadow-xl';
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                                <span class="bg-tech-border text-tech-cyan px-2.5 py-1 rounded font-mono">${post.category || 'Tech'}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> <span id="views-${post.id}">${post.views || 0}</span> views</span>
                             </div>
-                            <div class="flex gap-2">
-                                <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-tech-card border border-tech-border text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-tech-cyan">
-                                <button onclick="postComment('${post.id}')" class="bg-tech-cyan text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-sky-400 transition">Post</button>
+                            <h3 class="text-xl font-bold text-white hover:text-tech-cyan transition mb-3">
+                                <a href="${post.link}" target="_blank" onclick="handleView('${post.id}')">${post.title}</a>
+                            </h3>
+                            <p class="text-slate-400 text-sm mb-6 leading-relaxed">${post.snippet || ''}</p>
+                        </div>
+
+                        <div class="border-t border-tech-border pt-4">
+                            <div class="flex items-center justify-between text-sm mb-4">
+                                <button onclick="handleLike('${post.id}')" class="flex items-center gap-1.5 text-slate-300 hover:text-red-400 transition font-mono">
+                                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i>
+                                    <span id="likes-${post.id}">${post.likes || 0}</span>
+                                </button>
+                                <a href="${post.link}" target="_blank" onclick="handleView('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
+                                    Read on Blogspot <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </a>
+                            </div>
+
+                            <!-- Live Comment System -->
+                            <div class="mt-4 bg-tech-dark/50 p-3 rounded-lg border border-tech-border">
+                                <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (<span id="comments-count-${post.id}">${commentsArr.length}</span>)
+                                </h4>
+                                <div id="comments-list-${post.id}" class="space-y-1.5 max-h-24 overflow-y-auto mb-2 text-xs text-slate-400">
+                                    ${commentsArr.length === 0 ? '<p class="italic no-comments">No comments yet. Be the first!</p>' : ''}
+                                    ${commentsArr.map(c => `<div class="bg-tech-card p-1.5 rounded border border-tech-border"><strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-tech-card border border-tech-border text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-tech-cyan">
+                                    <button onclick="handleComment('${post.id}')" class="bg-tech-cyan text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-sky-400 transition">Post</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
-            
-            gsap.from('#blog-grid article', {
-                duration: 0.8,
-                y: 30,
-                opacity: 0,
-                stagger: 0.15,
-                ease: 'power2.out'
-            });
+                    `;
+                    container.appendChild(card);
+                });
+
+                lucide.createIcons();
+
+                gsap.from('#blog-grid article', {
+                    duration: 0.8,
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.15,
+                    ease: 'power2.out'
+                });
+            } catch (err) {
+                console.error('Failed to load live posts:', err);
+            }
         }
 
-        function incrementView(postId) {
-            const data = getPostData(postId);
-            data.views += 1;
-            savePostData(postId, data);
+        // Live API view counter
+        async function handleView(postId) {
+            try {
+                const res = await fetch(`${API_BASE}/posts/${postId}/view`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    const el = document.getElementById(`views-${postId}`);
+                    if (el) el.innerText = data.views;
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        function addLike(postId) {
-            const data = getPostData(postId);
-            data.likes += 1;
-            savePostData(postId, data);
-            document.getElementById(`likes-${postId}`).innerText = data.likes;
+        // Live API like counter
+        async function handleLike(postId) {
+            try {
+                const res = await fetch(`${API_BASE}/posts/${postId}/like`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    const el = document.getElementById(`likes-${postId}`);
+                    if (el) el.innerText = data.likes;
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        function postComment(postId) {
+        // Live API comment submission
+        async function handleComment(postId) {
             const input = document.getElementById(`input-${postId}`);
             const text = input.value.trim();
             if (!text) return;
 
-            const data = getPostData(postId);
-            data.comments.push({ user: 'Reader', text: text });
-            savePostData(postId, data);
-            input.value = '';
-            renderArticles();
+            try {
+                const res = await fetch(`${API_BASE}/posts/${postId}/comment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: 'Reader', text })
+                });
+                const data = await res.json();
+
+                if (data.success && data.comments) {
+                    input.value = '';
+                    const listContainer = document.getElementById(`comments-list-${postId}`);
+                    const countEl = document.getElementById(`comments-count-${postId}`);
+
+                    if (countEl) countEl.innerText = data.comments.length;
+
+                    if (listContainer) {
+                        listContainer.innerHTML = data.comments.map(c => `
+                            <div class="bg-tech-card p-1.5 rounded border border-tech-border">
+                                <strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         function escapeHtml(str) {
