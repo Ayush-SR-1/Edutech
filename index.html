@@ -40,12 +40,13 @@
         .glow-card:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
         
         /* Formatted Post Content Typography */
-        .blog-content p { margin-bottom: 1.25rem; line-height: 1.75; color: #cbd5e1; }
+        .blog-content p { margin-bottom: 1.25rem; line-height: 1.8; color: #cbd5e1; font-size: 1.05rem; }
         .blog-content h1, .blog-content h2, .blog-content h3 { color: #ffffff; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
         .blog-content h2 { font-size: 1.5rem; color: #00f2fe; }
         .blog-content code { background: #1e293b; color: #38bdf8; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
         .blog-content pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; border: 1px solid #1e293b; overflow-x: auto; margin-bottom: 1.25rem; }
         .blog-content img { border-radius: 0.75rem; border: 1px solid #334155; margin: 1.5rem 0; width: 100%; object-fit: cover; }
+        .blog-content ul, .blog-content ol { margin-left: 1.5rem; margin-bottom: 1.25rem; color: #cbd5e1; list-style-type: disc; }
     </style>
 </head>
 <body class="bg-tech-dark text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
@@ -86,14 +87,14 @@
         </h1>
         
         <p id="hero-desc" class="text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-            Welcome to the official EduByte publication hub. Read technical essays, AI hallucination deep-dives, machine learning theories, and modern computing breakdowns directly on this site.
+            Welcome to the official EduByte publication hub. Read tech blogs, AI hallucination deep-dives, machine learning theories, and modern computing breakdowns directly on this site.
         </p>
     </section>
 
     <!-- Articles Feed Grid -->
     <section id="articles" class="px-6 py-12 max-w-7xl mx-auto z-10 w-full">
         <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Insights
+            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Blogs
         </h2>
 
         <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -109,7 +110,7 @@
             
             <!-- Modal Header -->
             <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
-                <span id="modal-category" class="bg-slate-800 text-tech-cyan text-xs font-mono px-3 py-1 rounded">Tech Essay</span>
+                <span id="modal-category" class="bg-slate-800 text-tech-cyan text-xs font-mono px-3 py-1 rounded">Tech Blog</span>
                 <button onclick="closeReader()" class="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -124,14 +125,14 @@
                     <span class="flex items-center gap-1.5"><i data-lucide="heart" class="w-4 h-4 text-red-500"></i> <span id="modal-likes">0</span> likes</span>
                 </div>
 
-                <!-- Full Formatted Article Text -->
-                <div id="modal-body" class="blog-content text-slate-300 text-base"></div>
+                <!-- Full Formatted Article Body -->
+                <div id="modal-body" class="blog-content text-slate-300"></div>
             </div>
 
             <!-- Modal Footer Interactions -->
             <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex justify-between items-center text-xs">
                 <button id="modal-like-btn" class="bg-slate-800 hover:bg-red-500/20 text-slate-200 hover:text-red-400 border border-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 font-mono transition">
-                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i> Like Article
+                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i> Like Blog
                 </button>
                 <button onclick="closeReader()" class="bg-tech-cyan text-slate-950 font-bold px-5 py-2 rounded-lg hover:bg-sky-400 transition">
                     Done Reading
@@ -203,7 +204,7 @@
                 const result = await response.json();
 
                 if (!result.success || !result.posts || result.posts.length === 0) {
-                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No posts published yet.</p>`;
+                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No blog posts published yet.</p>`;
                     return;
                 }
 
@@ -234,7 +235,7 @@
                                     <span id="likes-${post.id}">${post.likes || 0}</span>
                                 </button>
                                 <button onclick="openReader('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
-                                    Read Essay <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                    Read Blog <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
 
@@ -275,12 +276,13 @@
             if (!post) return;
 
             document.getElementById('modal-title').innerText = post.title;
-            document.getElementById('modal-category').innerText = post.category || 'AI Essay';
+            document.getElementById('modal-category').innerText = post.category || 'Tech Blog';
             document.getElementById('modal-views').innerText = (post.views || 0) + 1;
             document.getElementById('modal-likes').innerText = post.likes || 0;
             
-            // Render full snippet/content with paragraph formatting
-            document.getElementById('modal-body').innerHTML = `<p>${post.snippet}</p><p class="mt-4 text-slate-400 italic">Full technical content synchronized directly with EduByte database.</p>`;
+            // Prioritize full post content, fallback to formatted snippet
+            const fullContent = post.content || post.contentSnippet || post.snippet || 'No blog content available.';
+            document.getElementById('modal-body').innerHTML = fullContent;
             
             document.getElementById('modal-like-btn').onclick = () => handleLike(postId);
 
@@ -291,7 +293,6 @@
                 gsap.fromTo("#reader-modal > div", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
             }
 
-            // Fire view counter increment on backend
             handleView(postId);
         }
 
