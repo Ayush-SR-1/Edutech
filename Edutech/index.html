@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduByte — Tech Thoughts & Insights</title>
+    <title>EduByte — Tech & AI Insights</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,9 +26,20 @@
         }
     </script>
     <style>
-        body { background-color: #F4F1EA; color: #1A1A1A; }
+        body { 
+            background-color: #F4F1EA; 
+            color: #1A1A1A; 
+            /* Subtle Tech & AI Grid Pattern Overlay */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.05) 0px, transparent 50%),
+                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+            background-attachment: fixed;
+        }
         
-        /* Full Article Typography inside Reader Modal */
+        /* Typography inside Article Modal */
         .blog-content { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             line-height: 1.8; 
@@ -54,28 +65,38 @@
 
     <div class="max-w-4xl mx-auto px-6 py-12 md:py-16">
         <!-- Header -->
-        <header class="flex justify-between items-center mb-16 pb-6 border-b border-stone-300">
-            <h1 class="font-serif text-2xl font-semibold tracking-tight">EduByte</h1>
-            <span class="text-xs uppercase tracking-widest text-muted font-medium">Insights & Writing</span>
+        <header class="flex justify-between items-center mb-16 pb-6 border-b border-stone-300/80">
+            <div class="flex items-center gap-3">
+                <h1 class="font-serif text-2xl font-semibold tracking-tight">EduByte</h1>
+                <span class="text-[10px] font-mono tracking-wider uppercase bg-stone-200/80 text-stone-600 px-2 py-0.5 rounded border border-stone-300">Tech & AI</span>
+            </div>
+            <span class="text-xs uppercase tracking-widest text-muted font-medium">Everyday Insights</span>
         </header>
 
         <!-- Dynamic Feed Container -->
         <main id="feed-container">
             <div class="animate-pulse space-y-8">
-                <div class="h-4 bg-stone-300 rounded w-1/4"></div>
-                <div class="h-10 bg-stone-300 rounded w-3/4"></div>
-                <div class="h-20 bg-stone-300 rounded w-full"></div>
+                <div class="h-4 bg-stone-300/60 rounded w-1/4"></div>
+                <div class="h-10 bg-stone-300/60 rounded w-3/4"></div>
+                <div class="h-20 bg-stone-300/60 rounded w-full"></div>
             </div>
         </main>
     </div>
 
     <!-- Article Reader Modal -->
-    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 md:p-6 overflow-y-auto">
+    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 md:p-6 overflow-y-auto">
         <div class="bg-cream max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl border border-stone-300 shadow-2xl p-6 md:p-10 relative my-8">
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-muted hover:text-ink text-xl font-mono">✕</button>
+            
+            <!-- Navigation Header in Modal -->
+            <div class="flex items-center justify-between pb-4 border-b border-stone-300 mb-6">
+                <button onclick="closeModal()" class="flex items-center gap-2 text-sm text-stone-600 hover:text-ink font-medium transition">
+                    <span>←</span> Back to all entries
+                </button>
+                <button onclick="closeModal()" class="text-muted hover:text-ink text-lg font-mono">✕</button>
+            </div>
             
             <div id="modal-header"></div>
-            <div id="modal-body" class="blog-content border-t border-stone-300 pt-6 my-6"></div>
+            <div id="modal-body" class="blog-content pt-4 my-6"></div>
             
             <!-- Dynamic Actions -->
             <div id="modal-footer" class="border-t border-stone-300 pt-6 mt-8">
@@ -108,13 +129,12 @@
         let currentPosts = [];
         let activePostId = null;
 
-        // Clean raw escape sequences (\n, \\, inline styles) from Blogger content
         function sanitizeBlogHtml(htmlStr) {
             if (!htmlStr) return '';
             return htmlStr
                 .replace(/\\n/g, ' ')
                 .replace(/\\"/g, '"')
-                .replace(/style="[^"]*"/gi, '') // Strip aggressive Blogger inline fonts
+                .replace(/style="[^"]*"/gi, '')
                 .trim();
         }
 
@@ -146,12 +166,14 @@
         function renderEditorialLayout(posts) {
             const container = document.getElementById('feed-container');
             const featured = posts[0];
-            const remaining = posts.slice(1);
 
             let html = `
                 <!-- Featured Entry -->
                 <section class="mb-20 cursor-pointer group" onclick="openModal('${featured.id}')">
-                    <span class="text-xs text-muted uppercase tracking-wider block mb-2 font-medium">Latest Entry</span>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                        <span class="text-xs text-muted uppercase tracking-wider font-medium">Latest Tech & AI Entry</span>
+                    </div>
                     <h2 class="font-serif text-4xl md:text-5xl font-normal leading-tight tracking-tight mb-4 group-hover:underline underline-offset-4 decoration-stone-400">${featured.title}</h2>
                     <p class="text-stone-600 text-lg font-serif italic mb-4 max-w-2xl">${featured.snippet}</p>
                     <div class="flex items-center gap-3 text-xs text-muted">
@@ -167,7 +189,7 @@
                     <div class="space-y-12">
             `;
 
-            remaining.forEach((post, idx) => {
+            posts.forEach((post, idx) => {
                 const num = String(idx + 1).padStart(2, '0');
                 html += `
                     <article class="flex gap-6 items-start group cursor-pointer" onclick="openModal('${post.id}')">
