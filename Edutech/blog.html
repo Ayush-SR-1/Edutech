@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduByte — Tech & AI Insights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#0B1317',
+                        ink: '#F4F1EA',
+                        muted: '#6B828D'
+                    },
+                    fontFamily: {
+                        serif: ['Newsreader', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #050A0E; 
+            color: #F4F1EA; 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Rolling Wave Grid Canvas */
+        #grid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Typography inside Article Modal */
+        .blog-content { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            line-height: 1.8; 
+            color: #D1E0E5; 
+            font-size: 1.05rem; 
+        }
+        .blog-content p { margin-bottom: 1.25rem; }
+        .blog-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1.5rem auto; display: block; }
+        .blog-content h1, .blog-content h2, .blog-content h3 { 
+            font-family: 'Newsreader', serif; 
+            color: #FFFFFF; 
+            font-weight: 600; 
+            margin-top: 2rem; 
+            margin-bottom: 0.75rem; 
+        }
+        .blog-content h2 { font-size: 1.65rem; }
+        .blog-content code { background: #121F24; color: #38BDF8; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .blog-content pre { background: #080D10; color: #F4F1EA; padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid #1B2E36; }
+        .blog-content pre code { background: transparent; color: inherit; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen selection:bg-cyan-900 selection:text-white">
+
+    <!-- 3D Rolling Wave Canvas -->
+    <canvas id="grid-canvas"></canvas>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 py-12 md:py-16">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-16 pb-6 border-b border-cyan-950/80 backdrop-blur-sm">
+            <div class="flex items-center gap-3">
+                <h1 class="font-serif text-2xl font-semibold tracking-tight text-white">EduByte</h1>
+                <span class="text-[10px] font-mono tracking-wider uppercase bg-cyan-950/80 text-cyan-400 px-2 py-0.5 rounded border border-cyan-800/40">Tech & AI</span>
+            </div>
+            <span class="text-xs uppercase tracking-widest text-muted font-medium">Everyday Insights</span>
+        </header>
+
+        <!-- Dynamic Feed Container -->
+        <main id="feed-container">
+            <div class="animate-pulse space-y-8">
+                <div class="h-4 bg-cyan-950/40 rounded w-1/4"></div>
+                <div class="h-10 bg-cyan-950/40 rounded w-3/4"></div>
+                <div class="h-20 bg-cyan-950/40 rounded w-full"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Article Reader Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 md:p-6 overflow-y-auto">
+        <div class="bg-[#0A1115]/90 max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl border border-cyan-900/60 shadow-2xl p-6 md:p-10 relative my-8 text-slate-200">
+            
+            <!-- Navigation Header in Modal -->
+            <div class="flex items-center justify-between pb-4 border-b border-cyan-900/40 mb-6">
+                <button onclick="closeModal()" class="flex items-center gap-2 text-sm text-cyan-400 hover:text-white font-medium transition">
+                    <span>←</span> Back to all entries
+                </button>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-lg font-mono">✕</button>
+            </div>
+            
+            <div id="modal-header"></div>
+            <div id="modal-body" class="blog-content pt-4 my-6"></div>
+            
+            <!-- Dynamic Actions -->
+            <div id="modal-footer" class="border-t border-cyan-900/40 pt-6 mt-8">
+                <div class="flex items-center justify-between mb-8">
+                    <button id="like-btn" class="flex items-center gap-2 border border-cyan-800/50 hover:border-cyan-600 bg-cyan-950/40 px-4 py-2 rounded-full text-sm font-medium transition text-cyan-200">
+                        <span>❤️</span> <span id="like-count">0</span> Likes
+                    </button>
+                    <span id="view-count" class="text-xs text-muted">0 views</span>
+                </div>
+
+                <!-- Comments -->
+                <div class="space-y-4">
+                    <h4 class="font-serif text-lg font-medium text-white">Discussion</h4>
+                    <div id="comments-list" class="space-y-3 mb-4 max-h-48 overflow-y-auto pr-2"></div>
+                    
+                    <form id="comment-form" onsubmit="submitComment(event)" class="flex flex-col gap-2">
+                        <input type="text" id="comment-user" placeholder="Your name (optional)" class="bg-cyan-950/30 border border-cyan-900/60 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500">
+                        <div class="flex gap-2">
+                            <input type="text" id="comment-text" placeholder="Write a comment..." required class="flex-1 bg-cyan-950/30 border border-cyan-900/60 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500">
+                            <button type="submit" class="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-500 transition">Post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rolling Wave Canvas Script
+        const canvas = document.getElementById('grid-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let time = 0;
+
+        function drawWaveGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dark space background
+            const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            bgGradient.addColorStop(0, '#03070A');
+            bgGradient.addColorStop(0.5, '#060D12');
+            bgGradient.addColorStop(1, '#020507');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            time += 0.012;
+
+            const rows = 28;
+            const cols = 48;
+            const horizonY = canvas.height * 0.42;
+            const gridHeight = canvas.height - horizonY;
+            const centerX = canvas.width / 2;
+
+            let gridPoints = [];
+
+            for (let r = 0; r <= rows; r++) {
+                gridPoints[r] = [];
+                let normY = r / rows;
+                let perspectiveY = Math.pow(normY, 2.5);
+                let baseY = horizonY + perspectiveY * gridHeight;
+
+                for (let c = 0; c <= cols; c++) {
+                    let normX = (c - cols / 2) / (cols / 2);
+                    let baseX = centerX + normX * (canvas.width * 0.85) * (0.2 + 0.8 * normY);
+
+                    // Dual wave calculation for continuous rolling effect
+                    let wave1 = Math.sin(normX * 5 + time + normY * 3) * 18 * normY;
+                    let wave2 = Math.cos(normY * 8 - time * 1.5) * 14 * normY;
+                    let waveHeight = wave1 + wave2;
+
+                    gridPoints[r][c] = {
+                        x: baseX,
+                        y: baseY + waveHeight,
+                        alpha: normY * 0.45
+                    };
+                }
+            }
+
+            ctx.lineWidth = 0.9;
+
+            // Draw Horizontal Wave Ribs
+            for (let r = 0; r <= rows; r++) {
+                let rowAlpha = gridPoints[r][0].alpha;
+                ctx.strokeStyle = `rgba(56, 189, 248, ${rowAlpha})`;
+                ctx.beginPath();
+                for (let c = 0; c <= cols; c++) {
+                    let pt = gridPoints[r][c];
+                    if (c === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
+                ctx.stroke();
+            }
+
+            // Draw Vertical Perspective Lines
+            for (let c = 0; c <= cols; c += 2) {
+                ctx.beginPath();
+                for (let r = 0; r <= rows; r++) {
+                    let pt = gridPoints[r][c];
+                    ctx.strokeStyle = `rgba(30, 120, 150, ${pt.alpha * 0.7})`;
+                    if (r === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
+                ctx.stroke();
+            }
+
+            // Glowing Horizon Soft Light
+            const horizonGlow = ctx.createLinearGradient(0, horizonY - 15, 0, horizonY + 25);
+            horizonGlow.addColorStop(0, 'rgba(56, 189, 248, 0)');
+            horizonGlow.addColorStop(0.5, 'rgba(56, 189, 248, 0.15)');
+            horizonGlow.addColorStop(1, 'rgba(56, 189, 248, 0)');
+            ctx.fillStyle = horizonGlow;
+            ctx.fillRect(0, horizonY - 15, canvas.width, 40);
+
+            requestAnimationFrame(drawWaveGrid);
+        }
+        drawWaveGrid();
+
+        // Feed & Modal Logic
+        const API_URL = 'https://edubyte-backend-x0up.onrender.com';
+        let currentPosts = [];
+        let activePostId = null;
+
+        function sanitizeBlogHtml(htmlStr) {
+            if (!htmlStr) return '';
+            return htmlStr
+                .replace(/\\n/g, ' ')
+                .replace(/\\"/g, '"')
+                .replace(/style="[^"]*"/gi, '')
+                .trim();
+        }
+
+        function cleanSnippetText(text) {
+            if (!text) return '';
+            return text
+                .replace(/^.*?---/g, '')
+                .replace(/Ayush Singh Rathor.*?(VIT|student)/gi, '')
+                .replace(/^.*?\?--/g, '')
+                .replace(/^[\s\-–—:\.]+/g, '')
+                .trim();
+        }
+
+        async function fetchPosts() {
+            const container = document.getElementById('feed-container');
+            try {
+                const res = await fetch(`${API_URL}/api/posts`);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                
+                const data = await res.json();
+                if (data.success && data.posts.length > 0) {
+                    currentPosts = data.posts;
+                    renderEditorialLayout(data.posts);
+                } else {
+                    container.innerHTML = `<p class="text-muted font-serif py-10 text-center">No posts available.</p>`;
+                }
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `
+                    <div class="text-center py-12 space-y-3">
+                        <p class="text-slate-300 font-serif text-lg">Unable to load feed from server.</p>
+                        <p class="text-xs text-slate-500 font-mono">${err.message}</p>
+                        <button onclick="fetchPosts()" class="bg-cyan-600 text-white text-xs px-4 py-2 rounded-md hover:bg-cyan-500 transition">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderEditorialLayout(posts) {
+            const container = document.getElementById('feed-container');
+            const featured = posts[0];
+
+            let html = `
+                <!-- Featured Entry -->
+                <section class="mb-20 cursor-pointer group bg-[#081014]/60 backdrop-blur-md border border-cyan-900/40 p-8 rounded-2xl hover:border-cyan-600/60 transition shadow-xl" onclick="openModal('${featured.id}')">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        <span class="text-xs text-cyan-400 uppercase tracking-wider font-mono">Latest Tech & AI Entry</span>
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl font-normal leading-tight tracking-tight mb-4 text-white group-hover:text-cyan-300 transition">${featured.title}</h2>
+                    <p class="text-slate-300 text-lg font-serif italic mb-6 max-w-2xl">${cleanSnippetText(featured.snippet)}</p>
+                    <div class="flex items-center gap-3 text-xs text-muted">
+                        <span class="text-cyan-400 font-medium">Read article</span>
+                        <span>•</span>
+                        <span class="bg-cyan-950/80 border border-cyan-800/50 px-2.5 py-1 rounded-full text-cyan-200 font-sans">${featured.category}</span>
+                    </div>
+                </section>
+
+                <!-- All Entries List -->
+                <section>
+                    <h3 class="text-xs uppercase tracking-widest text-muted font-medium mb-8 pb-3 border-b border-cyan-900/40">All entries, in order</h3>
+                    <div class="space-y-8">
+            `;
+
+            posts.forEach((post, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                html += `
+                    <article class="flex gap-6 items-start group cursor-pointer bg-[#081014]/40 backdrop-blur-sm border border-cyan-950/60 p-6 rounded-xl hover:border-cyan-800/60 hover:bg-[#081014]/80 transition" onclick="openModal('${post.id}')">
+                        <span class="font-serif text-cyan-500/60 text-lg md:text-xl font-light w-6 shrink-0">${num}</span>
+                        <div class="space-y-2 flex-1">
+                            <h4 class="font-serif text-2xl md:text-3xl font-normal leading-snug text-white group-hover:text-cyan-300 transition">${post.title}</h4>
+                            <p class="text-slate-400 text-sm md:text-base font-serif italic">${cleanSnippetText(post.snippet)}</p>
+                            <div class="pt-2 flex items-center gap-2">
+                                <span class="inline-block bg-cyan-950/60 border border-cyan-900/40 px-2.5 py-0.5 rounded-full text-xs text-cyan-300">${post.category}</span>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            });
+
+            html += `</div></section>`;
+            container.innerHTML = html;
+        }
+
+        async function openModal(id) {
+            const post = currentPosts.find(p => p.id === id);
+            if (!post) return;
+            activePostId = id;
+
+            document.getElementById('modal-header').innerHTML = `
+                <span class="text-xs uppercase tracking-wider text-cyan-400 font-mono block mb-2">${post.category}</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-normal leading-snug mb-2 text-white">${post.title}</h2>
+            `;
+            
+            const cleanedContent = sanitizeBlogHtml(post.content);
+            document.getElementById('modal-body').innerHTML = cleanedContent || `<p class="italic text-muted font-serif">No content available.</p>`;
+            document.getElementById('like-count').innerText = post.likes || 0;
+            document.getElementById('view-count').innerText = `${post.views || 0} views`;
+            
+            renderComments(post.comments || []);
+            document.getElementById('modal').classList.remove('hidden');
+
+            try {
+                const res = await fetch(`${API_URL}/api/posts/${id}/view`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('view-count').innerText = `${data.views} views`;
+                    post.views = data.views;
+                }
+            } catch (e) {}
+
+            document.getElementById('like-btn').onclick = () => handleLike(id);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            activePostId = null;
+        }
+
+        async function handleLike(id) {
+            try {
+                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('like-count').innerText = data.likes;
+                    const p = currentPosts.find(x => x.id === id);
+                    if (p) p.likes = data.likes;
+                }
+            } catch (e) {}
+        }
+
+        function renderComments(comments) {
+            const list = document.getElementById('comments-list');
+            if (!comments.length) {
+                list.innerHTML = `<p class="text-xs text-muted italic">No comments yet.</p>`;
+                return;
+            }
+            list.innerHTML = comments.map(c => `
+                <div class="bg-cyan-950/40 border border-cyan-900/40 p-3 rounded-lg text-xs">
+                    <span class="font-semibold text-cyan-300">${escapeHtml(c.user)}</span>
+                    <p class="text-slate-300 mt-1">${escapeHtml(c.text)}</p>
+                </div>
+            `).join('');
+        }
+
+        async function submitComment(e) {
+            e.preventDefault();
+            if (!activePostId) return;
+
+            const userVal = document.getElementById('comment-user').value.trim();
+            const textVal = document.getElementById('comment-text').value.trim();
+
+            try {
+                const res = await fetch(`${API_URL}/api/posts/${activePostId}/comment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: userVal, text: textVal })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('comment-text').value = '';
+                    renderComments(data.comments);
+                    const p = currentPosts.find(x => x.id === activePostId);
+                    if (p) p.comments = data.comments;
+                }
+            } catch (e) {}
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        window.onload = fetchPosts;
+    </script>
+</body>
+</html>
