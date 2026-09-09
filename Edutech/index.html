@@ -29,7 +29,6 @@
         body { 
             background-color: #F4F1EA; 
             color: #1A1A1A; 
-            /* Subtle Tech & AI Grid Pattern Overlay */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.05) 0px, transparent 50%),
@@ -138,6 +137,16 @@
                 .trim();
         }
 
+        function cleanSnippetText(text) {
+            if (!text) return '';
+            return text
+                .replace(/^.*?---/g, '')
+                .replace(/Ayush Singh Rathor.*?(VIT|student)/gi, '')
+                .replace(/^.*?\?--/g, '')
+                .replace(/^[\s\-–—:\.]+/g, '')
+                .trim();
+        }
+
         async function fetchPosts() {
             const container = document.getElementById('feed-container');
             try {
@@ -175,7 +184,7 @@
                         <span class="text-xs text-muted uppercase tracking-wider font-medium">Latest Tech & AI Entry</span>
                     </div>
                     <h2 class="font-serif text-4xl md:text-5xl font-normal leading-tight tracking-tight mb-4 group-hover:underline underline-offset-4 decoration-stone-400">${featured.title}</h2>
-                    <p class="text-stone-600 text-lg font-serif italic mb-4 max-w-2xl">${featured.snippet}</p>
+                    <p class="text-stone-600 text-lg font-serif italic mb-4 max-w-2xl">${cleanSnippetText(featured.snippet)}</p>
                     <div class="flex items-center gap-3 text-xs text-muted">
                         <span>Read article</span>
                         <span>•</span>
@@ -196,7 +205,7 @@
                         <span class="font-serif text-stone-400 text-lg md:text-xl font-light w-6 shrink-0">${num}</span>
                         <div class="space-y-2 flex-1">
                             <h4 class="font-serif text-2xl md:text-3xl font-normal leading-snug group-hover:underline underline-offset-4 decoration-stone-400">${post.title}</h4>
-                            <p class="text-stone-600 text-sm md:text-base font-serif italic">${post.snippet}</p>
+                            <p class="text-stone-600 text-sm md:text-base font-serif italic">${cleanSnippetText(post.snippet)}</p>
                             <div class="pt-1 flex items-center gap-2">
                                 <span class="inline-block bg-stone-200/80 px-2.5 py-0.5 rounded-full text-xs text-stone-700">${post.category}</span>
                             </div>
