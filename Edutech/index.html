@@ -27,13 +27,13 @@
     </script>
     <style>
         body { 
-            background-color: #060B0E; 
+            background-color: #050A0E; 
             color: #F4F1EA; 
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Perspective Grid Canvas */
+        /* Rolling Wave Grid Canvas */
         #grid-canvas {
             position: fixed;
             top: 0;
@@ -68,7 +68,7 @@
 </head>
 <body class="font-sans antialiased min-h-screen selection:bg-cyan-900 selection:text-white">
 
-    <!-- 3D Moving Perspective Grid Background Canvas -->
+    <!-- 3D Rolling Wave Canvas -->
     <canvas id="grid-canvas"></canvas>
 
     <div class="relative z-10 max-w-4xl mx-auto px-6 py-12 md:py-16">
@@ -133,7 +133,7 @@
     </div>
 
     <script>
-        // 3D Perspective Grid Canvas Script
+        // Rolling Wave Canvas Script
         const canvas = document.getElementById('grid-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -144,83 +144,92 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let speed = 0.005;
-        let offset = 0;
+        let time = 0;
 
-        function drawGrid() {
+        function drawWaveGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dark subtle top vignette background
+            // Dark space background
             const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            bgGradient.addColorStop(0, '#040709');
-            bgGradient.addColorStop(0.4, '#070E12');
-            bgGradient.addColorStop(1, '#020405');
+            bgGradient.addColorStop(0, '#03070A');
+            bgGradient.addColorStop(0.5, '#060D12');
+            bgGradient.addColorStop(1, '#020507');
             ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            const horizonY = canvas.height * 0.45;
-            const gridWidth = canvas.width * 2;
-            const gridHeight = canvas.height - horizonY;
-            
-            // Grid Lines Style
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
-            ctx.lineWidth = 1;
+            time += 0.012;
 
-            // Draw Perspective Vanishing Lines (Vertical)
-            const numVert = 32;
+            const rows = 28;
+            const cols = 48;
+            const horizonY = canvas.height * 0.42;
+            const gridHeight = canvas.height - horizonY;
             const centerX = canvas.width / 2;
 
-            for (let i = -numVert; i <= numVert; i++) {
-                const startX = centerX + i * 15;
-                const endX = centerX + i * 120;
-                
-                ctx.beginPath();
-                ctx.moveTo(startX, horizonY);
-                ctx.lineTo(endX, canvas.height);
+            let gridPoints = [];
 
-                // Fade intensity towards horizon
-                const alpha = Math.abs(i) / numVert;
-                ctx.strokeStyle = `rgba(30, 100, 120, ${0.35 - alpha * 0.2})`;
+            for (let r = 0; r <= rows; r++) {
+                gridPoints[r] = [];
+                let normY = r / rows;
+                let perspectiveY = Math.pow(normY, 2.5);
+                let baseY = horizonY + perspectiveY * gridHeight;
+
+                for (let c = 0; c <= cols; c++) {
+                    let normX = (c - cols / 2) / (cols / 2);
+                    let baseX = centerX + normX * (canvas.width * 0.85) * (0.2 + 0.8 * normY);
+
+                    // Dual wave calculation for continuous rolling effect
+                    let wave1 = Math.sin(normX * 5 + time + normY * 3) * 18 * normY;
+                    let wave2 = Math.cos(normY * 8 - time * 1.5) * 14 * normY;
+                    let waveHeight = wave1 + wave2;
+
+                    gridPoints[r][c] = {
+                        x: baseX,
+                        y: baseY + waveHeight,
+                        alpha: normY * 0.45
+                    };
+                }
+            }
+
+            ctx.lineWidth = 0.9;
+
+            // Draw Horizontal Wave Ribs
+            for (let r = 0; r <= rows; r++) {
+                let rowAlpha = gridPoints[r][0].alpha;
+                ctx.strokeStyle = `rgba(56, 189, 248, ${rowAlpha})`;
+                ctx.beginPath();
+                for (let c = 0; c <= cols; c++) {
+                    let pt = gridPoints[r][c];
+                    if (c === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
                 ctx.stroke();
             }
 
-            // Draw Dynamic Moving Horizontal Lines (Z-Perspective)
-            offset = (offset + speed) % 1;
-            const numHoriz = 18;
-
-            for (let i = 0; i < numHoriz; i++) {
-                let normY = (i + offset) / numHoriz;
-                // Perspective exponential scaling formula
-                let pY = Math.pow(normY, 2.8);
-                let currentY = horizonY + pY * gridHeight;
-
-                // Subtle Wave effect
-                let wave = Math.sin(normY * Math.PI * 4 + Date.now() * 0.002) * (normY * 4);
-                currentY += wave;
-
+            // Draw Vertical Perspective Lines
+            for (let c = 0; c <= cols; c += 2) {
                 ctx.beginPath();
-                ctx.moveTo(0, currentY);
-                ctx.lineTo(canvas.width, currentY);
-
-                // Fade lines closer to horizon
-                let lineAlpha = pY * 0.4;
-                ctx.strokeStyle = `rgba(56, 189, 248, ${lineAlpha})`;
+                for (let r = 0; r <= rows; r++) {
+                    let pt = gridPoints[r][c];
+                    ctx.strokeStyle = `rgba(30, 120, 150, ${pt.alpha * 0.7})`;
+                    if (r === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
                 ctx.stroke();
             }
 
-            // Horizon Glow Bar
-            const horizonGlow = ctx.createLinearGradient(0, horizonY - 10, 0, horizonY + 20);
+            // Glowing Horizon Soft Light
+            const horizonGlow = ctx.createLinearGradient(0, horizonY - 15, 0, horizonY + 25);
             horizonGlow.addColorStop(0, 'rgba(56, 189, 248, 0)');
-            horizonGlow.addColorStop(0.5, 'rgba(56, 189, 248, 0.18)');
+            horizonGlow.addColorStop(0.5, 'rgba(56, 189, 248, 0.15)');
             horizonGlow.addColorStop(1, 'rgba(56, 189, 248, 0)');
             ctx.fillStyle = horizonGlow;
-            ctx.fillRect(0, horizonY - 10, canvas.width, 30);
+            ctx.fillRect(0, horizonY - 15, canvas.width, 40);
 
-            requestAnimationFrame(drawGrid);
+            requestAnimationFrame(drawWaveGrid);
         }
-        drawGrid();
+        drawWaveGrid();
 
-        // Feed & Modal Fetching Logic
+        // Feed & Modal Logic
         const API_URL = 'https://edubyte-backend-x0up.onrender.com';
         let currentPosts = [];
         let activePostId = null;
