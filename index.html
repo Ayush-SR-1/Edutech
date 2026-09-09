@@ -1,377 +1,254 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduByte // Tech & AI Insights</title>
-    <!-- Tailwind CSS CDN -->
+    <title>EduByte — Tech Thoughts & Insights</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        tech: {
-                            cyan: '#00f2fe',
-                            blue: '#4facfe',
-                            dark: '#090d16'
-                        }
+                        cream: '#F4F1EA',
+                        'cream-card': '#EFECE6',
+                        ink: '#1A1A1A',
+                        muted: '#6B6861',
+                        borderline: '#E2DEC',
+                        pill: '#E6E2D8'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
+                        serif: ['Newsreader', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <!-- GSAP Animation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #090d16; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
-        .glow-cyan { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
-        .glow-card { box-shadow: 0 0 15px rgba(0, 242, 254, 0.08); }
-        .glow-card:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
+        body { background-color: #F4F1EA; color: #1A1A1A; }
         
-        /* Formatted Post Content Typography */
-        .blog-content p { margin-bottom: 1.25rem; line-height: 1.8; color: #cbd5e1; font-size: 1.05rem; }
-        .blog-content h1, .blog-content h2, .blog-content h3 { color: #ffffff; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
-        .blog-content h2 { font-size: 1.5rem; color: #00f2fe; }
-        .blog-content code { background: #1e293b; color: #38bdf8; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
-        .blog-content pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; border: 1px solid #1e293b; overflow-x: auto; margin-bottom: 1.25rem; }
-        .blog-content img { border-radius: 0.75rem; border: 1px solid #334155; margin: 1.5rem 0; width: 100%; object-fit: cover; }
-        .blog-content ul, .blog-content ol { margin-left: 1.5rem; margin-bottom: 1.25rem; color: #cbd5e1; list-style-type: disc; }
+        /* Modal Typography Overrides for Full Posts */
+        .blog-content { font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.8; color: #2D2B2A; font-size: 1.05rem; }
+        .blog-content p { margin-bottom: 1.5rem; }
+        .blog-content h1, .blog-content h2, .blog-content h3 { font-family: 'Newsreader', serif; color: #1A1A1A; font-weight: 500; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .blog-content h2 { font-size: 1.75rem; }
+        .blog-content code { background: #E6E2D8; color: #1A1A1A; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .blog-content pre { background: #1A1A1A; color: #F4F1EA; padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; }
+        .blog-content pre code { background: transparent; color: inherit; }
     </style>
 </head>
-<body class="bg-tech-dark text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+<body class="font-sans antialiased min-h-screen selection:bg-neutral-300">
 
-    <!-- Hero Matrix Canvas Background -->
-    <canvas id="heroCanvas" class="absolute top-0 left-0 w-full h-[500px] pointer-events-none opacity-20 z-0"></canvas>
+    <div class="max-w-4xl mx-auto px-6 py-12 md:py-16">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-16 pb-6 border-b border-stone-300">
+            <h1 class="font-serif text-2xl font-semibold tracking-tight">EduByte</h1>
+            <span class="text-xs uppercase tracking-widest text-muted font-medium">Insights & Writing</span>
+        </header>
 
-    <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-tech-dark/90 backdrop-blur sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToTop()">
-                <div class="p-2 bg-gradient-to-r from-tech-cyan to-tech-blue rounded-lg text-black font-bold">
-                    <i data-lucide="cpu" class="w-6 h-6 text-slate-950"></i>
-                </div>
-                <span class="font-extrabold text-xl tracking-wider text-white">EDU<span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan to-tech-blue">BYTE</span></span>
+        <!-- Dynamic Feed Container -->
+        <main id="feed-container">
+            <div class="animate-pulse space-y-8">
+                <div class="h-4 bg-stone-300 rounded w-1/4"></div>
+                <div class="h-10 bg-stone-300 rounded w-3/4"></div>
+                <div class="h-20 bg-stone-300 rounded w-full"></div>
             </div>
+        </main>
+    </div>
+
+    <!-- Article Reader Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 md:p-6 overflow-y-auto">
+        <div class="bg-cream max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl border border-stone-300 shadow-2xl p-6 md:p-10 relative my-8">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-muted hover:text-ink text-xl font-mono">✕</button>
             
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#articles" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="newspaper" class="w-4 h-4"></i> Articles</a>
-                <a href="#about" class="hover:text-tech-cyan transition flex items-center gap-2"><i data-lucide="terminal" class="w-4 h-4"></i> About AI Lab</a>
-            </nav>
-
-            <button onclick="scrollToArticles()" class="bg-gradient-to-r from-tech-cyan to-tech-blue hover:opacity-90 text-slate-950 font-bold px-4 py-2 rounded-md shadow-lg transition flex items-center gap-2 text-sm">
-                <span>Explore Posts</span>
-                <i data-lucide="arrow-down" class="w-4 h-4"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="relative px-6 py-20 max-w-7xl mx-auto text-center z-10">
-        <div id="hero-badge" class="inline-flex items-center gap-2 text-tech-cyan border border-tech-cyan/30 bg-tech-cyan/10 px-4 py-1.5 rounded-full text-xs font-mono uppercase mb-6 glow-cyan">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Artificial Intelligence & System Insights
-        </div>
-        
-        <h1 id="hero-title" class="text-4xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-            Deciphering <span class="text-transparent bg-clip-text bg-gradient-to-r from-tech-cyan via-sky-400 to-tech-blue">Artificial Intelligence</span> <br/>& Next-Gen Computing
-        </h1>
-        
-        <p id="hero-desc" class="text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-            Welcome to the official EduByte publication hub. Read tech blogs, AI hallucination deep-dives, machine learning theories, and modern computing breakdowns directly on this site.
-        </p>
-    </section>
-
-    <!-- Articles Feed Grid -->
-    <section id="articles" class="px-6 py-12 max-w-7xl mx-auto z-10 w-full">
-        <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-            <i data-lucide="bot" class="text-tech-cyan"></i> Featured Blogs
-        </h2>
-
-        <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="col-span-3 text-center text-slate-400 font-mono py-12">
-                Connecting to EduByte API...
-            </div>
-        </div>
-    </section>
-
-    <!-- In-Site Full Article Reader Modal -->
-    <div id="reader-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 md:p-8">
-        <div class="bg-gray-900 border border-slate-800 w-full max-w-4xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl relative glow-card">
+            <div id="modal-header"></div>
+            <div id="modal-body" class="blog-content border-t border-stone-300 pt-6 my-6"></div>
             
-            <!-- Modal Header -->
-            <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
-                <span id="modal-category" class="bg-slate-800 text-tech-cyan text-xs font-mono px-3 py-1 rounded">Tech Blog</span>
-                <button onclick="closeReader()" class="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <!-- Modal Content Body -->
-            <div class="p-6 md:p-10 overflow-y-auto space-y-6">
-                <h1 id="modal-title" class="text-2xl md:text-4xl font-extrabold text-white leading-tight"></h1>
-                
-                <div class="flex items-center gap-6 text-xs text-slate-400 font-mono border-b border-slate-800 pb-4">
-                    <span class="flex items-center gap-1.5"><i data-lucide="eye" class="w-4 h-4 text-tech-cyan"></i> <span id="modal-views">0</span> views</span>
-                    <span class="flex items-center gap-1.5"><i data-lucide="heart" class="w-4 h-4 text-red-500"></i> <span id="modal-likes">0</span> likes</span>
+            <!-- Dynamic Actions (Likes & Comments) -->
+            <div id="modal-footer" class="border-t border-stone-300 pt-6 mt-8">
+                <div class="flex items-center justify-between mb-8">
+                    <button id="like-btn" class="flex items-center gap-2 border border-stone-300 hover:border-stone-400 bg-cream px-4 py-2 rounded-full text-sm font-medium transition">
+                        <span>❤️</span> <span id="like-count">0</span> Likes
+                    </button>
+                    <span id="view-count" class="text-xs text-muted">0 views</span>
                 </div>
 
-                <!-- Full Formatted Article Body -->
-                <div id="modal-body" class="blog-content text-slate-300"></div>
-            </div>
-
-            <!-- Modal Footer Interactions -->
-            <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex justify-between items-center text-xs">
-                <button id="modal-like-btn" class="bg-slate-800 hover:bg-red-500/20 text-slate-200 hover:text-red-400 border border-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 font-mono transition">
-                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i> Like Blog
-                </button>
-                <button onclick="closeReader()" class="bg-tech-cyan text-slate-950 font-bold px-5 py-2 rounded-lg hover:bg-sky-400 transition">
-                    Done Reading
-                </button>
+                <!-- Comment Section -->
+                <div class="space-y-4">
+                    <h4 class="font-serif text-lg font-medium">Discussion</h4>
+                    <div id="comments-list" class="space-y-3 mb-4 max-h-48 overflow-y-auto pr-2"></div>
+                    
+                    <form id="comment-form" onsubmit="submitComment(event)" class="flex flex-col gap-2">
+                        <input type="text" id="comment-user" placeholder="Your name (optional)" class="bg-stone-200/60 border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-500">
+                        <div class="flex gap-2">
+                            <input type="text" id="comment-text" placeholder="Write a comment..." required class="flex-1 bg-stone-200/60 border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-500">
+                            <button type="submit" class="bg-ink text-cream px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-800 transition">Post</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer id="about" class="border-t border-slate-800 bg-tech-dark py-8 px-6 text-center text-xs text-slate-500 z-10">
-        <p>© 2026 EduByte Publishing Platform. Authored by Ayush Singh Rathor.</p>
-    </footer>
-
-    <!-- JavaScript Execution Logic -->
     <script>
-        const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
-        let loadedPosts = [];
+        const API_URL = 'https://edubyte-backend.onrender.com'; // Adjust if using local localhost:5000
+        let currentPosts = [];
+        let activePostId = null;
 
-        // Matrix Background Effect
-        const canvas = document.getElementById('heroCanvas');
-        const ctx = canvas.getContext('2d');
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = 500;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const chars = '01AI-TECH-EDUBYTE-FUTURE';
-        const fontSize = 14;
-        const columns = Math.floor(window.innerWidth / fontSize);
-        const drops = Array(columns).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(9, 13, 22, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00f2fe';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 33);
-
-        // Init Lifecycle
-        window.addEventListener('load', () => {
-            if (window.lucide) lucide.createIcons();
-            
-            if (window.gsap) {
-                gsap.from('#hero-badge', { duration: 1, y: -20, opacity: 0, ease: 'power3.out' });
-                gsap.from('#hero-title', { duration: 1.2, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
-                gsap.from('#hero-desc', { duration: 1, y: 20, opacity: 0, ease: 'power3.out', delay: 0.4 });
-            }
-
-            fetchAndRenderPosts();
-        });
-
-        // Fetch Posts from Backend
-        async function fetchAndRenderPosts() {
-            const container = document.getElementById('blog-grid');
+        async function fetchPosts() {
             try {
-                const response = await fetch(`${API_BASE}/posts`);
-                const result = await response.json();
-
-                if (!result.success || !result.posts || result.posts.length === 0) {
-                    container.innerHTML = `<p class="col-span-3 text-center text-slate-400">No blog posts published yet.</p>`;
-                    return;
+                const res = await fetch(`${API_URL}/api/posts`);
+                const data = await res.json();
+                
+                if (data.success && data.posts.length > 0) {
+                    currentPosts = data.posts;
+                    renderEditorialLayout(data.posts);
+                } else {
+                    document.getElementById('feed-container').innerHTML = `<p class="text-muted font-serif">No published articles found.</p>`;
                 }
-
-                loadedPosts = result.posts;
-                container.innerHTML = '';
-
-                result.posts.forEach(post => {
-                    const commentsArr = post.comments || [];
-                    const card = document.createElement('article');
-                    card.className = 'bg-gray-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-tech-cyan/50 transition-all duration-300 shadow-xl glow-card';
-                    
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                                <span class="bg-slate-800 text-tech-cyan px-2.5 py-1 rounded font-mono">${post.category || 'Tech'}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i> <span id="views-${post.id}">${post.views || 0}</span> views</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-white hover:text-tech-cyan transition mb-3 cursor-pointer" onclick="openReader('${post.id}')">
-                                ${post.title}
-                            </h3>
-                            <p class="text-slate-300 text-sm mb-6 leading-relaxed cursor-pointer" onclick="openReader('${post.id}')">${post.snippet || ''}</p>
-                        </div>
-
-                        <div class="border-t border-slate-800 pt-4">
-                            <div class="flex items-center justify-between text-sm mb-4">
-                                <button onclick="handleLike('${post.id}')" class="flex items-center gap-1.5 text-slate-300 hover:text-red-400 transition font-mono">
-                                    <i data-lucide="heart" class="w-4 h-4 text-red-500"></i>
-                                    <span id="likes-${post.id}">${post.likes || 0}</span>
-                                </button>
-                                <button onclick="openReader('${post.id}')" class="text-tech-cyan hover:underline flex items-center gap-1 text-xs font-semibold">
-                                    Read Blog <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                                </button>
-                            </div>
-
-                            <div class="mt-4 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <h4 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1">
-                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-tech-cyan"></i> Comments (<span id="comments-count-${post.id}">${commentsArr.length}</span>)
-                                </h4>
-                                <div id="comments-list-${post.id}" class="space-y-1.5 max-h-24 overflow-y-auto mb-2 text-xs text-slate-400">
-                                    ${commentsArr.length === 0 ? '<p class="italic no-comments">No comments yet. Be the first!</p>' : ''}
-                                    ${commentsArr.map(c => `<div class="bg-slate-900 p-1.5 rounded border border-slate-800"><strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
-                                </div>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-${post.id}" placeholder="Write a comment..." class="bg-slate-900 border border-slate-800 text-xs rounded px-2 py-1 w-full text-white outline-none focus:border-tech-cyan">
-                                    <button onclick="handleComment('${post.id}')" class="bg-tech-cyan text-slate-950 px-2 py-1 rounded text-xs font-bold hover:bg-sky-400 transition">Post</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-
-                if (window.lucide) lucide.createIcons();
-
             } catch (err) {
-                console.error('Failed to load posts:', err);
-                container.innerHTML = `
-                    <div class="col-span-3 text-center border border-red-900/50 bg-red-950/20 p-6 rounded-xl">
-                        <p class="text-red-400 font-semibold mb-1">Failed to fetch backend data</p>
-                        <p class="text-slate-400 text-xs">${err.message}</p>
+                console.error(err);
+                document.getElementById('feed-container').innerHTML = `<p class="text-muted font-serif">Unable to load feed. Check backend status.</p>`;
+            }
+        }
+
+        function renderEditorialLayout(posts) {
+            const container = document.getElementById('feed-container');
+            const featured = posts[0];
+            const remaining = posts.slice(1);
+
+            let html = `
+                <!-- Featured Top Article -->
+                <section class="mb-20 cursor-pointer group" onclick="openModal('${featured.id}')">
+                    <span class="text-xs text-muted uppercase tracking-wider block mb-2 font-medium">Latest Entry</span>
+                    <h2 class="font-serif text-4xl md:text-5xl font-normal leading-tight tracking-tight mb-4 group-hover:underline underline-offset-4 decoration-stone-400">${featured.title}</h2>
+                    <p class="text-stone-600 text-lg font-serif italic mb-4 max-w-2xl">${featured.snippet}</p>
+                    <div class="flex items-center gap-3 text-xs text-muted">
+                        <span>Read article</span>
+                        <span>•</span>
+                        <span class="bg-stone-200/80 px-2.5 py-1 rounded-full text-stone-700 font-sans">${featured.category}</span>
                     </div>
+                </section>
+
+                <!-- All Subsequent Entries List -->
+                <section>
+                    <h3 class="text-xs uppercase tracking-widest text-muted font-medium mb-8 pb-3 border-b border-stone-300">All entries, in order</h3>
+                    <div class="space-y-12">
+            `;
+
+            remaining.forEach((post, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                html += `
+                    <article class="flex gap-6 items-start group cursor-pointer" onclick="openModal('${post.id}')">
+                        <span class="font-serif text-stone-400 text-lg md:text-xl font-light w-6 shrink-0">${num}</span>
+                        <div class="space-y-2 flex-1">
+                            <h4 class="font-serif text-2xl md:text-3xl font-normal leading-snug group-hover:underline underline-offset-4 decoration-stone-400">${post.title}</h4>
+                            <p class="text-stone-600 text-sm md:text-base font-serif italic">${post.snippet}</p>
+                            <div class="pt-1 flex items-center gap-2">
+                                <span class="inline-block bg-stone-200/80 px-2.5 py-0.5 rounded-full text-xs text-stone-700">${post.category}</span>
+                            </div>
+                        </div>
+                    </article>
                 `;
-            }
+            });
+
+            html += `</div></section>`;
+            container.innerHTML = html;
         }
 
-        // Open Reader Modal In-Site
-        function openReader(postId) {
-            const post = loadedPosts.find(p => p.id === postId);
+        async function openModal(id) {
+            const post = currentPosts.find(p => p.id === id);
             if (!post) return;
+            activePostId = id;
 
-            document.getElementById('modal-title').innerText = post.title;
-            document.getElementById('modal-category').innerText = post.category || 'Tech Blog';
-            document.getElementById('modal-views').innerText = (post.views || 0) + 1;
-            document.getElementById('modal-likes').innerText = post.likes || 0;
+            document.getElementById('modal-header').innerHTML = `
+                <span class="text-xs uppercase tracking-wider text-muted block mb-2">${post.category}</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-normal leading-snug mb-2">${post.title}</h2>
+            `;
             
-            // Prioritize full post content, fallback to formatted snippet
-            const fullContent = post.content || post.contentSnippet || post.snippet || 'No blog content available.';
-            document.getElementById('modal-body').innerHTML = fullContent;
+            document.getElementById('modal-body').innerHTML = post.content || `<p class="italic text-muted font-serif">No content available for this entry.</p>`;
+            document.getElementById('like-count').innerText = post.likes || 0;
+            document.getElementById('view-count').innerText = `${post.views || 0} views`;
             
-            document.getElementById('modal-like-btn').onclick = () => handleLike(postId);
+            renderComments(post.comments || []);
+            document.getElementById('modal').classList.remove('hidden');
 
-            const modal = document.getElementById('reader-modal');
-            modal.classList.remove('hidden');
-
-            if (window.gsap) {
-                gsap.fromTo("#reader-modal > div", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
-            }
-
-            handleView(postId);
-        }
-
-        function closeReader() {
-            document.getElementById('reader-modal').classList.add('hidden');
-        }
-
-        async function handleView(postId) {
+            // Record View
             try {
-                const res = await fetch(`${API_BASE}/posts/${postId}/view`, { method: 'POST' });
+                const res = await fetch(`${API_URL}/api/posts/${id}/view`, { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    const el = document.getElementById(`views-${postId}`);
-                    if (el) el.innerText = data.views;
+                    document.getElementById('view-count').innerText = `${data.views} views`;
+                    post.views = data.views;
                 }
-            } catch (err) {
-                console.error(err);
-            }
+            } catch (e) {}
+
+            document.getElementById('like-btn').onclick = () => handleLike(id);
         }
 
-        async function handleLike(postId) {
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            activePostId = null;
+        }
+
+        async function handleLike(id) {
             try {
-                const res = await fetch(`${API_BASE}/posts/${postId}/like`, { method: 'POST' });
+                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    const el = document.getElementById(`likes-${postId}`);
-                    const modalEl = document.getElementById('modal-likes');
-                    if (el) el.innerText = data.likes;
-                    if (modalEl) modalEl.innerText = data.likes;
+                    document.getElementById('like-count').innerText = data.likes;
+                    const p = currentPosts.find(x => x.id === id);
+                    if (p) p.likes = data.likes;
                 }
-            } catch (err) {
-                console.error(err);
-            }
+            } catch (e) {}
         }
 
-        async function handleComment(postId) {
-            const input = document.getElementById(`input-${postId}`);
-            const text = input.value.trim();
-            if (!text) return;
+        function renderComments(comments) {
+            const list = document.getElementById('comments-list');
+            if (!comments.length) {
+                list.innerHTML = `<p class="text-xs text-muted italic">No comments yet. Start the conversation.</p>`;
+                return;
+            }
+            list.innerHTML = comments.map(c => `
+                <div class="bg-stone-200/50 p-3 rounded-lg text-xs">
+                    <span class="font-semibold text-ink">${escapeHtml(c.user)}</span>
+                    <p class="text-stone-700 mt-1">${escapeHtml(c.text)}</p>
+                </div>
+            `).join('');
+        }
+
+        async function submitComment(e) {
+            e.preventDefault();
+            if (!activePostId) return;
+
+            const userVal = document.getElementById('comment-user').value.trim();
+            const textVal = document.getElementById('comment-text').value.trim();
 
             try {
-                const res = await fetch(`${API_BASE}/posts/${postId}/comment`, {
+                const res = await fetch(`${API_URL}/api/posts/${activePostId}/comment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user: 'Reader', text })
+                    body: JSON.stringify({ user: userVal, text: textVal })
                 });
                 const data = await res.json();
-
-                if (data.success && data.comments) {
-                    input.value = '';
-                    const listContainer = document.getElementById(`comments-list-${postId}`);
-                    const countEl = document.getElementById(`comments-count-${postId}`);
-
-                    if (countEl) countEl.innerText = data.comments.length;
-
-                    if (listContainer) {
-                        listContainer.innerHTML = data.comments.map(c => `
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">
-                                <strong class="text-slate-200">${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}
-                            </div>
-                        `).join('');
-                    }
+                if (data.success) {
+                    document.getElementById('comment-text').value = '';
+                    renderComments(data.comments);
+                    const p = currentPosts.find(x => x.id === activePostId);
+                    if (p) p.comments = data.comments;
                 }
-            } catch (err) {
-                console.error(err);
-            }
+            } catch (e) {}
         }
 
         function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function scrollToArticles() {
-            document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
-        }
+        window.onload = fetchPosts;
     </script>
 </body>
 </html>
