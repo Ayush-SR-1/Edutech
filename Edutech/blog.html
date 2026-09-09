@@ -290,8 +290,7 @@
 
         function renderEditorialLayout(posts) {
             const container = document.getElementById('feed-container');
-            const featured = posts[0];
-            const featuredComments = (featured.comments || []).length;
+            const featured = posts[posts.length - 1]; // Latest post as featured
 
             let html = `
                 <!-- Featured Entry -->
@@ -327,7 +326,7 @@
                     <div class="space-y-6">
             `;
 
-            posts.forEach((post, idx) => {
+            posts.slice().reverse().forEach((post, idx) => {
                 const num = String(idx + 1).padStart(2, '0');
                 html += `
                     <article class="bg-[#081014]/40 backdrop-blur-sm border border-cyan-950/60 p-6 rounded-xl hover:border-cyan-800/60 transition">
@@ -436,7 +435,7 @@
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('like-count').innerText = data.likes;
-                    const p = currentPosts.find(x => x.id === id);
+                    const p = currentPosts.find(x => x.id === activePostId);
                     if (p) p.likes = data.likes;
                 } else {
                     alert(data.message || "You have already liked this post.");
