@@ -78,7 +78,10 @@
                     <span class="text-cyan-900">•</span>
                     <h1 class="font-serif text-2xl font-semibold tracking-tight text-white">EduByte</h1>
                 </div>
-                <span class="text-xs uppercase tracking-widest text-muted font-medium">Tech & AI Insights</span>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleOwnerMode()" id="owner-badge" class="text-[10px] font-mono border border-cyan-900 text-slate-500 px-2 py-0.5 rounded hover:border-cyan-500 transition">Admin Mode</button>
+                    <span class="text-xs uppercase tracking-widest text-muted font-medium">Tech & AI Insights</span>
+                </div>
             </header>
 
             <main id="feed-container">
@@ -223,6 +226,43 @@
         let currentPosts = [];
         let activePostId = null;
 
+        // Header helper for owner key
+        function getHeaders() {
+            const headers = { 'Content-Type': 'application/json' };
+            const ownerKey = localStorage.getItem('edubyte_owner_key');
+            if (ownerKey) {
+                headers['x-owner-key'] = ownerKey;
+            }
+            return headers;
+        }
+
+        function toggleOwnerMode() {
+            const existingKey = localStorage.getItem('edubyte_owner_key');
+            if (existingKey) {
+                localStorage.removeItem('edubyte_owner_key');
+                alert("Owner mode disabled.");
+                updateOwnerBadge();
+            } else {
+                const key = prompt("Enter owner secret key:");
+                if (key) {
+                    localStorage.setItem('edubyte_owner_key', key);
+                    alert("Owner mode activated!");
+                    updateOwnerBadge();
+                }
+            }
+        }
+
+        function updateOwnerBadge() {
+            const badge = document.getElementById('owner-badge');
+            if (localStorage.getItem('edubyte_owner_key')) {
+                badge.innerText = "Admin: ACTIVE";
+                badge.className = "text-[10px] font-mono border border-emerald-500 text-emerald-400 px-2 py-0.5 rounded cursor-pointer";
+            } else {
+                badge.innerText = "Admin Mode";
+                badge.className = "text-[10px] font-mono border border-cyan-900 text-slate-500 px-2 py-0.5 rounded cursor-pointer hover:border-cyan-500 transition";
+            }
+        }
+
         function sanitizeBlogHtml(htmlStr) {
             if (!htmlStr) return '';
             return htmlStr
@@ -292,7 +332,6 @@
                             <span class="bg-cyan-950/80 border border-cyan-800/50 px-2.5 py-1 rounded-full text-cyan-200 font-sans">${featured.category}</span>
                         </div>
 
-                        <!-- Interactive Action Bar -->
                         <div class="flex items-center gap-2 font-mono text-xs">
                             <button onclick="inlineLike('${featured.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
                                 <span>❤️</span> <span id="feed-likes-${featured.id}">${featured.likes || 0}</span>
@@ -304,7 +343,6 @@
                         </div>
                     </div>
 
-                    <!-- Quick Comment Inline Drawer -->
                     <div id="quick-comment-box-${featured.id}" class="hidden mt-4 pt-4 border-t border-cyan-950/80">
                         <form onsubmit="submitQuickComment(event, '${featured.id}')" class="flex flex-col gap-2 bg-cyan-950/30 p-3 rounded-lg border border-cyan-900/40">
                             <input type="text" id="quick-user-${featured.id}" placeholder="Your name (optional)" class="bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
@@ -335,11 +373,9 @@
                             </div>
                         </div>
 
-                        <!-- Card Footer Controls -->
                         <div class="pt-4 mt-3 flex items-center justify-between border-t border-cyan-950/60 pl-12">
                             <span class="inline-block bg-cyan-950/60 border border-cyan-900/40 px-2.5 py-0.5 rounded-full text-xs text-cyan-300">${post.category}</span>
                             
-                            <!-- Interactive Buttons (Likes, Views, Comments) -->
                             <div class="flex items-center gap-2 font-mono text-xs">
                                 <button onclick="inlineLike('${post.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
                                     <span>❤️</span> <span id="feed-likes-${post.id}">${post.likes || 0}</span>
@@ -351,7 +387,6 @@
                             </div>
                         </div>
 
-                        <!-- Quick Comment Drawer -->
                         <div id="quick-comment-box-${post.id}" class="hidden pl-12 mt-3 pt-3 border-t border-cyan-950/60">
                             <form onsubmit="submitQuickComment(event, '${post.id}')" class="flex flex-col gap-2 bg-cyan-950/30 p-3 rounded-lg border border-cyan-900/40">
                                 <input type="text" id="quick-user-${post.id}" placeholder="Your name (optional)" class="bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
@@ -372,13 +407,18 @@
         async function inlineLike(id, event) {
             if (event) event.stopPropagation();
             try {
-                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { method: 'POST' });
+                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { 
+                    method: 'POST',
+                    headers: getHeaders()
+                });
                 const data = await res.json();
                 if (data.success) {
                     const el = document.getElementById(`feed-likes-${id}`);
                     if (el) el.innerText = data.likes;
                     const p = currentPosts.find(x => x.id === id);
                     if (p) p.likes = data.likes;
+                } else {
+                    alert(data.message || "You have already liked this post.");
                 }
             } catch (e) {}
         }
@@ -401,7 +441,7 @@
             try {
                 const res = await fetch(`${API_URL}/api/posts/${id}/comment`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getHeaders(),
                     body: JSON.stringify({ user: userVal, text: textVal })
                 });
                 const data = await res.json();
@@ -415,6 +455,8 @@
 
                     const box = document.getElementById(`quick-comment-box-${id}`);
                     if (box) box.classList.add('hidden');
+                } else {
+                    alert(data.message || "You have already commented on this post.");
                 }
             } catch (e) {}
         }
@@ -473,12 +515,17 @@
 
         async function handleLike(id) {
             try {
-                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { method: 'POST' });
+                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { 
+                    method: 'POST',
+                    headers: getHeaders()
+                });
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('like-count').innerText = data.likes;
                     const p = currentPosts.find(x => x.id === id);
                     if (p) p.likes = data.likes;
+                } else {
+                    alert(data.message || "You have already liked this post.");
                 }
             } catch (e) {}
         }
@@ -507,7 +554,7 @@
             try {
                 const res = await fetch(`${API_URL}/api/posts/${activePostId}/comment`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getHeaders(),
                     body: JSON.stringify({ user: userVal, text: textVal })
                 });
                 const data = await res.json();
@@ -516,6 +563,8 @@
                     renderComments(data.comments);
                     const p = currentPosts.find(x => x.id === activePostId);
                     if (p) p.comments = data.comments;
+                } else {
+                    alert(data.message || "You have already commented on this post.");
                 }
             } catch (e) {}
         }
@@ -532,7 +581,10 @@
             }
         };
 
-        window.onload = fetchPosts;
+        window.onload = () => {
+            updateOwnerBadge();
+            fetchPosts();
+        };
     </script>
 </body>
 </html>
