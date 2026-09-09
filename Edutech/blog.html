@@ -271,27 +271,48 @@
         function renderEditorialLayout(posts) {
             const container = document.getElementById('feed-container');
             const featured = posts[0];
+            const featuredComments = (featured.comments || []).length;
 
             let html = `
                 <!-- Featured Entry -->
-                <section class="mb-16 cursor-pointer group bg-[#081014]/60 backdrop-blur-md border border-cyan-900/40 p-8 rounded-2xl hover:border-cyan-600/60 transition shadow-xl" onclick="openFullArticle('${featured.id}')">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                        <span class="text-xs text-cyan-400 uppercase tracking-wider font-mono">Latest Entry</span>
+                <section class="mb-16 bg-[#081014]/60 backdrop-blur-md border border-cyan-900/40 p-8 rounded-2xl hover:border-cyan-600/60 transition shadow-xl">
+                    <div class="cursor-pointer group" onclick="openFullArticle('${featured.id}')">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                            <span class="text-xs text-cyan-400 uppercase tracking-wider font-mono">Latest Entry</span>
+                        </div>
+                        <h2 class="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight mb-4 text-white group-hover:text-cyan-300 transition">${featured.title}</h2>
+                        <p class="text-slate-300 text-lg font-serif italic mb-6 max-w-2xl">${cleanSnippetText(featured.snippet)}</p>
                     </div>
-                    <h2 class="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight mb-4 text-white group-hover:text-cyan-300 transition">${featured.title}</h2>
-                    <p class="text-slate-300 text-lg font-serif italic mb-6 max-w-2xl">${cleanSnippetText(featured.snippet)}</p>
-                    <div class="flex items-center justify-between text-xs text-muted pt-2 border-t border-cyan-950/80">
+                    
+                    <div class="flex items-center justify-between text-xs text-muted pt-4 border-t border-cyan-950/80">
                         <div class="flex items-center gap-3">
-                            <span class="text-cyan-400 font-medium">Read article →</span>
+                            <button onclick="openFullArticle('${featured.id}')" class="text-cyan-400 hover:underline font-medium">Read article →</button>
                             <span>•</span>
                             <span class="bg-cyan-950/80 border border-cyan-800/50 px-2.5 py-1 rounded-full text-cyan-200 font-sans">${featured.category}</span>
                         </div>
-                        <div class="flex items-center gap-4 font-mono text-xs text-slate-400">
-                            <span class="flex items-center gap-1">❤️ ${featured.likes || 0}</span>
-                            <span class="flex items-center gap-1">👁️ ${featured.views || 0}</span>
-                            <span class="flex items-center gap-1">💬 ${(featured.comments || []).length}</span>
+
+                        <!-- Interactive Action Bar -->
+                        <div class="flex items-center gap-2 font-mono text-xs">
+                            <button onclick="inlineLike('${featured.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
+                                <span>❤️</span> <span id="feed-likes-${featured.id}">${featured.likes || 0}</span>
+                            </button>
+                            <span class="text-slate-500 px-1">👁️ ${featured.views || 0}</span>
+                            <button onclick="toggleQuickComment('${featured.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
+                                <span>💬</span> <span id="feed-comments-count-${featured.id}">${featuredComments}</span>
+                            </button>
                         </div>
+                    </div>
+
+                    <!-- Quick Comment Inline Drawer -->
+                    <div id="quick-comment-box-${featured.id}" class="hidden mt-4 pt-4 border-t border-cyan-950/80">
+                        <form onsubmit="submitQuickComment(event, '${featured.id}')" class="flex flex-col gap-2 bg-cyan-950/30 p-3 rounded-lg border border-cyan-900/40">
+                            <input type="text" id="quick-user-${featured.id}" placeholder="Your name (optional)" class="bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                            <div class="flex gap-2">
+                                <input type="text" id="quick-text-${featured.id}" placeholder="Write a comment..." required class="flex-1 bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded text-xs transition">Send</button>
+                            </div>
+                        </form>
                     </div>
                 </section>
 
@@ -305,21 +326,40 @@
                 const num = String(idx + 1).padStart(2, '0');
                 const commentCount = (post.comments || []).length;
                 html += `
-                    <article class="flex gap-6 items-start group cursor-pointer bg-[#081014]/40 backdrop-blur-sm border border-cyan-950/60 p-6 rounded-xl hover:border-cyan-800/60 hover:bg-[#081014]/80 transition" onclick="openFullArticle('${post.id}')">
-                        <span class="font-serif text-cyan-500/60 text-lg md:text-xl font-light w-6 shrink-0">${num}</span>
-                        <div class="space-y-3 flex-1">
-                            <h4 class="font-serif text-2xl md:text-3xl font-semibold leading-snug text-white group-hover:text-cyan-300 transition">${post.title}</h4>
-                            <p class="text-slate-400 text-sm md:text-base font-serif italic">${cleanSnippetText(post.snippet)}</p>
-                            
-                            <div class="pt-2 flex items-center justify-between border-t border-cyan-950/60">
-                                <span class="inline-block bg-cyan-950/60 border border-cyan-900/40 px-2.5 py-0.5 rounded-full text-xs text-cyan-300">${post.category}</span>
-                                
-                                <div class="flex items-center gap-4 font-mono text-xs text-slate-400">
-                                    <span class="flex items-center gap-1" title="Likes">❤️ ${post.likes || 0}</span>
-                                    <span class="flex items-center gap-1" title="Views">👁️ ${post.views || 0}</span>
-                                    <span class="flex items-center gap-1" title="Comments">💬 ${commentCount}</span>
-                                </div>
+                    <article class="bg-[#081014]/40 backdrop-blur-sm border border-cyan-950/60 p-6 rounded-xl hover:border-cyan-800/60 transition">
+                        <div class="flex gap-6 items-start cursor-pointer group" onclick="openFullArticle('${post.id}')">
+                            <span class="font-serif text-cyan-500/60 text-lg md:text-xl font-light w-6 shrink-0">${num}</span>
+                            <div class="space-y-2 flex-1">
+                                <h4 class="font-serif text-2xl md:text-3xl font-semibold leading-snug text-white group-hover:text-cyan-300 transition">${post.title}</h4>
+                                <p class="text-slate-400 text-sm md:text-base font-serif italic">${cleanSnippetText(post.snippet)}</p>
                             </div>
+                        </div>
+
+                        <!-- Card Footer Controls -->
+                        <div class="pt-4 mt-3 flex items-center justify-between border-t border-cyan-950/60 pl-12">
+                            <span class="inline-block bg-cyan-950/60 border border-cyan-900/40 px-2.5 py-0.5 rounded-full text-xs text-cyan-300">${post.category}</span>
+                            
+                            <!-- Interactive Buttons (Likes, Views, Comments) -->
+                            <div class="flex items-center gap-2 font-mono text-xs">
+                                <button onclick="inlineLike('${post.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
+                                    <span>❤️</span> <span id="feed-likes-${post.id}">${post.likes || 0}</span>
+                                </button>
+                                <span class="text-slate-500 px-1">👁️ ${post.views || 0}</span>
+                                <button onclick="toggleQuickComment('${post.id}', event)" class="flex items-center gap-1.5 px-3 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/50 rounded-full text-cyan-200 transition">
+                                    <span>💬</span> <span id="feed-comments-count-${post.id}">${commentCount}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Comment Drawer -->
+                        <div id="quick-comment-box-${post.id}" class="hidden pl-12 mt-3 pt-3 border-t border-cyan-950/60">
+                            <form onsubmit="submitQuickComment(event, '${post.id}')" class="flex flex-col gap-2 bg-cyan-950/30 p-3 rounded-lg border border-cyan-900/40">
+                                <input type="text" id="quick-user-${post.id}" placeholder="Your name (optional)" class="bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                <div class="flex gap-2">
+                                    <input type="text" id="quick-text-${post.id}" placeholder="Write a comment..." required class="flex-1 bg-cyan-950/60 border border-cyan-900/60 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded text-xs transition">Send</button>
+                                </div>
+                            </form>
                         </div>
                     </article>
                 `;
@@ -327,6 +367,56 @@
 
             html += `</div></section>`;
             container.innerHTML = html;
+        }
+
+        async function inlineLike(id, event) {
+            if (event) event.stopPropagation();
+            try {
+                const res = await fetch(`${API_URL}/api/posts/${id}/like`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    const el = document.getElementById(`feed-likes-${id}`);
+                    if (el) el.innerText = data.likes;
+                    const p = currentPosts.find(x => x.id === id);
+                    if (p) p.likes = data.likes;
+                }
+            } catch (e) {}
+        }
+
+        function toggleQuickComment(id, event) {
+            if (event) event.stopPropagation();
+            const box = document.getElementById(`quick-comment-box-${id}`);
+            if (box) {
+                box.classList.toggle('hidden');
+            }
+        }
+
+        async function submitQuickComment(e, id) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const userVal = document.getElementById(`quick-user-${id}`).value.trim();
+            const textVal = document.getElementById(`quick-text-${id}`).value.trim();
+
+            try {
+                const res = await fetch(`${API_URL}/api/posts/${id}/comment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: userVal, text: textVal })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById(`quick-text-${id}`).value = '';
+                    const countEl = document.getElementById(`feed-comments-count-${id}`);
+                    if (countEl) countEl.innerText = data.comments.length;
+
+                    const p = currentPosts.find(x => x.id === id);
+                    if (p) p.comments = data.comments;
+
+                    const box = document.getElementById(`quick-comment-box-${id}`);
+                    if (box) box.classList.add('hidden');
+                }
+            } catch (e) {}
         }
 
         async function openFullArticle(id) {
