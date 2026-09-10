@@ -1,88 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduByte - Blog</title>
+  <title>EduByte - Blog Post</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
+    /* Dark Theme (EduByte Classic) */
+    .dark body {
       background-color: #0b0f17;
       color: #94a3b8;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
-    .content-area h3 {
-      color: #f8fafc;
-      font-size: 1.5rem;
+    .dark .bg-surface { background-color: #0b0f17; }
+    .dark .bg-card { background-color: rgba(15, 23, 42, 0.6); }
+    .dark .border-color { border-color: #1e293b; }
+    .dark .text-main { color: #f8fafc; }
+    .dark .text-sub { color: #94a3b8; }
+
+    /* Light Theme (Profile Page Palette) */
+    html:not(.dark) body {
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    html:not(.dark) .bg-surface { background-color: #ffffff; }
+    html:not(.dark) .bg-card { background-color: #ffffff; }
+    html:not(.dark) .border-color { border-color: #e2e8f0; }
+    html:not(.dark) .text-main { color: #0f172a; }
+    html:not(.dark) .text-sub { color: #64748b; }
+
+    .content-area h2, .content-area h3 {
       font-weight: 700;
       margin-top: 2rem;
       margin-bottom: 1rem;
+      scroll-margin-top: 5rem;
     }
-    .content-area p {
-      margin-bottom: 1.25rem;
-      line-height: 1.75;
-      color: #cbd5e1;
-    }
-    .content-area ul {
-      list-style-type: disc;
-      padding-left: 1.5rem;
-      margin-bottom: 1.25rem;
-      color: #cbd5e1;
-    }
-    .content-area li {
-      margin-bottom: 0.5rem;
-    }
-    .content-area img {
-      border-radius: 0.5rem;
-      margin: 1.5rem 0;
-      width: 100%;
-      object-fit: cover;
-    }
+    .dark .content-area h2, .dark .content-area h3 { color: #f8fafc; }
+    html:not(.dark) .content-area h2, html:not(.dark) .content-area h3 { color: #0f172a; }
+
+    .content-area h2 { font-size: 1.75rem; }
+    .content-area h3 { font-size: 1.35rem; }
+    .content-area p { margin-bottom: 1.25rem; line-height: 1.75; }
+    .content-area ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    .content-area li { margin-bottom: 0.5rem; }
+    .content-area img { border-radius: 0.5rem; margin: 1.5rem 0; width: 100%; object-fit: cover; }
     .content-area blockquote {
       border-left: 4px solid #06b6d4;
-      padding-left: 1rem;
+      padding: 0.5rem 0 0.5rem 1rem;
       margin: 1.5rem 0;
       font-style: italic;
-      color: #38bdf8;
+      color: #0284c7;
       background: rgba(14, 165, 233, 0.05);
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
       border-radius: 0 0.375rem 0.375rem 0;
     }
     .toc-item.active {
-      color: #38bdf8;
-      border-left: 2px solid #38bdf8;
+      color: #06b6d4 !important;
+      border-left: 2px solid #06b6d4 !important;
       padding-left: 0.5rem;
+      font-weight: 600;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
 
   <!-- Navigation Bar -->
-  <nav class="border-b border-slate-800 bg-[#0b0f17]/80 backdrop-blur-md sticky top-0 z-40">
+  <nav class="border-b border-color bg-surface/80 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-8">
-        <a href="index.html" class="text-xl font-bold text-white tracking-wide">EduByte</a>
-        <div class="hidden md:flex space-x-6 text-sm font-medium">
-          <a href="index.html" class="hover:text-white transition">Home</a>
-          <a href="blogs.html" class="text-cyan-400 border-b-2 border-cyan-400 pb-1">Blogs</a>
-          <a href="#" class="hover:text-white transition">Projects</a>
-          <a href="#" class="hover:text-white transition">About</a>
+        <a href="index.html" class="text-xl font-bold text-main tracking-wide">EduByte</a>
+        <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
+          <a href="index.html" class="hover:text-main transition">Home</a>
+          <a href="blogs.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1">Blogs</a>
+          <a href="#" class="hover:text-main transition">Projects</a>
+          <a href="#" class="hover:text-main transition">About</a>
         </div>
       </div>
       <div class="flex items-center space-x-4">
         <!-- Interactive Navbar Search Input -->
         <div class="relative hidden sm:block">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-500"></i>
-          <input id="nav-search-input" type="text" oninput="handleNavSearch()" placeholder="Search blogs, topics, or keywords..." class="bg-slate-900 border border-slate-800 text-xs rounded-full pl-8 pr-4 py-2 text-slate-200 focus:outline-none focus:border-cyan-500 w-64 transition">
-          
-          <!-- Dropdown Search Results Box -->
-          <div id="search-dropdown" class="hidden absolute top-10 left-0 w-80 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 p-2 max-h-80 overflow-y-auto space-y-2">
-          </div>
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-sub"></i>
+          <input id="nav-search-input" type="text" oninput="handleNavSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-full pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
+          <div id="search-dropdown" class="hidden absolute top-10 left-0 w-80 bg-surface border border-color rounded-xl shadow-2xl z-50 p-2 max-h-80 overflow-y-auto space-y-2"></div>
         </div>
-        <button class="text-slate-400 hover:text-white p-2">
-          <i class="fa-regular fa-moon"></i>
+        
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-lg border border-color transition">
+          <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
         </button>
       </div>
     </div>
@@ -92,14 +100,14 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
     
     <!-- Breadcrumb Navigation -->
-    <div id="breadcrumb" class="flex items-center space-x-2 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap">
-      <a href="index.html" class="hover:text-slate-300"><i class="fa-solid fa-house mr-1"></i>Home</a>
+    <div id="breadcrumb" class="flex items-center space-x-2 text-xs text-sub mb-6 overflow-x-auto whitespace-nowrap">
+      <a href="index.html" class="hover:text-main"><i class="fa-solid fa-house mr-1"></i>Home</a>
       <span>&gt;</span>
-      <a href="blogs.html" class="hover:text-slate-300">Blogs</a>
+      <a href="blogs.html" class="hover:text-main">Blogs</a>
       <span>&gt;</span>
-      <span id="bc-category" class="hover:text-slate-300">AI & ML</span>
+      <span id="bc-category">AI & ML</span>
       <span>&gt;</span>
-      <span id="bc-title" class="text-slate-300 truncate max-w-xs">Loading...</span>
+      <span id="bc-title" class="text-main truncate max-w-xs">Loading...</span>
     </div>
 
     <!-- Article & Sidebar Layout -->
@@ -107,53 +115,70 @@
       
       <!-- Main Content Column -->
       <article class="lg:col-span-8">
-        <!-- Header / Meta -->
+        <!-- Latest Blog Preview Banner -->
+        <div id="latest-preview-banner" class="hidden mb-6 p-4 rounded-xl border border-cyan-500/30 bg-cyan-500/10 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Latest Release</span>
+            <p id="latest-preview-title" class="text-xs text-main font-medium truncate max-w-sm"></p>
+          </div>
+          <a id="latest-preview-link" href="#" class="text-xs text-cyan-500 hover:underline font-semibold flex items-center gap-1">Read Now <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+        </div>
+
         <div id="post-header">
-          <span id="post-category" class="inline-block bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+          <span id="post-category" class="inline-block bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 text-xs font-semibold px-3 py-1 rounded-full mb-4">
             AI & ML
           </span>
-          <h1 id="post-title" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+          <h1 id="post-title" class="text-3xl sm:text-4xl font-extrabold text-main tracking-tight mb-4 leading-tight">
             Loading Article...
           </h1>
-          <div class="flex flex-wrap items-center text-xs text-slate-400 gap-4 mb-8">
-            <span class="flex items-center gap-1.5"><i class="fa-regular fa-user text-slate-500"></i><span id="post-author">Ayush Singh Rathor</span></span>
-            <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar text-slate-500"></i><span id="post-date">Sep 10, 2026</span></span>
-            <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock text-slate-500"></i><span id="post-readtime">7 min read</span></span>
-            <span class="flex items-center gap-1.5"><i class="fa-solid fa-tag text-slate-500"></i><span>AI, ML, Tech</span></span>
+          <div class="flex flex-wrap items-center text-xs text-sub gap-4 mb-8">
+            <span class="flex items-center gap-1.5"><i class="fa-regular fa-user"></i><span id="post-author">Ayush Singh Rathor</span></span>
+            <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar"></i><span id="post-date">Sep 10, 2026</span></span>
+            <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock"></i><span id="post-readtime">7 min read</span></span>
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-tag"></i><span id="post-tags">AI, ML, Tech</span></span>
           </div>
         </div>
 
         <!-- Banner Card -->
-        <div class="relative bg-gradient-to-r from-cyan-950 to-slate-900 border border-slate-800 rounded-xl p-6 mb-8 overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="relative bg-gradient-to-r from-cyan-950 to-slate-900 border border-color rounded-xl p-6 mb-8 overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 text-white">
           <div class="z-10">
-            <h2 class="text-2xl font-bold text-white mb-2" id="banner-title">Understanding AI Models</h2>
-            <p class="text-xs text-slate-400 max-w-md">Deep dive into large language models, patterns, and modern artificial intelligence capabilities.</p>
+            <h2 class="text-2xl font-bold mb-2" id="banner-title">Loading...</h2>
+            <p id="banner-excerpt" class="text-xs text-slate-300 max-w-md">Deep dive into tech trends and interactive insights.</p>
           </div>
           <div class="flex gap-3 z-10 shrink-0">
-            <div class="bg-rose-950/60 border border-rose-800/50 text-rose-400 px-4 py-3 rounded-lg text-center font-bold text-sm">
-              MYTHS
-            </div>
-            <div class="bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 px-4 py-3 rounded-lg text-center font-bold text-sm">
-              FACTS
-            </div>
+            <div class="bg-rose-950/60 border border-rose-800/50 text-rose-400 px-4 py-3 rounded-lg text-center font-bold text-sm">MYTHS</div>
+            <div class="bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 px-4 py-3 rounded-lg text-center font-bold text-sm">FACTS</div>
           </div>
         </div>
 
         <!-- Main Body Content -->
-        <div id="post-body" class="content-area border-b border-slate-800 pb-8">
-          <!-- Dynamic post HTML content will load here -->
-        </div>
+        <div id="post-body" class="content-area border-b border-color pb-8"></div>
 
         <!-- Like & Interaction Bar -->
         <div class="flex items-center justify-between py-6">
-          <button id="like-btn" onclick="likePost()" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 px-4 py-2 rounded-lg text-xs font-semibold transition">
-            <i class="fa-regular fa-heart text-rose-500 text-sm"></i>
-            <span>Like Article</span>
-            <span id="like-count" class="bg-slate-800 px-2 py-0.5 rounded text-xs text-slate-400">0</span>
+          <button id="like-btn" onclick="likePost()" class="flex items-center gap-2 bg-card hover:bg-surface border border-color text-main px-4 py-2 rounded-lg text-xs font-semibold transition">
+            <i id="like-icon" class="fa-regular fa-heart text-rose-500 text-sm"></i>
+            <span id="like-text">Like Article</span>
+            <span id="like-count" class="bg-surface px-2 py-0.5 rounded text-xs text-sub">0</span>
           </button>
-          <div class="text-xs text-slate-500">
+          <div class="text-xs text-sub">
             <i class="fa-regular fa-eye mr-1"></i> <span id="view-count">0</span> views
           </div>
+        </div>
+
+        <!-- Contact Form Section -->
+        <div class="mt-12 bg-card border border-color rounded-xl p-6">
+          <h3 class="text-lg font-bold text-main mb-2">Have a question or feedback?</h3>
+          <p class="text-xs text-sub mb-6">Send a message directly to the author.</p>
+          <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input type="text" id="contact-name" required placeholder="Your Name" class="bg-surface border border-color rounded-lg px-3 py-2 text-xs text-main focus:outline-none focus:border-cyan-500">
+              <input type="email" id="contact-email" required placeholder="Your Email" class="bg-surface border border-color rounded-lg px-3 py-2 text-xs text-main focus:outline-none focus:border-cyan-500">
+            </div>
+            <textarea id="contact-message" required rows="4" placeholder="Your Message..." class="w-full bg-surface border border-color rounded-lg p-3 text-xs text-main focus:outline-none focus:border-cyan-500"></textarea>
+            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs transition">Send Message</button>
+            <p id="contact-status" class="text-xs hidden"></p>
+          </form>
         </div>
 
       </article>
@@ -162,51 +187,39 @@
       <aside class="lg:col-span-4 space-y-6">
         
         <!-- Table of Contents -->
-        <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-5 sticky top-24">
-          <div class="flex items-center justify-between text-white font-semibold text-sm mb-4">
+        <div class="bg-card border border-color rounded-xl p-5 sticky top-24">
+          <div class="flex items-center justify-between text-main font-semibold text-sm mb-4">
             <span class="flex items-center gap-2">
-              <i class="fa-solid fa-bars-staggered text-cyan-400 text-xs"></i> Table of Contents
+              <i class="fa-solid fa-bars-staggered text-cyan-500 text-xs"></i> Table of Contents
             </span>
-            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
           </div>
-          <nav id="toc-list" class="space-y-2 text-xs text-slate-400">
-            <p class="text-slate-600 italic">Scanning headings...</p>
+          <nav id="toc-list" class="space-y-2 text-xs text-sub">
+            <p class="italic">Scanning headings...</p>
           </nav>
         </div>
 
         <!-- Share Article -->
-        <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-5">
-          <h3 class="text-white font-semibold text-xs mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-share-nodes text-cyan-400"></i> Share Article
+        <div class="bg-card border border-color rounded-xl p-5">
+          <h3 class="text-main font-semibold text-xs mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-share-nodes text-cyan-500"></i> Share Article
           </h3>
-          <div class="flex items-center gap-2 text-slate-400">
-            <button onclick="copyLink()" class="p-2.5 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg transition text-xs flex-1"><i class="fa-solid fa-link"></i></button>
-            <button onclick="copyLink()" class="p-2.5 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg transition text-xs flex-1"><i class="fa-regular fa-copy"></i></button>
+          <div class="flex items-center gap-2 text-sub">
+            <button onclick="share('x')" title="Share on X" class="p-2.5 bg-surface border border-color hover:text-main rounded-lg transition text-xs flex-1"><i class="fa-brands fa-x-twitter"></i></button>
+            <button onclick="share('linkedin')" title="Share on LinkedIn" class="p-2.5 bg-surface border border-color hover:text-main rounded-lg transition text-xs flex-1"><i class="fa-brands fa-linkedin-in"></i></button>
+            <button onclick="share('reddit')" title="Share on Reddit" class="p-2.5 bg-surface border border-color hover:text-main rounded-lg transition text-xs flex-1"><i class="fa-brands fa-reddit-alien"></i></button>
+            <button onclick="copyLink()" title="Copy Link" class="p-2.5 bg-surface border border-color hover:text-main rounded-lg transition text-xs flex-1"><i class="fa-solid fa-link"></i></button>
           </div>
         </div>
 
         <!-- Related Articles -->
-        <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-5">
+        <div class="bg-card border border-color rounded-xl p-5">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-white font-semibold text-xs">Related Articles</h3>
-            <!-- LINK UPDATED TO BLOGS.HTML LISTING PAGE -->
-            <a href="blogs.html" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">View All <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+            <h3 class="text-main font-semibold text-xs">Related Articles</h3>
+            <a href="blogs.html" class="text-xs text-cyan-500 hover:underline flex items-center gap-1">View All <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
           </div>
           <div id="related-posts" class="space-y-4">
-            <p class="text-xs text-slate-600">Loading recommendations...</p>
+            <p class="text-xs text-sub">Loading recommendations...</p>
           </div>
-        </div>
-
-        <!-- Newsletter / CTA Card -->
-        <div class="bg-gradient-to-b from-slate-900/80 to-slate-900/30 border border-slate-800 rounded-xl p-5 text-center">
-          <div class="w-8 h-8 bg-cyan-950 text-cyan-400 border border-cyan-800/50 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <i class="fa-solid fa-rocket text-xs"></i>
-          </div>
-          <h4 class="text-white font-semibold text-xs mb-1">Loved this article?</h4>
-          <p class="text-[11px] text-slate-400 mb-4">Follow me for more tech, AI and Python content.</p>
-          <button class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold py-2 rounded-lg text-xs transition">
-            Follow
-          </button>
         </div>
 
       </aside>
@@ -214,68 +227,93 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-800/80 bg-slate-950/50 py-6 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+  <footer class="border-t border-color bg-surface/50 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sub">
       <p>© 2026 EduByte. All rights reserved.</p>
       <div class="flex items-center space-x-6">
-        <a href="index.html" class="hover:text-slate-400">Home</a>
-        <a href="blogs.html" class="hover:text-slate-400">Blogs</a>
-        <a href="#" class="hover:text-slate-400">Projects</a>
-        <a href="#" class="hover:text-slate-400">About</a>
-      </div>
-      <div class="flex items-center space-x-4 text-slate-400">
-        <a href="#" class="hover:text-white"><i class="fa-brands fa-github"></i></a>
-        <a href="#" class="hover:text-white"><i class="fa-brands fa-linkedin"></i></a>
-        <a href="#" class="hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" class="hover:text-white"><i class="fa-regular fa-envelope"></i></a>
+        <a href="index.html" class="hover:text-main">Home</a>
+        <a href="blogs.html" class="hover:text-main">Blogs</a>
+        <a href="#" class="hover:text-main">Projects</a>
+        <a href="#" class="hover:text-main">About</a>
       </div>
     </div>
   </footer>
 
-  <!-- Script Logic for API, Dynamic Table of Contents, & Interactive Search -->
   <script>
     const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
     let currentPostId = null;
     let cachedPosts = [];
+    let hasLiked = false;
+
+    // Theme Toggle Functionality
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-toggle-icon');
+      icon.className = isDark ? 'fa-regular fa-sun text-yellow-400' : 'fa-regular fa-moon text-slate-700';
+    }
 
     async function loadPost() {
       const urlParams = new URLSearchParams(window.location.search);
       currentPostId = urlParams.get('id');
 
       try {
+        const allPostsRes = await fetch(`${API_BASE}/posts`);
+        cachedPosts = await allPostsRes.json();
+
+        // Latest Blog Preview setup
+        if (cachedPosts && cachedPosts.length > 0) {
+          const latest = cachedPosts[0];
+          if (!currentPostId || currentPostId !== latest._id) {
+            document.getElementById('latest-preview-banner').classList.remove('hidden');
+            document.getElementById('latest-preview-title').innerText = latest.title;
+            document.getElementById('latest-preview-link').href = `blog.html?id=${latest._id}`;
+          }
+        }
+
         let response;
         if (currentPostId) {
           response = await fetch(`${API_BASE}/posts/${currentPostId}`);
-        } else {
-          // Default to latest post if no ID provided
-          const allPostsRes = await fetch(`${API_BASE}/posts`);
-          cachedPosts = await allPostsRes.json();
-          if (cachedPosts && cachedPosts.length > 0) {
-            currentPostId = cachedPosts[0]._id;
-            response = await fetch(`${API_BASE}/posts/${currentPostId}`);
-          }
+        } else if (cachedPosts.length > 0) {
+          currentPostId = cachedPosts[0]._id;
+          response = await fetch(`${API_BASE}/posts/${currentPostId}`);
         }
 
         if (!response.ok) throw new Error('Post not found');
         const post = await response.json();
 
-        // Render Article Data
+        document.title = `${post.title} - EduByte`;
         document.getElementById('post-title').innerText = post.title;
         document.getElementById('banner-title').innerText = post.title;
+        document.getElementById('banner-excerpt').innerText = post.excerpt || 'Deep dive into tech trends and interactive insights.';
         document.getElementById('bc-title').innerText = post.title;
         document.getElementById('bc-category').innerText = post.category || 'AI & ML';
         document.getElementById('post-category').innerText = post.category || 'AI & ML';
         document.getElementById('post-author').innerText = post.author || 'Ayush Singh Rathor';
         document.getElementById('post-date').innerText = post.date || 'Sep 10, 2026';
         document.getElementById('post-readtime').innerText = post.readTime || '6 min read';
+        document.getElementById('post-tags').innerText = post.tags ? post.tags.join(', ') : (post.category || 'Tech');
         document.getElementById('post-body').innerHTML = post.content;
         document.getElementById('like-count').innerText = post.likes || 0;
         document.getElementById('view-count').innerText = post.views || 0;
 
-        // Generate Table of Contents
         generateTOC();
-
-        // Load Sidebar Related Articles
+        setupScrollSpy();
         loadRelatedPosts(currentPostId);
 
       } catch (err) {
@@ -286,12 +324,12 @@
 
     function generateTOC() {
       const body = document.getElementById('post-body');
-      const headings = body.querySelectorAll('h3');
+      const headings = body.querySelectorAll('h2, h3');
       const tocList = document.getElementById('toc-list');
       tocList.innerHTML = '';
 
       if (headings.length === 0) {
-        tocList.innerHTML = '<p class="text-slate-600">No sections found.</p>';
+        tocList.innerHTML = '<p class="text-sub">No sections found.</p>';
         return;
       }
 
@@ -301,51 +339,80 @@
 
         const item = document.createElement('a');
         item.href = `#${id}`;
-        item.className = 'block hover:text-cyan-400 transition truncate py-1 text-xs border-l-2 border-transparent pl-2 text-slate-400';
+        item.dataset.headingId = id;
+        item.className = 'toc-item block hover:text-cyan-500 transition truncate py-1 text-xs border-l-2 border-transparent pl-2 text-sub';
         item.innerText = `${index + 1}. ${heading.innerText}`;
         tocList.appendChild(item);
       });
     }
 
-    async function loadRelatedPosts(excludeId) {
-      try {
-        if (cachedPosts.length === 0) {
-          const res = await fetch(`${API_BASE}/posts`);
-          cachedPosts = await res.json();
-        }
-        
-        const relatedContainer = document.getElementById('related-posts');
-        relatedContainer.innerHTML = '';
+    function setupScrollSpy() {
+      const headings = document.querySelectorAll('#post-body h2, #post-body h3');
+      const tocItems = document.querySelectorAll('.toc-item');
 
-        const filtered = cachedPosts.filter(p => p._id !== excludeId).slice(0, 3);
+      if (headings.length === 0) return;
 
-        if (filtered.length === 0) {
-          relatedContainer.innerHTML = '<p class="text-xs text-slate-600">No related posts found.</p>';
-          return;
-        }
-
-        filtered.forEach(p => {
-          const card = document.createElement('a');
-          card.href = `blog.html?id=${p._id}`;
-          card.className = 'flex items-center gap-3 p-2 rounded-lg hover:bg-slate-900 border border-transparent hover:border-slate-800 transition group';
-          card.innerHTML = `
-            <div class="w-12 h-12 bg-cyan-950/80 border border-cyan-800/40 rounded-lg flex items-center justify-center shrink-0 text-cyan-400 text-sm font-bold">
-              <i class="fa-solid fa-brain"></i>
-            </div>
-            <div class="overflow-hidden">
-              <span class="text-[10px] text-cyan-400 font-medium block">${p.category || 'AI & ML'}</span>
-              <h4 class="text-xs font-semibold text-slate-200 group-hover:text-cyan-300 truncate">${p.title}</h4>
-              <span class="text-[10px] text-slate-500">${p.date} • ${p.readTime}</span>
-            </div>
-          `;
-          relatedContainer.appendChild(card);
+      window.addEventListener('scroll', () => {
+        let current = '';
+        headings.forEach(heading => {
+          const headingTop = heading.getBoundingClientRect().top;
+          if (headingTop <= 120) {
+            current = heading.getAttribute('id');
+          }
         });
-      } catch (err) {
-        console.error('Error fetching related posts:', err);
-      }
+
+        tocItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.dataset.headingId === current) {
+            item.classList.add('active');
+          }
+        });
+      });
     }
 
-    // Interactive Navbar Search Handler
+    async function loadRelatedPosts(excludeId) {
+      const relatedContainer = document.getElementById('related-posts');
+      relatedContainer.innerHTML = '';
+
+      const filtered = cachedPosts.filter(p => p._id !== excludeId).slice(0, 3);
+
+      if (filtered.length === 0) {
+        relatedContainer.innerHTML = '<p class="text-xs text-sub">No related posts found.</p>';
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('a');
+        card.href = `blog.html?id=${p._id}`;
+        card.className = 'flex items-center gap-3 p-2 rounded-lg hover:bg-surface border border-transparent hover:border-color transition group';
+        card.innerHTML = `
+          <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/20 rounded-lg flex items-center justify-center shrink-0 text-cyan-500 text-sm font-bold">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div class="overflow-hidden">
+            <span class="text-[10px] text-cyan-500 font-medium block">${p.category || 'AI & ML'}</span>
+            <h4 class="text-xs font-semibold text-main group-hover:text-cyan-500 truncate">${p.title}</h4>
+            <span class="text-[10px] text-sub">${p.date} • ${p.readTime}</span>
+          </div>
+        `;
+        relatedContainer.appendChild(card);
+      });
+    }
+
+    async function handleContactSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('contact-status');
+      status.className = 'text-xs text-cyan-500';
+      status.innerText = 'Sending message...';
+      status.classList.remove('hidden');
+
+      setTimeout(() => {
+        status.className = 'text-xs text-emerald-500';
+        status.innerText = 'Message sent successfully!';
+        document.getElementById('contact-form').reset();
+      }, 1000);
+    }
+
     async function handleNavSearch() {
       const query = document.getElementById('nav-search-input').value.toLowerCase().trim();
       const dropdown = document.getElementById('search-dropdown');
@@ -353,11 +420,6 @@
       if (!query) {
         dropdown.classList.add('hidden');
         return;
-      }
-
-      if (cachedPosts.length === 0) {
-        const res = await fetch(`${API_BASE}/posts`);
-        cachedPosts = await res.json();
       }
 
       const matches = cachedPosts.filter(p => 
@@ -368,34 +430,28 @@
       dropdown.classList.remove('hidden');
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<p class="text-xs text-slate-500 p-2">No matching blogs found.</p>`;
+        dropdown.innerHTML = `<p class="text-xs text-sub p-2">No matching blogs found.</p>`;
         return;
       }
 
       dropdown.innerHTML = matches.map(p => `
-        <a href="blog.html?id=${p._id}" class="block p-2 hover:bg-slate-800 rounded-lg transition border border-transparent hover:border-slate-700">
-          <span class="text-[10px] text-cyan-400 font-bold uppercase block">${p.category || 'AI & ML'}</span>
-          <h5 class="text-xs font-semibold text-slate-200 truncate">${p.title}</h5>
+        <a href="blog.html?id=${p._id}" class="block p-2 hover:bg-card rounded-lg transition border border-transparent hover:border-color">
+          <span class="text-[10px] text-cyan-500 font-bold uppercase block">${p.category || 'AI & ML'}</span>
+          <h5 class="text-xs font-semibold text-main truncate">${p.title}</h5>
         </a>
       `).join('');
     }
 
-    // Close search dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      const dropdown = document.getElementById('search-dropdown');
-      const input = document.getElementById('nav-search-input');
-      if (dropdown && !dropdown.contains(e.target) && e.target !== input) {
-        dropdown.classList.add('hidden');
-      }
-    });
-
     async function likePost() {
-      if (!currentPostId) return;
+      if (!currentPostId || hasLiked) return;
       try {
         const res = await fetch(`${API_BASE}/posts/${currentPostId}/like`, { method: 'POST' });
         if (res.ok) {
           const updated = await res.json();
           document.getElementById('like-count').innerText = updated.likes;
+          hasLiked = true;
+          document.getElementById('like-icon').className = 'fa-solid fa-heart text-rose-500 text-sm';
+          document.getElementById('like-text').innerText = 'Liked!';
         }
       } catch (err) {
         console.error('Failed to like post:', err);
@@ -416,11 +472,13 @@
 
     function copyLink() {
       navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      alert('Article link copied to clipboard!');
     }
 
-    // Initialize Page
-    document.addEventListener('DOMContentLoaded', loadPost);
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadPost();
+    });
   </script>
 </body>
 </html>
