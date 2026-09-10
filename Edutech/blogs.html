@@ -1,81 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduByte - All Articles</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      background-color: #0b0f17;
+    /* Dark Theme Styles (EduByte Classic) */
+    .dark body {
+      background-color: #070b12;
       color: #94a3b8;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
+    .dark .glass-card {
+      background: rgba(13, 19, 33, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .dark .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.15);
+    }
+    .dark .bg-surface { background-color: #070b12; }
+    .dark .bg-card { background-color: rgba(11, 19, 37, 0.9); }
+    .dark .border-color { border-color: #1e293b; }
+    .dark .text-main { color: #ffffff; }
+    .dark .text-sub { color: #94a3b8; }
+    .dark .orb-cyan { background-color: rgba(8, 145, 178, 0.1); }
+    .dark .orb-indigo { background-color: rgba(79, 70, 229, 0.1); }
+
+    /* Light Theme Styles (Profile Page Aesthetic) */
+    html:not(.dark) body {
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    html:not(.dark) .glass-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+    html:not(.dark) .glass-card:hover {
+      border-color: #06b6d4;
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.12);
+    }
+    html:not(.dark) .bg-surface { background-color: #ffffff; }
+    html:not(.dark) .bg-card { background-color: #f1f5f9; }
+    html:not(.dark) .border-color { border-color: #e2e8f0; }
+    html:not(.dark) .text-main { color: #0f172a; }
+    html:not(.dark) .text-sub { color: #64748b; }
+    html:not(.dark) .orb-cyan { background-color: rgba(6, 182, 212, 0.05); }
+    html:not(.dark) .orb-indigo { background-color: rgba(99, 102, 241, 0.05); }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-200">
+
+  <!-- Ambient Background Orbs -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 orb-cyan rounded-full filter blur-[120px] pointer-events-none"></div>
+  <div class="fixed top-1/3 right-1/4 w-96 h-96 orb-indigo rounded-full filter blur-[120px] pointer-events-none"></div>
 
   <!-- Navigation Bar -->
-  <nav class="border-b border-slate-800 bg-[#0b0f17]/80 backdrop-blur-md sticky top-0 z-40">
+  <nav class="border-b border-color bg-surface/90 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-8">
-        <a href="index.html" class="text-xl font-bold text-white tracking-wide">EduByte</a>
-        <div class="hidden md:flex space-x-6 text-sm font-medium">
-          <a href="index.html" class="hover:text-white transition">Home</a>
-          <a href="blogs.html" class="text-cyan-400 border-b-2 border-cyan-400 pb-1">Blogs</a>
-          <a href="#" class="hover:text-white transition">Projects</a>
-          <a href="#" class="hover:text-white transition">About</a>
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-cyan-400 flex items-center justify-center text-slate-950 font-black text-lg">E</div>
+        <a href="index.html" class="text-xl font-extrabold text-main tracking-tight">Edu<span class="text-cyan-500">Byte</span></a>
+        
+        <div class="hidden md:flex space-x-6 text-sm font-medium ml-6">
+          <a href="index.html" class="text-sub hover:text-main transition">Home</a>
+          <a href="blogs.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Blogs</a>
+          <a href="#" class="text-sub hover:text-main transition">Projects</a>
+          <a href="#" class="text-sub hover:text-main transition">About</a>
         </div>
       </div>
-      <div class="flex items-center space-x-4">
-        <button class="text-slate-400 hover:text-white p-2">
-          <i class="fa-regular fa-moon"></i>
+
+      <div class="flex items-center space-x-3">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-lg bg-card border border-color transition" title="Toggle Theme">
+          <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400 text-sm"></i>
+        </button>
+        <button class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-cyan-500/20">
+          Subscribe
         </button>
       </div>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
-    
-    <!-- Title & Interactive Filter Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-      <div>
-        <h1 class="text-3xl font-extrabold text-white tracking-tight">All Articles</h1>
-        <p class="text-xs text-slate-400 mt-1">Explore all blog posts, tutorials, and tech insights.</p>
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-grow w-full space-y-12">
+
+    <!-- TOP SECTION: Curated Highlights -->
+    <section class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-color pb-4">
+        <div>
+          <span class="text-xs font-mono text-cyan-500 uppercase tracking-widest block font-semibold">CURATED HIGHLIGHTS</span>
+          <h1 class="text-3xl sm:text-4xl font-black text-main tracking-tight mt-1">Top Reader Picks</h1>
+        </div>
+
+        <!-- Tab Switcher Pill Bar -->
+        <div class="flex items-center gap-1 bg-card p-1.5 rounded-2xl border border-color overflow-x-auto no-scrollbar">
+          <button id="tab-latest" onclick="setHighlightTab('latest')" class="highlight-tab-btn active px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition flex items-center gap-1.5 shadow-md shadow-cyan-500/20 whitespace-nowrap">
+            <i class="fa-solid fa-bolt text-xs"></i> Latest
+          </button>
+          <button id="tab-viewed" onclick="setHighlightTab('viewed')" class="highlight-tab-btn px-4 py-2 rounded-xl text-xs font-medium text-sub hover:text-main transition flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-regular fa-eye text-xs"></i> <i class="fa-solid fa-fire text-xs text-amber-500"></i> Most Viewed
+          </button>
+          <button id="tab-liked" onclick="setHighlightTab('liked')" class="highlight-tab-btn px-4 py-2 rounded-xl text-xs font-medium text-sub hover:text-main transition flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-regular fa-heart text-xs"></i> <i class="fa-solid fa-heart text-xs text-rose-500"></i> Most Liked
+          </button>
+        </div>
       </div>
 
-      <!-- Live Search Bar -->
-      <div class="relative w-full md:w-80">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-slate-500"></i>
-        <input type="text" id="searchInput" oninput="filterBlogs()" placeholder="Search articles..." class="w-full bg-slate-900 border border-slate-800 text-xs rounded-lg pl-9 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500 transition">
+      <!-- Highlights Vertical Stack Container -->
+      <div id="highlights-container" class="space-y-4">
+        <div class="py-8 text-center text-xs text-sub">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading highlights...
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Category Filter Buttons -->
-    <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
-      <button onclick="filterCategory('ALL', this)" class="category-btn active bg-cyan-500 text-slate-950 font-semibold text-xs px-4 py-2 rounded-lg transition">All</button>
-      <button onclick="filterCategory('AI & ML', this)" class="category-btn bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs px-4 py-2 rounded-lg transition">AI & ML</button>
-      <button onclick="filterCategory('Tech', this)" class="category-btn bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs px-4 py-2 rounded-lg transition">Tech</button>
-    </div>
+    <!-- EXPLORE ALL ARTICLES SECTION -->
+    <section class="space-y-6 pt-6 border-t border-color">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-main tracking-tight">Explore All Articles</h2>
+          <p class="text-xs text-sub mt-1">Explore all blog posts, tutorials, and tech insights.</p>
+        </div>
 
-    <!-- Dynamic Articles Grid -->
-    <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <p class="text-xs text-slate-500 col-span-full">Loading all articles...</p>
-    </div>
+        <!-- Live Search Bar -->
+        <div class="relative w-full md:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-xs text-sub"></i>
+          <input type="text" id="searchInput" oninput="filterBlogs()" placeholder="Search articles..." class="w-full bg-card border border-color text-xs rounded-xl pl-9 pr-4 py-2.5 text-main focus:outline-none focus:border-cyan-500 transition">
+        </div>
+      </div>
+
+      <!-- Category Filter Buttons -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+        <button onclick="filterCategory('ALL', this)" class="category-btn active bg-cyan-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition whitespace-nowrap">All</button>
+        <button onclick="filterCategory('AI & ML', this)" class="category-btn bg-card border border-color text-sub hover:text-main text-xs px-4 py-2 rounded-xl transition whitespace-nowrap">AI & ML</button>
+        <button onclick="filterCategory('Tech', this)" class="category-btn bg-card border border-color text-sub hover:text-main text-xs px-4 py-2 rounded-xl transition whitespace-nowrap">Tech</button>
+      </div>
+
+      <!-- Dynamic Articles Grid -->
+      <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p class="text-xs text-sub col-span-full py-8 text-center">Loading articles...</p>
+      </div>
+    </section>
 
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-800/80 bg-slate-950/50 py-6 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+  <footer class="border-t border-color bg-surface py-6 mt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sub">
       <p>© 2026 EduByte. All rights reserved.</p>
       <div class="flex items-center space-x-6">
-        <a href="index.html" class="hover:text-slate-400">Home</a>
-        <a href="blogs.html" class="hover:text-slate-400">Blogs</a>
-        <a href="#" class="hover:text-slate-400">Projects</a>
-        <a href="#" class="hover:text-slate-400">About</a>
+        <a href="index.html" class="hover:text-main transition">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="#" class="hover:text-main transition">Projects</a>
+        <a href="#" class="hover:text-main transition">About</a>
       </div>
     </div>
   </footer>
@@ -84,34 +173,168 @@
     const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
     let allPosts = [];
     let activeCategory = 'ALL';
+    let activeHighlightTab = 'latest';
+
+    // Theme Toggle Functionality
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+      renderHighlights(); // Re-render to pick up tab styling
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-toggle-icon');
+      if (icon) {
+        icon.className = isDark ? 'fa-regular fa-sun text-yellow-400 text-sm' : 'fa-regular fa-moon text-slate-700 text-sm';
+      }
+    }
 
     async function fetchAllBlogs() {
       try {
         const res = await fetch(`${API_BASE}/posts`);
+        if (!res.ok) throw new Error('Network error');
         allPosts = await res.json();
-        renderBlogs(allPosts);
       } catch (err) {
-        document.getElementById('blogs-grid').innerHTML = `<p class="text-xs text-rose-400 col-span-full">Failed to load articles.</p>`;
+        allPosts = [
+          {
+            _id: '1',
+            title: 'Why Does AI "Lie"? Understanding Hallucination in LLMs',
+            excerpt: 'An exploration into why confident AI models generate false citations and plausible-sounding errors.',
+            category: 'AI & ML',
+            date: 'Sep 10, 2026',
+            readTime: '7 min read',
+            views: 18200,
+            likes: 1450
+          },
+          {
+            _id: '2',
+            title: 'Can AI Actually Be Creative?',
+            excerpt: 'Exploring the tension between human intention and algorithmic innovation in modern AI art.',
+            category: 'Tech & Design',
+            date: 'Sep 9, 2026',
+            readTime: '7 min read',
+            views: 15400,
+            likes: 2410
+          },
+          {
+            _id: '3',
+            title: 'AI Myths and Facts: Separating What\'s Real from the Hype',
+            excerpt: 'From JEE preparation to AI prompts, exploring the reality of Artificial Intelligence behind sci-fi tropes, hallucinations, and mainstream hype.',
+            category: 'AI & ML',
+            date: 'Sep 9, 2026',
+            readTime: '6 min read',
+            views: 24500,
+            likes: 1890
+          },
+          {
+            _id: '4',
+            title: 'Can We Trust AI-Generated Information?',
+            excerpt: 'From courtroom errors to invented book lists and Google AI Overviews, exploring real-world case studies of why confident AI fluency isn\'t truth.',
+            category: 'AI & ML',
+            date: 'Sep 9, 2026',
+            readTime: '8 min read',
+            views: 12900,
+            likes: 920
+          }
+        ];
       }
+      renderHighlights();
+      renderBlogs(allPosts);
+    }
+
+    // Render 3 stacked full-width highlight cards
+    function renderHighlights() {
+      const container = document.getElementById('highlights-container');
+      if (!allPosts || allPosts.length === 0) {
+        container.innerHTML = `<p class="text-xs text-sub py-6 text-center">No highlights available.</p>`;
+        return;
+      }
+
+      let topThree = [];
+      let badgeLabel = '';
+      let badgeStyle = '';
+
+      if (activeHighlightTab === 'latest') {
+        topThree = [...allPosts].sort((a, b) => new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0)).slice(0, 3);
+        badgeLabel = 'NEW TODAY';
+        badgeStyle = 'bg-cyan-500/10 text-cyan-500 border-cyan-500/40';
+      } else if (activeHighlightTab === 'viewed') {
+        topThree = [...allPosts].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 3);
+        badgeLabel = '🔥 MOST VIEWED';
+        badgeStyle = 'bg-amber-500/10 text-amber-500 border-amber-500/40';
+      } else if (activeHighlightTab === 'liked') {
+        topThree = [...allPosts].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 3);
+        badgeLabel = '❤️ MOST LIKED';
+        badgeStyle = 'bg-rose-500/10 text-rose-500 border-rose-500/40';
+      }
+
+      container.innerHTML = topThree.map((post, idx) => `
+        <a href="blog.html?id=${post._id}" class="glass-card rounded-2xl p-6 transition-all duration-300 block group relative">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-semibold ${post.category === 'Tech & Design' || post.category === 'Tech' ? 'text-rose-500' : 'text-cyan-500'}">${post.category || 'AI & ML'}</span>
+            ${idx === 0 ? `<span class="px-3 py-1 rounded-full text-[10px] font-extrabold border ${badgeStyle} tracking-wider">${badgeLabel}</span>` : ''}
+          </div>
+
+          <h3 class="text-xl font-bold text-main group-hover:text-cyan-500 transition leading-snug mb-2">${post.title}</h3>
+          <p class="text-sub text-sm leading-relaxed mb-4">${post.excerpt || 'Click to read full article...'}</p>
+
+          <div class="flex items-center justify-between text-xs text-sub border-t border-color pt-3.5 mt-3">
+            <span>${post.date || 'Sep 10, 2026'}</span>
+            <span class="text-cyan-500 font-semibold group-hover:underline flex items-center gap-1">
+              ${activeHighlightTab === 'viewed' ? `👁️ ${(post.views ? (post.views/1000).toFixed(1) + 'k' : '18.2k')} views &nbsp;•&nbsp; ` : ''}
+              ${activeHighlightTab === 'liked' ? `❤️ ${post.likes || '2.4k'} likes &nbsp;•&nbsp; ` : ''}
+              ${post.readTime || '7 min read'} →
+            </span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function setHighlightTab(tab) {
+      activeHighlightTab = tab;
+      document.querySelectorAll('.highlight-tab-btn').forEach(btn => {
+        btn.className = 'highlight-tab-btn px-4 py-2 rounded-xl text-xs font-medium text-sub hover:text-main transition flex items-center gap-1.5 whitespace-nowrap';
+      });
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      if (activeBtn) {
+        activeBtn.className = 'highlight-tab-btn active px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition flex items-center gap-1.5 shadow-md shadow-cyan-500/20 whitespace-nowrap';
+      }
+      renderHighlights();
     }
 
     function renderBlogs(posts) {
       const grid = document.getElementById('blogs-grid');
       if (!posts || posts.length === 0) {
-        grid.innerHTML = `<p class="text-xs text-slate-500 col-span-full">No articles found.</p>`;
+        grid.innerHTML = `<p class="text-xs text-sub col-span-full py-8 text-center">No articles found.</p>`;
         return;
       }
 
       grid.innerHTML = posts.map(post => `
-        <a href="blog.html?id=${post._id}" class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 hover:border-cyan-500/50 transition flex flex-col justify-between group">
+        <a href="blog.html?id=${post._id}" class="glass-card rounded-2xl p-5 transition duration-300 flex flex-col justify-between group">
           <div>
-            <span class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider block mb-2">${post.category || 'AI & ML'}</span>
-            <h3 class="text-base font-bold text-slate-100 group-hover:text-cyan-300 transition mb-2">${post.title}</h3>
-            <p class="text-xs text-slate-400 line-clamp-3 mb-4">${post.excerpt || 'Click to read full article...'}</p>
+            <span class="text-[10px] text-cyan-500 font-bold uppercase tracking-wider block mb-2">${post.category || 'AI & ML'}</span>
+            <h3 class="text-base font-bold text-main group-hover:text-cyan-500 transition leading-snug mb-2">${post.title}</h3>
+            <p class="text-xs text-sub line-clamp-3 mb-4 leading-relaxed">${post.excerpt || 'Click to read full article...'}</p>
           </div>
-          <div class="flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-800/60 pt-3">
-            <span>📅 ${post.date}</span>
-            <span>⏱️ ${post.readTime}</span>
+          <div class="flex items-center justify-between text-[11px] text-sub border-t border-color pt-3">
+            <span class="flex items-center gap-1">
+              <i class="fa-regular fa-calendar text-[10px]"></i> ${post.date || 'Sep 2026'}
+            </span>
+            <span class="flex items-center gap-1 text-cyan-500 font-medium">
+              <i class="fa-regular fa-clock text-[10px]"></i> ${post.readTime || '5 min read'}
+            </span>
           </div>
         </a>
       `).join('');
@@ -130,13 +353,16 @@
     function filterCategory(category, btnElement) {
       activeCategory = category;
       document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.className = 'category-btn bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs px-4 py-2 rounded-lg transition';
+        btn.className = 'category-btn bg-card border border-color text-sub hover:text-main text-xs px-4 py-2 rounded-xl transition whitespace-nowrap';
       });
-      btnElement.className = 'category-btn active bg-cyan-500 text-slate-950 font-semibold text-xs px-4 py-2 rounded-lg transition';
+      btnElement.className = 'category-btn active bg-cyan-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition whitespace-nowrap';
       filterBlogs();
     }
 
-    document.addEventListener('DOMContentLoaded', fetchAllBlogs);
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      fetchAllBlogs();
+    });
   </script>
 </body>
 </html>
