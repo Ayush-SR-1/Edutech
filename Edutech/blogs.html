@@ -17,7 +17,7 @@
       darkMode: 'class',
     }
   </script>
-  <!-- Updated Font Awesome CDN to 6.5.2 -->
+  <!-- Font Awesome CDN 6.5.2 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     .dark body { background-color: #070b12; color: #94a3b8; }
@@ -64,7 +64,6 @@
         <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
           <a href="index.html" class="hover:text-main transition">Home</a>
           <a href="blogs.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Blogs</a>
-          <a href="#" class="hover:text-main transition">Projects</a>
           <a href="#" class="hover:text-main transition">About</a>
         </div>
       </div>
@@ -166,37 +165,47 @@
         title: "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models",
         excerpt: "An exploration into why confident AI models generate false citations, made-up facts, and plausible-sounding errors—and how to handle them.",
         category: "AI & ML",
-        date: "Sep 10, 2026",
+        date: "Aug 30, 2026",
         readTime: "7 min read",
         views: 18200,
         likes: 1450,
-        createdAt: "2026-09-10T10:00:00.000Z"
+        createdAt: "2026-08-30T10:00:00.000Z"
       },
       {
         _id: 'sample-2',
         title: "AI Myths and Facts: Separating What's Real from the Hype",
         excerpt: "From JEE preparation to AI prompts, exploring the reality of Artificial Intelligence behind sci-fi tropes, hallucinations, and mainstream hype.",
         category: "AI & ML",
-        date: "Sep 9, 2026",
+        date: "Aug 27, 2026",
         readTime: "6 min read",
         views: 24500,
         likes: 1890,
-        createdAt: "2026-09-09T10:00:00.000Z"
+        createdAt: "2026-08-27T10:00:00.000Z"
       },
       {
         _id: 'sample-3',
         title: "Can We Trust AI-Generated Information?",
         excerpt: "From courtroom errors to invented book lists and Google AI Overviews, exploring real-world case studies of why confident AI fluency isn't the same as truth.",
         category: "AI & ML",
-        date: "Sep 9, 2026",
+        date: "Sep 2, 2026",
         readTime: "8 min read",
         views: 12900,
         likes: 920,
-        createdAt: "2026-09-09T08:00:00.000Z"
+        createdAt: "2026-09-02T08:00:00.000Z"
+      },
+      {
+        _id: 'sample-4',
+        title: "Can AI Actually Be Creative?",
+        excerpt: "Exploring neural networks, generative art, music synthesis, and whether statistical pattern matching constitutes true human-like creativity.",
+        category: "AI & ML",
+        date: "Sep 5, 2026",
+        readTime: "7 min read",
+        views: 15400,
+        likes: 1120,
+        createdAt: "2026-09-05T10:00:00.000Z"
       }
     ];
 
-    // Pre-seed allPosts with static fallback array for 0ms immediate render
     let allPosts = staticFallbackPosts;
 
     function isAdmin() {
@@ -264,11 +273,9 @@
     }
 
     async function loadBlogsPage() {
-      // 1. Immediate 0ms static render (no waiting for API)
       renderHighlights();
       renderArticles(allPosts);
 
-      // 2. Non-blocking background fetch with 5s timeout for live updates
       try {
         const res = await fetchWithTimeout(`${API_BASE}/posts`, 5000);
         if (res.ok) {
