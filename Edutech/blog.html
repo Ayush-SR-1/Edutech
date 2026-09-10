@@ -501,9 +501,21 @@
         } catch (e) {}
       }
 
+      const DATE_OVERRIDES = {
+        "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models": "Aug 30, 2026",
+        "Why Does AI \"Lie\"? Understanding Hallucination in LLMs": "Aug 30, 2026",
+        "AI Myths and Facts: Separating What's Real from the Hype": "Aug 27, 2026",
+        "Can We Trust AI-Generated Information?": "Sep 2, 2026",
+        "Can AI Actually Be Creative?": "Sep 5, 2026"
+      };
+
       if (!post) {
         post = cachedPosts.find(p => p._id === currentPostId) || cachedPosts[0];
         currentPostId = post._id;
+      }
+
+      if (post && post.title && DATE_OVERRIDES[post.title.trim()]) {
+        post.date = DATE_OVERRIDES[post.title.trim()];
       }
 
       document.title = `${post.title} - EduByte`;
@@ -738,6 +750,7 @@
       }
 
       filtered.forEach(p => {
+        const displayDate = DATE_OVERRIDES[p.title ? p.title.trim() : ''] || p.date || 'Sep 2026';
         const card = document.createElement('a');
         card.href = `blog.html?id=${p._id}`;
         card.className = 'flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface border border-transparent hover:border-color transition group';
@@ -748,7 +761,7 @@
           <div class="overflow-hidden">
             <span class="text-[10px] text-cyan-500 font-bold uppercase block">${p.category || 'AI & ML'}</span>
             <h4 class="text-xs font-bold text-main group-hover:text-cyan-500 truncate">${p.title}</h4>
-            <span class="text-[10px] text-sub">${p.date || 'Sep 2026'} • ${p.readTime || '5 min'}</span>
+            <span class="text-[10px] text-sub">${displayDate} • ${p.readTime || '5 min'}</span>
           </div>
         `;
         relatedContainer.appendChild(card);

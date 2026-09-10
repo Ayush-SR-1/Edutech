@@ -206,7 +206,26 @@
       }
     ];
 
-    let allPosts = staticFallbackPosts;
+    const DATE_OVERRIDES = {
+      "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models": "Aug 30, 2026",
+      "Why Does AI \"Lie\"? Understanding Hallucination in LLMs": "Aug 30, 2026",
+      "AI Myths and Facts: Separating What's Real from the Hype": "Aug 27, 2026",
+      "Can We Trust AI-Generated Information?": "Sep 2, 2026",
+      "Can AI Actually Be Creative?": "Sep 5, 2026"
+    };
+
+    function normalizePosts(posts) {
+      if (!posts) return [];
+      return posts.map(p => {
+        const titleKey = p.title ? p.title.trim() : '';
+        if (DATE_OVERRIDES[titleKey]) {
+          return { ...p, date: DATE_OVERRIDES[titleKey] };
+        }
+        return p;
+      });
+    }
+
+    let allPosts = normalizePosts(staticFallbackPosts);
 
     function isAdmin() {
       return localStorage.getItem('edubyte_admin_mode') === 'true';
@@ -273,6 +292,7 @@
     }
 
     async function loadBlogsPage() {
+      allPosts = normalizePosts(allPosts);
       renderHighlights();
       renderArticles(allPosts);
 
@@ -281,7 +301,7 @@
         if (res.ok) {
           const livePosts = await res.json();
           if (livePosts && livePosts.length > 0) {
-            allPosts = livePosts;
+            allPosts = normalizePosts(livePosts);
             renderHighlights();
             renderArticles(allPosts);
           }
