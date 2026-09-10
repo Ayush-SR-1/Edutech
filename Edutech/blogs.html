@@ -32,6 +32,13 @@
     html:not(.dark) .border-color { border-color: #e2e8f0; }
     html:not(.dark) .text-main { color: #0f172a; }
     html:not(.dark) .text-sub { color: #475569; }
+
+    .tab-btn.active {
+      background-color: #06b6d4;
+      color: #020617;
+      font-weight: 700;
+      border-color: #06b6d4;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
@@ -72,19 +79,36 @@
       <p class="text-sub text-sm max-w-xl">Deep dives into Artificial Intelligence, software patterns, prompt engineering, and computing concepts.</p>
     </div>
 
-    <!-- Highlights Section -->
-    <section class="space-y-4">
-      <h2 class="text-lg font-bold text-main flex items-center gap-2">
-        <i class="fa-solid fa-star text-amber-400 text-sm"></i> Featured Highlights
-      </h2>
-      <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub">
+    <!-- Highlights Section (Latest, Most Liked, Most Viewed) -->
+    <section class="space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-color pb-4">
+        <h2 class="text-lg font-bold text-main flex items-center gap-2">
+          <i class="fa-solid fa-fire text-amber-400 text-sm"></i> Highlights
+        </h2>
+
+        <!-- Tab Filters for Highlights -->
+        <div class="flex items-center gap-2 bg-card p-1 rounded-xl border border-color">
+          <button id="tab-latest" onclick="switchHighlightTab('latest')" class="tab-btn active text-xs px-3 py-1.5 rounded-lg transition border border-transparent">
+            <i class="fa-solid fa-clock text-[10px] mr-1"></i> Latest
+          </button>
+          <button id="tab-liked" onclick="switchHighlightTab('liked')" class="tab-btn text-xs px-3 py-1.5 rounded-lg transition border border-transparent text-sub">
+            <i class="fa-solid fa-heart text-[10px] mr-1 text-rose-500"></i> Most Liked
+          </button>
+          <button id="tab-viewed" onclick="switchHighlightTab('viewed')" class="tab-btn text-xs px-3 py-1.5 rounded-lg transition border border-transparent text-sub">
+            <i class="fa-solid fa-eye text-[10px] mr-1 text-cyan-400"></i> Most Viewed
+          </button>
+        </div>
+      </div>
+
+      <!-- Highlights Grid (Up to 3 cards) -->
+      <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub col-span-3">
           Loading highlights...
         </div>
       </div>
     </section>
 
-    <!-- Filter and Search Controls -->
+    <!-- Filter and Search Controls for All Articles -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-card p-4 rounded-2xl border border-color">
       <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
         <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950">All</button>
@@ -97,11 +121,11 @@
       </div>
     </div>
 
-    <!-- Articles Grid -->
+    <!-- All Articles Grid -->
     <section class="space-y-4">
       <h2 class="text-lg font-bold text-main">All Articles</h2>
       <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub">
+        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub col-span-full">
           Loading articles...
         </div>
       </div>
@@ -125,8 +149,8 @@
     const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
     let allPosts = [];
     let currentCategory = 'All';
+    let currentHighlightTab = 'latest';
 
-    // Instant timeout helper to ensure fallback triggers without hanging
     const fetchWithTimeout = (url, timeoutMs = 2000) => 
       Promise.race([
         fetch(url),
@@ -142,29 +166,39 @@
         date: "Sep 10, 2026",
         readTime: "6 min read",
         views: 18200,
-        featured: true
+        likes: 342,
+        createdAt: "2026-09-10T10:00:00.000Z"
       },
       {
         _id: 'sample-2',
         title: "Why Does AI \"Lie\"? Understanding Hallucination in LLMs",
         excerpt: "An in-depth look into token probabilities, training datasets, and why modern generative models generate false statements.",
         category: "AI & ML",
-        date: "Sep 10, 2026",
+        date: "Sep 09, 2026",
         readTime: "7 min read",
-        views: 12400,
-        featured: true
+        views: 24500,
+        likes: 512,
+        createdAt: "2026-09-09T10:00:00.000Z"
       },
       {
         _id: 'sample-3',
         title: "Can AI Actually Be Creative?",
         excerpt: "Evaluating algorithmic output vs human originality in design, composition, and natural language synthesis.",
         category: "Tech & Design",
-        date: "Sep 09, 2026",
+        date: "Sep 08, 2026",
         readTime: "5 min read",
         views: 9800,
-        featured: false
+        likes: 189,
+        createdAt: "2026-09-08T10:00:00.000Z"
       }
     ];
+
+    function formatViews(views) {
+      const num = Number(views);
+      if (isNaN(num)) return '0';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+      return num.toString();
+    }
 
     function initTheme() {
       const savedTheme = localStorage.getItem('theme');
@@ -197,37 +231,72 @@
           allPosts = await res.json();
         }
       } catch (err) {
-        console.warn('API connection timed out or failed. Falling back to local content instantly.');
+        console.warn('API connection timed out or failed. Falling back to static data.');
       }
 
       if (!allPosts || allPosts.length === 0) {
         allPosts = staticFallbackPosts;
       }
 
-      renderHighlights(allPosts);
+      renderHighlights();
       renderArticles(allPosts);
     }
 
-    function renderHighlights(posts) {
-      const container = document.getElementById('highlights-container');
-      const featured = posts.filter(p => p.featured || p._id === 'sample-1' || p._id === 'sample-2').slice(0, 2);
+    function switchHighlightTab(tab) {
+      currentHighlightTab = tab;
+      
+      const tabs = ['latest', 'liked', 'viewed'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === tab) {
+          btn.className = 'tab-btn active text-xs px-3 py-1.5 rounded-lg transition border border-transparent';
+        } else {
+          btn.className = 'tab-btn text-xs px-3 py-1.5 rounded-lg transition border border-transparent text-sub hover:text-main';
+        }
+      });
 
-      if (featured.length === 0) {
-        container.innerHTML = '<p class="text-xs text-sub">No highlights available.</p>';
+      renderHighlights();
+    }
+
+    function renderHighlights() {
+      const container = document.getElementById('highlights-container');
+      let sortedPosts = [...allPosts];
+
+      if (currentHighlightTab === 'latest') {
+        sortedPosts.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+      } else if (currentHighlightTab === 'liked') {
+        sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+      } else if (currentHighlightTab === 'viewed') {
+        sortedPosts.sort((a, b) => (b.views || 0) - (a.views || 0));
+      }
+
+      // Limit to 3 posts maximum
+      const top3 = sortedPosts.slice(0, 3);
+
+      if (top3.length === 0) {
+        container.innerHTML = '<div class="col-span-3 text-xs text-sub p-4 border border-color rounded-2xl bg-card">No highlight posts available.</div>';
         return;
       }
 
-      container.innerHTML = featured.map(p => `
-        <a href="blog.html?id=${p._id}" class="group block p-6 rounded-2xl bg-card border border-color hover:border-cyan-500/50 transition duration-300 relative overflow-hidden">
-          <div class="flex items-center justify-between mb-3">
-            <span class="bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">${p.category || 'AI & ML'}</span>
-            <span class="text-[10px] text-sub">${p.readTime || '5 min'}</span>
+      container.innerHTML = top3.map((p, idx) => `
+        <a href="blog.html?id=${p._id}" class="group flex flex-col justify-between p-6 rounded-2xl bg-card border border-color hover:border-cyan-500/50 transition duration-300 relative overflow-hidden">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">${p.category || 'AI & ML'}</span>
+              <span class="text-[10px] text-amber-400 font-bold flex items-center gap-1">
+                #${idx + 1} ${currentHighlightTab.toUpperCase()}
+              </span>
+            </div>
+            <h3 class="text-base font-bold text-main group-hover:text-cyan-400 transition mb-2 line-clamp-2">${p.title}</h3>
+            <p class="text-xs text-sub line-clamp-2 mb-4 leading-relaxed">${p.excerpt || ''}</p>
           </div>
-          <h3 class="text-lg font-bold text-main group-hover:text-cyan-400 transition mb-2">${p.title}</h3>
-          <p class="text-xs text-sub line-clamp-2 mb-4 leading-relaxed">${p.excerpt || ''}</p>
-          <div class="flex items-center justify-between text-[11px] text-sub pt-2 border-t border-color">
-            <span>${p.date || 'Sep 2026'}</span>
-            <span class="text-cyan-500 font-bold group-hover:translate-x-1 transition flex items-center gap-1">Read Post <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
+
+          <div class="pt-3 border-t border-color flex items-center justify-between text-[11px] text-sub">
+            <span class="flex items-center gap-3">
+              <span><i class="fa-regular fa-heart text-rose-500"></i> ${p.likes || 0}</span>
+              <span><i class="fa-regular fa-eye text-cyan-400"></i> ${formatViews(p.views || 0)}</span>
+            </span>
+            <span class="text-cyan-500 font-bold group-hover:translate-x-1 transition flex items-center gap-1">Read <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
           </div>
         </a>
       `).join('');
