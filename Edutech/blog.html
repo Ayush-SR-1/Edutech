@@ -145,7 +145,7 @@
             Loading Article...
           </h1>
 
-          <!-- Author Byline Bar -->
+          <!-- Author Byline Bar (With Direct Mailto Link) -->
           <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-card border border-color">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center text-slate-950 font-bold text-sm shadow-md shadow-cyan-500/20">
@@ -154,6 +154,9 @@
               <div>
                 <h4 id="post-author" class="text-sm font-bold text-main">Ayush Singh Rathor</h4>
                 <p class="text-xs text-sub">B.Tech CSE (AI & ML), VIT</p>
+                <a href="mailto:ayushsinghrathor18@gmail.com" class="text-xs text-cyan-400 hover:underline flex items-center gap-1 mt-0.5">
+                  <i class="fa-regular fa-envelope text-[11px]"></i> ayushsinghrathor18@gmail.com
+                </a>
               </div>
             </div>
 
@@ -333,16 +336,25 @@
 
       let post = null;
 
+      // Promise timeout helper (5 seconds)
+      const timeout = (ms) => new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Backend timeout - auto fallback trigger')), ms)
+      );
+
       try {
-        const allPostsRes = await fetch(`${API_BASE}/posts`);
+        const allPostsRes = await Promise.race([
+          fetch(`${API_BASE}/posts`),
+          timeout(5000)
+        ]);
+
         if (allPostsRes.ok) {
           cachedPosts = await allPostsRes.json();
         }
       } catch (e) {
-        console.warn('Backend API unreachable, using sample post data for preview');
+        console.warn('Backend API slow or sleeping, loaded local fallback sample data instantly.');
       }
 
-      // Sample post fallback if backend is offline or no post returned
+      // Sample post fallback if backend is sleeping or returns empty
       if (!cachedPosts || cachedPosts.length === 0) {
         cachedPosts = [
           {
@@ -411,7 +423,10 @@
 
       if (currentPostId) {
         try {
-          const response = await fetch(`${API_BASE}/posts/${currentPostId}`);
+          const response = await Promise.race([
+            fetch(`${API_BASE}/posts/${currentPostId}`),
+            timeout(5000)
+          ]);
           if (response.ok) post = await response.json();
         } catch (e) {}
       }
