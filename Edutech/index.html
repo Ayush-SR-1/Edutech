@@ -1,111 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayush Singh Rathor — Developer & Creator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cream: '#F7F4EE',
-                        ink: '#1C1917',
-                        terracotta: '#B85032',
-                        muted: '#78716C'
-                    },
-                    fontFamily: {
-                        serif: ['Newsreader', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { 
-            background-color: #F7F4EE; 
-            color: #1C1917; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            /* Subtle fine-grid paper texture matching the image */
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-            background-size: 12px 12px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayush Singh Rathor - Developer, Explorer & Writer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f7f4ed;
+      color: #2b2623;
+      font-family: 'Georgia', serif;
+      background-image: radial-gradient(#e2dcd2 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .text-sans {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .btn-primary {
+      background-color: #c25732;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: #a84725;
+    }
+    .accent-color {
+      color: #c25732;
+    }
+    .border-card {
+      border: 1px solid #e2dcd2;
+    }
+  </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-stone-300 selection:text-black">
+<body class="min-h-screen flex flex-col justify-between p-6 sm:p-12 md:p-20">
 
-    <div class="max-w-3xl mx-auto px-6 py-12 md:py-20 w-full flex-1 flex flex-col justify-center">
-        <!-- Main Hero Profile Section -->
-        <main class="space-y-8">
-            <div class="text-center space-y-3">
-                <span class="text-xs uppercase tracking-widest text-muted font-medium block">
-                    EVERYDAY INSIGHTS & ENGINEERING
-                </span>
-                <h1 class="font-serif text-5xl md:text-7xl font-semibold tracking-tight text-ink">
-                    Ayush Singh Rathor
-                </h1>
-                
-                <div class="flex items-center justify-center gap-4 py-2">
-                    <span class="h-[1px] w-12 bg-stone-400"></span>
-                    <span class="text-xs uppercase tracking-wider font-semibold text-terracotta">
-                        DEVELOPER, EXPLORER & WRITER
-                    </span>
-                    <span class="h-[1px] w-12 bg-stone-400"></span>
-                </div>
-            </div>
+  <!-- Header Banner -->
+  <main class="max-w-4xl mx-auto w-full space-y-12 my-auto">
+    
+    <!-- Hero Title Section -->
+    <section class="text-center space-y-4">
+      <span class="text-xs uppercase tracking-widest text-sans text-stone-500 font-semibold">Everyday Insights & Engineering</span>
+      <h1 class="text-4xl sm:text-6xl font-normal text-stone-900 tracking-tight">
+        Ayush Singh Rathor
+      </h1>
+      <div class="flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-sans accent-color font-bold">
+        <span class="w-8 h-[1px] bg-amber-800/40"></span>
+        DEVELOPER, EXPLORER & WRITER
+        <span class="w-8 h-[1px] bg-amber-800/40"></span>
+      </div>
+      <p class="italic text-stone-600 text-lg sm:text-xl max-w-2xl mx-auto pt-4 leading-relaxed">
+        Building digital experiences, exploring artificial intelligence, and sharing tech knowledge.
+      </p>
+      
+      <!-- Primary Blog Button -->
+      <div class="pt-4">
+        <a href="blog.html" class="inline-block btn-primary text-sans text-sm font-semibold px-6 py-3 rounded-xl shadow-md transition-all hover:shadow-lg">
+          Read EduByte Blog
+        </a>
+      </div>
+    </section>
 
-            <hr class="border-stone-800 border-t my-8" />
+    <!-- Content & Connect Cards Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sans pt-8">
+      
+      <!-- Publication Card -->
+      <div class="bg-white/80 backdrop-blur-sm border-card rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:border-amber-700/40 transition">
+        <div>
+          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">
+            <span>Publication</span>
+            <a href="blog.html" class="accent-color hover:underline flex items-center gap-1">Explore &rarr;</a>
+          </div>
+          <h3 class="text-2xl font-bold accent-color font-serif">EduByte</h3>
+          <p class="text-sm text-stone-600 italic mt-2 leading-relaxed">
+            Everyday insights on technology, AI breakdowns, and tech simplified.
+          </p>
+        </div>
+      </div>
 
-            <p class="text-stone-700 font-serif text-xl md:text-2xl italic text-center leading-relaxed max-w-2xl mx-auto">
-                Building digital experiences, exploring artificial intelligence, and sharing tech knowledge.
-            </p>
+      <!-- Social Links & Email Card -->
+      <div class="bg-white/80 backdrop-blur-sm border-card rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:border-amber-700/40 transition">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Connect</span>
+          <h3 class="text-2xl font-bold text-stone-800 font-serif mt-1 mb-4">Social Links</h3>
+          <div class="flex flex-wrap items-center gap-3 text-sm font-medium accent-color">
+            <a href="https://github.com/ayush-sr-1" target="_blank" class="hover:underline">GitHub</a>
+            <span class="text-stone-300">•</span>
+            <a href="https://linkedin.com" target="_blank" class="hover:underline">LinkedIn</a>
+            <span class="text-stone-300">•</span>
+            <a href="mailto:ayushsinghrathor18@gmail.com" class="hover:underline font-semibold">Email</a>
+          </div>
+        </div>
+      </div>
 
-            <!-- Primary Navigation to EduByte Blog -->
-            <div class="pt-4 flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="blog.html" class="w-full sm:w-auto text-center bg-terracotta hover:bg-[#A04328] text-white font-medium px-8 py-3 rounded-md transition shadow-sm font-sans text-sm">
-                    Read EduByte Blog
-                </a>
-            </div>
+    </section>
+  </main>
 
-            <!-- Quick Links Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 border-t border-stone-300">
-                <a href="blog.html" class="group p-6 rounded-lg bg-[#FAF8F5] border border-stone-300 hover:border-terracotta transition shadow-sm">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-mono uppercase tracking-wider text-terracotta">Publication</span>
-                        <span class="text-xs text-muted group-hover:text-terracotta transition">Explore →</span>
-                    </div>
-                    <h2 class="font-serif text-2xl text-ink font-semibold group-hover:text-terracotta transition mb-1">EduByte</h2>
-                    <p class="text-sm text-stone-600 font-serif italic">Everyday insights on technology, AI breakdowns, and tech simplified.</p>
-                </a>
-
-                <div class="p-6 rounded-lg bg-[#FAF8F5] border border-stone-300 shadow-sm">
-                    <span class="text-xs font-mono uppercase tracking-wider text-muted block mb-2">Connect</span>
-                    <h2 class="font-serif text-2xl text-ink font-semibold mb-2">Social Links</h2>
-                    <div class="flex gap-4 text-sm text-terracotta font-medium pt-1">
-                        <a href="https://github.com/Ayush-SR-1" target="_blank" rel="noopener noreferrer" class="hover:underline">GitHub</a>
-                        <span class="text-stone-400">•</span>
-                        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:underline">LinkedIn</a>
-                        <span class="text-stone-400">•</span>
-                        <a href="mailto:contact@example.com" class="hover:underline">Email</a>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Footer -->
-    <footer class="max-w-3xl mx-auto px-6 py-8 w-full border-t border-stone-300 flex justify-between items-center text-xs text-muted font-sans">
-        <span>© 2026 Ayush Singh Rathor</span>
-        <span>EduByte Connected</span>
-    </footer>
+  <!-- Footer -->
+  <footer class="max-w-4xl mx-auto w-full pt-12 border-t border-stone-300/60 flex items-center justify-between text-xs text-sans text-stone-500">
+    <p>© 2026 Ayush Singh Rathor</p>
+    <p class="font-medium text-stone-600">EduByte Connected</p>
+  </footer>
 
 </body>
 </html>
