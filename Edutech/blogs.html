@@ -17,7 +17,7 @@
       darkMode: 'class',
     }
   </script>
-  <!-- Updated Font Awesome CDN to 6.5.2 to support fa-x-twitter -->
+  <!-- Updated Font Awesome CDN to 6.5.2 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     .dark body { background-color: #070b12; color: #94a3b8; }
@@ -75,9 +75,6 @@
         </button>
 
         <!-- Social Icons -->
-        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="text-sub hover:text-main p-2 transition" aria-label="X (Twitter)">
-          <i class="fa-brands fa-x-twitter text-base"></i>
-        </a>
         <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="text-sub hover:text-main p-2 transition" aria-label="GitHub">
           <i class="fa-brands fa-github text-base"></i>
         </a>
@@ -114,11 +111,7 @@
       </div>
 
       <!-- Highlights Stacked List Container -->
-      <div id="highlights-container" class="space-y-4">
-        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub">
-          Loading picks...
-        </div>
-      </div>
+      <div id="highlights-container" class="space-y-4"></div>
     </section>
 
     <!-- Search Controls -->
@@ -137,11 +130,7 @@
     <!-- Articles Section -->
     <section class="space-y-4">
       <h2 class="text-lg font-bold text-main">All Articles</h2>
-      <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl bg-card border border-color animate-pulse text-xs text-sub col-span-full">
-          Loading articles...
-        </div>
-      </div>
+      <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
   </main>
@@ -153,8 +142,8 @@
       <div class="flex items-center space-x-6">
         <a href="index.html" class="hover:text-main transition">Home</a>
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
-        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5">
-          <i class="fa-brands fa-x-twitter"></i> Twitter / X
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5">
+          <i class="fa-brands fa-github"></i> GitHub
         </a>
       </div>
     </div>
@@ -162,11 +151,10 @@
 
   <script>
     const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
-    let allPosts = [];
     let currentCategory = 'All';
     let currentHighlightTab = 'latest';
 
-    const fetchWithTimeout = (url, timeoutMs = 2500) => 
+    const fetchWithTimeout = (url, timeoutMs = 5000) => 
       Promise.race([
         fetch(url),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Network Timeout')), timeoutMs))
@@ -180,8 +168,8 @@
         category: "AI & ML",
         date: "Sep 10, 2026",
         readTime: "7 min read",
-        views: 5,
-        likes: 120,
+        views: 18200,
+        likes: 1450,
         createdAt: "2026-09-10T10:00:00.000Z"
       },
       {
@@ -191,8 +179,8 @@
         category: "AI & ML",
         date: "Sep 9, 2026",
         readTime: "6 min read",
-        views: 36,
-        likes: 342,
+        views: 24500,
+        likes: 1890,
         createdAt: "2026-09-09T10:00:00.000Z"
       },
       {
@@ -202,11 +190,14 @@
         category: "AI & ML",
         date: "Sep 9, 2026",
         readTime: "8 min read",
-        views: 1,
-        likes: 95,
+        views: 12900,
+        likes: 920,
         createdAt: "2026-09-09T08:00:00.000Z"
       }
     ];
+
+    // Pre-seed allPosts with static fallback array for 0ms immediate render
+    let allPosts = staticFallbackPosts;
 
     function isAdmin() {
       return localStorage.getItem('edubyte_admin_mode') === 'true';
@@ -273,21 +264,24 @@
     }
 
     async function loadBlogsPage() {
-      try {
-        const res = await fetchWithTimeout(`${API_BASE}/posts`, 2500);
-        if (res.ok) {
-          allPosts = await res.json();
-        }
-      } catch (err) {
-        console.warn('API connection timed out or failed. Falling back to static data.');
-      }
-
-      if (!allPosts || allPosts.length === 0) {
-        allPosts = staticFallbackPosts;
-      }
-
+      // 1. Immediate 0ms static render (no waiting for API)
       renderHighlights();
       renderArticles(allPosts);
+
+      // 2. Non-blocking background fetch with 5s timeout for live updates
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/posts`, 5000);
+        if (res.ok) {
+          const livePosts = await res.json();
+          if (livePosts && livePosts.length > 0) {
+            allPosts = livePosts;
+            renderHighlights();
+            renderArticles(allPosts);
+          }
+        }
+      } catch (err) {
+        console.warn('API connection timed out or failed. Displayed static backup.');
+      }
     }
 
     function switchHighlightTab(tab) {
