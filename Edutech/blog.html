@@ -274,13 +274,15 @@
           </nav>
         </div>
 
-        <!-- Share Box (LinkedIn, Reddit, Copy Link) -->
+        <!-- Connect & Share Box (With Direct Official Profile Link) -->
         <div class="bg-card border border-color rounded-2xl p-5 shadow-lg">
           <h3 class="text-main font-bold text-xs mb-3 border-b border-color pb-3 flex items-center gap-2">
-            <i class="fa-solid fa-share-nodes text-cyan-500"></i> Share Article
+            <i class="fa-solid fa-share-nodes text-cyan-500"></i> Connect & Share
           </h3>
           <div class="flex items-center gap-2 text-sub">
-            <button onclick="share('linkedin')" title="Share on LinkedIn" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1 flex items-center justify-center gap-1.5"><i class="fa-brands fa-linkedin-in text-sm"></i> <span>LinkedIn</span></button>
+            <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1 flex items-center justify-center gap-1.5">
+              <i class="fa-brands fa-linkedin-in text-sm"></i> <span>LinkedIn</span>
+            </a>
             <button onclick="share('reddit')" title="Share on Reddit" class="p-2.5 bg-surface border border-color hover:text-amber-400 rounded-xl transition text-xs flex-1 flex items-center justify-center gap-1.5"><i class="fa-brands fa-reddit-alien text-sm"></i> <span>Reddit</span></button>
             <button id="copy-btn" onclick="copyLink()" title="Copy Link" class="p-2.5 bg-surface border border-color hover:text-main rounded-xl transition text-xs flex-1 flex items-center justify-center gap-1.5"><i id="copy-icon" class="fa-solid fa-link text-sm"></i> <span id="copy-label">Copy</span></button>
           </div>
@@ -787,7 +789,7 @@
       const text = encodeURIComponent(document.getElementById('post-title').innerText);
       let shareUrl = '';
 
-      if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/`;
       if (platform === 'reddit') shareUrl = `https://reddit.com/submit?url=${url}&title=${text}`;
 
       if (shareUrl) window.open(shareUrl, '_blank');
