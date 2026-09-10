@@ -88,14 +88,14 @@
 
         <!-- Segmented Control Switcher -->
         <div class="flex items-center p-1.5 bg-[#0b1322] border border-cyan-500/20 rounded-2xl w-fit">
-          <button id="tab-latest" onclick="switchHighlightTab('latest')" class="tab-btn text-xs px-4 py-2 font-medium flex items-center gap-2">
+          <button id="tab-latest" onclick="switchHighlightTab('latest')" class="tab-btn active text-xs px-4 py-2 font-medium flex items-center gap-2">
             <i class="fa-solid fa-clock text-[11px]"></i> Latest
           </button>
-          <button id="tab-viewed" onclick="switchHighlightTab('viewed')" class="tab-btn active text-xs px-4 py-2 font-medium flex items-center gap-2">
+          <button id="tab-viewed" onclick="switchHighlightTab('viewed')" class="tab-btn text-xs px-4 py-2 font-medium flex items-center gap-2">
             <i class="fa-solid fa-fire text-[11px]"></i> Most Viewed
           </button>
           <button id="tab-liked" onclick="switchHighlightTab('liked')" class="tab-btn text-xs px-4 py-2 font-medium flex items-center gap-2">
-            <i class="fa-regular fa-heart text-[11px]"></i> Most Liked
+            <i class="fa-solid fa-heart text-[11px]"></i> Most Liked
           </button>
         </div>
       </div>
@@ -149,9 +149,9 @@
     const API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
     let allPosts = [];
     let currentCategory = 'All';
-    let currentHighlightTab = 'viewed';
+    let currentHighlightTab = 'latest';
 
-    const fetchWithTimeout = (url, timeoutMs = 2000) => 
+    const fetchWithTimeout = (url, timeoutMs = 2500) => 
       Promise.race([
         fetch(url),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Network Timeout')), timeoutMs))
@@ -160,44 +160,44 @@
     const staticFallbackPosts = [
       {
         _id: 'sample-1',
+        title: "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models",
+        excerpt: "An exploration into why confident AI models generate false citations, made-up facts, and plausible-sounding errors—and how to handle them.",
+        category: "AI & ML",
+        date: "Sep 10, 2026",
+        readTime: "7 min read",
+        views: 5,
+        likes: 120,
+        createdAt: "2026-09-10T10:00:00.000Z"
+      },
+      {
+        _id: 'sample-2',
         title: "AI Myths and Facts: Separating What's Real from the Hype",
         excerpt: "From JEE preparation to AI prompts, exploring the reality of Artificial Intelligence behind sci-fi tropes, hallucinations, and mainstream hype.",
         category: "AI & ML",
         date: "Sep 9, 2026",
         readTime: "6 min read",
-        views: 24500,
+        views: 36,
         likes: 342,
         createdAt: "2026-09-09T10:00:00.000Z"
       },
       {
-        _id: 'sample-2',
-        title: "Why Does AI \"Lie\"? Understanding Hallucination in LLMs",
-        excerpt: "An exploration into why confident AI models generate false citations and plausible-sounding errors.",
-        category: "AI & ML",
-        date: "Sep 10, 2026",
-        readTime: "7 min read",
-        views: 18200,
-        likes: 512,
-        createdAt: "2026-09-10T10:00:00.000Z"
-      },
-      {
         _id: 'sample-3',
-        title: "Can AI Actually Be Creative?",
-        excerpt: "Exploring the tension between human intention and algorithmic innovation in modern AI art.",
-        category: "Tech & Design",
+        title: "Can We Trust AI-Generated Information?",
+        excerpt: "From courtroom errors to invented book lists and Google AI Overviews, exploring real-world case studies of why confident AI fluency isn't the same as truth.",
+        category: "AI & ML",
         date: "Sep 9, 2026",
-        readTime: "7 min read",
-        views: 15400,
-        likes: 189,
+        readTime: "8 min read",
+        views: 1,
+        likes: 95,
         createdAt: "2026-09-09T08:00:00.000Z"
       }
     ];
 
-    function formatViews(views) {
-      const num = Number(views);
-      if (isNaN(num)) return '0';
-      if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-      return num.toString();
+    function formatCount(num) {
+      const n = Number(num);
+      if (isNaN(n)) return '0';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+      return n.toString();
     }
 
     function initTheme() {
@@ -279,9 +279,18 @@
 
       container.innerHTML = top3.map((p, idx) => {
         let badgeLabel = '';
-        if (currentHighlightTab === 'viewed') badgeLabel = '🔥 MOST VIEWED';
-        else if (currentHighlightTab === 'liked') badgeLabel = '❤️ MOST LIKED';
-        else badgeLabel = '✨ LATEST';
+        let badgeStyle = '';
+
+        if (currentHighlightTab === 'viewed') {
+          badgeLabel = '🔥 MOST VIEWED';
+          badgeStyle = 'bg-amber-500/10 border-amber-500/30 text-amber-400';
+        } else if (currentHighlightTab === 'liked') {
+          badgeLabel = '❤️ MOST LIKED';
+          badgeStyle = 'bg-rose-500/10 border-rose-500/30 text-rose-400';
+        } else {
+          badgeLabel = '✨ LATEST';
+          badgeStyle = 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400';
+        }
 
         const categoryClass = p.category === 'Tech & Design' ? 'text-rose-400' : 'text-cyan-400';
 
@@ -290,7 +299,7 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold ${categoryClass}">${p.category || 'AI & ML'}</span>
               ${idx === 0 ? `
-                <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wider">
+                <span class="border ${badgeStyle} text-[10px] font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wider">
                   ${badgeLabel}
                 </span>
               ` : ''}
@@ -300,9 +309,11 @@
             <p class="text-xs sm:text-sm text-slate-400 line-clamp-2 mb-6 font-normal leading-relaxed">${p.excerpt || ''}</p>
 
             <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
-              <span>${p.date || 'Sep 9, 2026'}</span>
-              <span class="flex items-center gap-1.5 font-medium text-cyan-400 group-hover:translate-x-1 transition">
-                <i class="fa-regular fa-eye"></i> ${formatViews(p.views || 0)} views • ${p.readTime || '6 min read'} →
+              <span>${p.date || 'Sep 10, 2026'}</span>
+              <span class="flex items-center gap-2 font-medium text-cyan-400 group-hover:translate-x-1 transition">
+                <span><i class="fa-regular fa-eye text-cyan-400 mr-1"></i>${formatCount(p.views || 0)} views</span> • 
+                <span><i class="fa-solid fa-heart text-rose-500 mr-1"></i>${formatCount(p.likes || 0)} likes</span> • 
+                <span>${p.readTime || '7 min read'} →</span>
               </span>
             </div>
           </a>
