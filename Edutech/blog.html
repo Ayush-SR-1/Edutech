@@ -27,6 +27,15 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      emailjs.init("oMXLPbQJQYfYxT4Gv");
+    })();
+  </script>
+
   <style>
     /* Dark Theme */
     .dark body {
@@ -227,7 +236,7 @@
           </form>
 
           <div id="comments-list" class="space-y-4 border-t border-color pt-4">
-            <!-- Comments will be injected dynamically -->
+            <!-- Comments rendered dynamically -->
           </div>
         </div>
 
@@ -244,7 +253,7 @@
             </div>
             <textarea id="contact-message" required rows="4" placeholder="Your Message..." class="w-full bg-surface border border-color rounded-xl p-4 text-xs text-main focus:outline-none focus:border-cyan-500"></textarea>
             <button type="submit" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-md shadow-cyan-400/20">Send Message</button>
-            <p id="contact-status" class="text-xs hidden"></p>
+            <p id="contact-status" class="text-xs hidden mt-2"></p>
           </form>
         </div>
 
@@ -630,6 +639,44 @@
       } catch (e) {}
     }
 
+    async function handleContactSubmit(e) {
+      e.preventDefault();
+      
+      const status = document.getElementById('contact-status');
+      if (status) {
+        status.className = 'text-xs text-cyan-500 font-medium mt-2';
+        status.innerText = 'Sending message...';
+        status.classList.remove('hidden');
+      }
+
+      const name = document.getElementById('contact-name')?.value || '';
+      const email = document.getElementById('contact-email')?.value || '';
+      const message = document.getElementById('contact-message')?.value || '';
+
+      const templateParams = {
+        name: name,
+        email: email,
+        from_email: email,
+        message: message
+      };
+
+      try {
+        await emailjs.send('service_61b05at', 'template_dglndds', templateParams);
+        
+        if (status) {
+          status.className = 'text-xs text-emerald-400 font-bold mt-2';
+          status.innerText = 'Message sent successfully!';
+        }
+        document.getElementById('contact-form')?.reset();
+      } catch (error) {
+        console.error('EmailJS Error:', error);
+        if (status) {
+          status.className = 'text-xs text-rose-400 font-bold mt-2';
+          status.innerText = 'Failed to send message. Please try again.';
+        }
+      }
+    }
+
     function generateTOC() {
       const body = document.getElementById('post-body');
       const headings = body.querySelectorAll('h2, h3');
@@ -705,20 +752,6 @@
         `;
         relatedContainer.appendChild(card);
       });
-    }
-
-    async function handleContactSubmit(e) {
-      e.preventDefault();
-      const status = document.getElementById('contact-status');
-      status.className = 'text-xs text-cyan-500 font-medium';
-      status.innerText = 'Sending message...';
-      status.classList.remove('hidden');
-
-      setTimeout(() => {
-        status.className = 'text-xs text-emerald-500 font-bold';
-        status.innerText = 'Message sent successfully!';
-        document.getElementById('contact-form').reset();
-      }, 1000);
     }
 
     async function handleNavSearch() {
