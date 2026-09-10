@@ -242,7 +242,7 @@
             <i class="fa-solid fa-share-nodes text-cyan-500"></i> Share Article
           </h3>
           <div class="flex items-center gap-2 text-sub">
-            <button onclick="share('x')" title="Share on X" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-x-twitter"></i></button>
+            <button onclick="share('x')" title="Share on X" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-x-twitter fa-brands fa-twitter"></i></button>
             <button onclick="share('linkedin')" title="Share on LinkedIn" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-linkedin-in"></i></button>
             <button onclick="share('reddit')" title="Share on Reddit" class="p-2.5 bg-surface border border-color hover:text-amber-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-reddit-alien"></i></button>
             <button id="copy-btn" onclick="copyLink()" title="Copy Link" class="p-2.5 bg-surface border border-color hover:text-main rounded-xl transition text-xs flex-1"><i id="copy-icon" class="fa-solid fa-link"></i> <span id="copy-label">Copy</span></button>
@@ -282,6 +282,16 @@
     let currentPostId = null;
     let cachedPosts = [];
     let hasLiked = false;
+
+    // View Count Formatting Helper
+    function formatViews(views) {
+      const num = Number(views);
+      if (isNaN(num)) return '18.2k';
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
+      }
+      return num.toString();
+    }
 
     // Reading Progress Bar handler
     window.addEventListener('scroll', () => {
@@ -423,7 +433,7 @@
       document.getElementById('post-readtime').innerText = post.readTime || '6 min read';
       document.getElementById('post-body').innerHTML = post.content || '';
       document.getElementById('like-count').innerText = post.likes || 142;
-      document.getElementById('view-count').innerText = (post.views ? (post.views/1000).toFixed(1) + 'k' : '18.2k');
+      document.getElementById('view-count').innerText = formatViews(post.views ?? 18200);
 
       generateTOC();
       setupScrollSpy();
