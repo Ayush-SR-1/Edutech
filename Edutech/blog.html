@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduByte - Blog Post</title>
+  
+  <!-- SEO & Basic Meta Tags -->
+  <meta name="description" content="EduByte Blog - Deep dives into Artificial Intelligence, Machine Learning, software engineering trends, and interactive tech insights by Ayush Singh Rathor.">
+  
+  <!-- Open Graph / Social Link Previews -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ayush-sr-1.github.io/Edutech/blog.html">
+  <meta property="og:title" content="EduByte Blog - Tech Insights & AI Breakdowns">
+  <meta property="og:description" content="Exploring AI myths, LLMs, prompt engineering, and software development with Ayush Singh Rathor.">
+  <meta property="og:image" content="https://ayush-sr-1.github.io/Edutech/preview.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EduByte Blog - Tech Insights">
+  <meta name="twitter:description" content="Exploring AI myths, LLMs, prompt engineering, and software development.">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -12,7 +28,7 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Dark Theme (EduByte Classic) */
+    /* Dark Theme */
     .dark body {
       background-color: #070b12;
       color: #94a3b8;
@@ -94,14 +110,12 @@
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <!-- Interactive Navbar Search Input -->
         <div class="relative hidden sm:block">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
           <input id="nav-search-input" type="text" oninput="handleNavSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
           <div id="search-dropdown" class="hidden absolute top-11 left-0 w-80 bg-surface border border-color rounded-xl shadow-2xl z-50 p-2 max-h-80 overflow-y-auto space-y-2"></div>
         </div>
         
-        <!-- Theme Toggle Button -->
         <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
         </button>
@@ -112,7 +126,7 @@
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
     
-    <!-- Breadcrumb Navigation -->
+    <!-- Breadcrumb -->
     <div id="breadcrumb" class="flex items-center space-x-2 text-xs text-sub mb-6 overflow-x-auto whitespace-nowrap">
       <a href="index.html" class="hover:text-main"><i class="fa-solid fa-house mr-1"></i>Home</a>
       <span>&gt;</span>
@@ -126,9 +140,8 @@
     <!-- Article & Sidebar Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      <!-- Main Content Column -->
+      <!-- Content Column -->
       <article class="lg:col-span-8 space-y-6">
-        <!-- Latest Blog Preview Banner -->
         <div id="latest-preview-banner" class="hidden p-4 rounded-xl border border-cyan-500/30 bg-cyan-500/10 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <span class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Latest Release</span>
@@ -145,7 +158,7 @@
             Loading Article...
           </h1>
 
-          <!-- Author Byline Bar (With Direct Mailto Link) -->
+          <!-- Author Byline -->
           <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-card border border-color">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center text-slate-950 font-bold text-sm shadow-md shadow-cyan-500/20">
@@ -180,7 +193,7 @@
           </div>
         </div>
 
-        <!-- Key Takeaway Summary Box -->
+        <!-- Key Takeaway -->
         <div class="p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 space-y-1">
           <div class="flex items-center gap-2 font-bold text-sm">
             <i class="fa-solid fa-lightbulb text-cyan-400"></i> Key Takeaway
@@ -190,10 +203,10 @@
           </p>
         </div>
 
-        <!-- Main Body Content -->
+        <!-- Article Body -->
         <div id="post-body" class="content-area border-b border-color pb-8 space-y-6"></div>
 
-        <!-- Like & Interaction Bar -->
+        <!-- Interaction Bar -->
         <div class="flex items-center justify-between py-6 bg-card px-6 rounded-2xl border border-color">
           <button id="like-btn" onclick="likePost()" class="flex items-center gap-2 bg-surface hover:bg-cyan-500/10 border border-color text-main px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
             <i id="like-icon" class="fa-regular fa-heart text-rose-500 text-sm"></i>
@@ -205,7 +218,7 @@
           </div>
         </div>
 
-        <!-- Contact Form Section -->
+        <!-- Contact Form -->
         <div class="mt-10 bg-card border border-color rounded-2xl p-6 sm:p-8 space-y-4">
           <div>
             <h3 class="text-lg font-bold text-main">Have a question or feedback?</h3>
@@ -239,20 +252,20 @@
           </nav>
         </div>
 
-        <!-- Share Article -->
+        <!-- Share Box -->
         <div class="bg-card border border-color rounded-2xl p-5 shadow-lg">
           <h3 class="text-main font-bold text-xs mb-3 border-b border-color pb-3 flex items-center gap-2">
             <i class="fa-solid fa-share-nodes text-cyan-500"></i> Share Article
           </h3>
           <div class="flex items-center gap-2 text-sub">
-            <button onclick="share('x')" title="Share on X" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-x-twitter fa-brands fa-twitter"></i></button>
+            <button onclick="share('x')" title="Share on X" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-x-twitter"></i></button>
             <button onclick="share('linkedin')" title="Share on LinkedIn" class="p-2.5 bg-surface border border-color hover:text-cyan-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-linkedin-in"></i></button>
             <button onclick="share('reddit')" title="Share on Reddit" class="p-2.5 bg-surface border border-color hover:text-amber-400 rounded-xl transition text-xs flex-1"><i class="fa-brands fa-reddit-alien"></i></button>
             <button id="copy-btn" onclick="copyLink()" title="Copy Link" class="p-2.5 bg-surface border border-color hover:text-main rounded-xl transition text-xs flex-1"><i id="copy-icon" class="fa-solid fa-link"></i> <span id="copy-label">Copy</span></button>
           </div>
         </div>
 
-        <!-- Related Articles -->
+        <!-- Related Posts -->
         <div class="bg-card border border-color rounded-2xl p-5 shadow-lg">
           <div class="flex items-center justify-between mb-4 border-b border-color pb-3">
             <h3 class="text-main font-bold text-xs">Related Articles</h3>
@@ -286,7 +299,6 @@
     let cachedPosts = [];
     let hasLiked = false;
 
-    // View Count Formatting Helper
     function formatViews(views) {
       const num = Number(views);
       if (isNaN(num)) return '18.2k';
@@ -296,7 +308,6 @@
       return num.toString();
     }
 
-    // Reading Progress Bar handler
     window.addEventListener('scroll', () => {
       const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -305,7 +316,6 @@
       if (bar) bar.style.width = scrolled + '%';
     });
 
-    // Theme Toggle Functionality
     function initTheme() {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'light') {
@@ -336,7 +346,6 @@
 
       let post = null;
 
-      // Promise timeout helper (5 seconds)
       const timeout = (ms) => new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Backend timeout - auto fallback trigger')), ms)
       );
@@ -354,7 +363,6 @@
         console.warn('Backend API slow or sleeping, loaded local fallback sample data instantly.');
       }
 
-      // Sample post fallback if backend is sleeping or returns empty
       if (!cachedPosts || cachedPosts.length === 0) {
         cachedPosts = [
           {
@@ -408,7 +416,6 @@
         ];
       }
 
-      // Latest Blog Preview setup
       if (cachedPosts && cachedPosts.length > 0) {
         const latest = cachedPosts[0];
         if (!currentPostId || currentPostId !== latest._id) {
