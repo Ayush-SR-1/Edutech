@@ -17,7 +17,8 @@
       darkMode: 'class',
     }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Updated Font Awesome CDN to 6.5.2 to support fa-x-twitter -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     .dark body { background-color: #070b12; color: #94a3b8; }
     .dark .bg-surface { background-color: #070b12; }
@@ -67,7 +68,19 @@
           <a href="#" class="hover:text-main transition">About</a>
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-3">
+        <!-- Admin Toggle Button -->
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="px-3 py-1.5 rounded-xl border border-color text-xs font-semibold text-sub hover:text-main transition flex items-center gap-1.5">
+          <i class="fa-solid fa-user-shield text-cyan-400"></i> <span id="admin-status-text">Admin</span>
+        </button>
+
+        <!-- Social Icons -->
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="text-sub hover:text-main p-2 transition" aria-label="X (Twitter)">
+          <i class="fa-brands fa-x-twitter text-base"></i>
+        </a>
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="text-sub hover:text-main p-2 transition" aria-label="GitHub">
+          <i class="fa-brands fa-github text-base"></i>
+        </a>
         <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
         </button>
@@ -140,7 +153,9 @@
       <div class="flex items-center space-x-6">
         <a href="index.html" class="hover:text-main transition">Home</a>
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
-        <a href="#" class="hover:text-main transition">Projects</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5">
+          <i class="fa-brands fa-x-twitter"></i> Twitter / X
+        </a>
       </div>
     </div>
   </footer>
@@ -192,6 +207,39 @@
         createdAt: "2026-09-09T08:00:00.000Z"
       }
     ];
+
+    function isAdmin() {
+      return localStorage.getItem('edubyte_admin_mode') === 'true';
+    }
+
+    function updateAdminUI() {
+      const statusText = document.getElementById('admin-status-text');
+      const btn = document.getElementById('admin-toggle-btn');
+      if (isAdmin()) {
+        statusText.innerText = 'Admin ON';
+        btn.className = 'px-3 py-1.5 rounded-xl border border-cyan-500/50 bg-cyan-500/10 text-xs font-bold text-cyan-400 transition flex items-center gap-1.5';
+      } else {
+        statusText.innerText = 'Admin';
+        btn.className = 'px-3 py-1.5 rounded-xl border border-color text-xs font-semibold text-sub hover:text-main transition flex items-center gap-1.5';
+      }
+    }
+
+    function toggleAdminMode() {
+      if (!isAdmin()) {
+        const pass = prompt("Enter Admin Passcode:");
+        if (pass === "admin123") {
+          localStorage.setItem('edubyte_admin_mode', 'true');
+          alert("Admin Mode Activated!");
+        } else if (pass !== null) {
+          alert("Incorrect Passcode!");
+        }
+      } else {
+        localStorage.setItem('edubyte_admin_mode', 'false');
+        alert("Admin Mode Deactivated.");
+      }
+      updateAdminUI();
+      renderHighlights();
+    }
 
     function formatCount(num) {
       const n = Number(num);
@@ -295,7 +343,7 @@
         const categoryClass = p.category === 'Tech & Design' ? 'text-rose-400' : 'text-cyan-400';
 
         return `
-          <a href="blog.html?id=${p._id}" class="group block p-6 sm:p-7 rounded-2xl bg-[#090f1d]/80 border border-cyan-500/10 hover:border-cyan-500/30 transition duration-300">
+          <a href="blog.html?id=${p._id}" class="group block p-6 sm:p-7 rounded-2xl bg-[#090f1d]/80 border border-cyan-500/10 hover:border-cyan-500/30 transition duration-300 relative">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold ${categoryClass}">${p.category || 'AI & ML'}</span>
               ${idx === 0 ? `
@@ -372,6 +420,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      updateAdminUI();
       loadBlogsPage();
     });
   </script>
