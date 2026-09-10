@@ -191,7 +191,7 @@
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
       updateThemeIcon(isDark);
-      renderHighlights(); // Re-render to pick up tab styling
+      renderHighlights();
     }
 
     function updateThemeIcon(isDark) {
@@ -199,6 +199,23 @@
       if (icon) {
         icon.className = isDark ? 'fa-regular fa-sun text-yellow-400 text-sm' : 'fa-regular fa-moon text-slate-700 text-sm';
       }
+    }
+
+    // Helper functions for view & like counts
+    function formatViews(views) {
+      if (!views || views === 0) return '0 views';
+      if (views >= 1000) {
+        return (views / 1000).toFixed(1) + 'k views';
+      }
+      return views + ' views';
+    }
+
+    function formatLikes(likes) {
+      if (!likes || likes === 0) return '0 likes';
+      if (likes >= 1000) {
+        return (likes / 1000).toFixed(1) + 'k likes';
+      }
+      return likes + ' likes';
     }
 
     async function fetchAllBlogs() {
@@ -293,8 +310,8 @@
           <div class="flex items-center justify-between text-xs text-sub border-t border-color pt-3.5 mt-3">
             <span>${post.date || 'Sep 10, 2026'}</span>
             <span class="text-cyan-500 font-semibold group-hover:underline flex items-center gap-1">
-              ${activeHighlightTab === 'viewed' ? `👁️ ${(post.views ? (post.views/1000).toFixed(1) + 'k' : '18.2k')} views &nbsp;•&nbsp; ` : ''}
-              ${activeHighlightTab === 'liked' ? `❤️ ${post.likes || '2.4k'} likes &nbsp;•&nbsp; ` : ''}
+              ${activeHighlightTab === 'viewed' ? `👁️ ${formatViews(post.views)} &nbsp;•&nbsp; ` : ''}
+              ${activeHighlightTab === 'liked' ? `❤️ ${formatLikes(post.likes)} &nbsp;•&nbsp; ` : ''}
               ${post.readTime || '7 min read'} →
             </span>
           </div>
