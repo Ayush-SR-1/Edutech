@@ -149,6 +149,7 @@
         new Promise((_, reject) => setTimeout(() => reject(new Error('Network Timeout')), timeoutMs))
       ]);
 
+    // Baseline metrics: Views (100–200) and Likes (50–100)
     const staticFallbackPosts = [
       {
         _id: 'sample-1',
@@ -157,8 +158,8 @@
         category: "AI & ML",
         date: "Aug 30, 2026",
         readTime: "7 min read",
-        views: 18200,
-        likes: 1450,
+        views: 184,
+        likes: 72,
         createdAt: "2026-08-30T10:00:00.000Z"
       },
       {
@@ -168,8 +169,8 @@
         category: "AI & ML",
         date: "Aug 27, 2026",
         readTime: "6 min read",
-        views: 24500,
-        likes: 1890,
+        views: 145,
+        likes: 89,
         createdAt: "2026-08-27T10:00:00.000Z"
       },
       {
@@ -179,8 +180,8 @@
         category: "AI & ML",
         date: "Sep 2, 2026",
         readTime: "8 min read",
-        views: 12900,
-        likes: 920,
+        views: 112,
+        likes: 54,
         createdAt: "2026-09-02T08:00:00.000Z"
       },
       {
@@ -190,8 +191,8 @@
         category: "AI & ML",
         date: "Sep 5, 2026",
         readTime: "7 min read",
-        views: 15400,
-        likes: 1120,
+        views: 196,
+        likes: 63,
         createdAt: "2026-09-05T10:00:00.000Z"
       }
     ];
@@ -250,7 +251,6 @@
       renderHighlights();
     }
 
-    // Storage event listeners for live synchronization
     window.addEventListener('storage', (event) => {
       if (event.key === 'edubyte_admin_mode') {
         updateAdminUI();
