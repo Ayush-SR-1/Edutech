@@ -549,7 +549,7 @@
 
       generateTOC();
       setupScrollSpy();
-      loadRelatedPosts(currentPostId);
+      loadRelatedPosts(currentPostId, post ? post.title : '');
     }
 
     function renderComments() {
@@ -742,34 +742,81 @@
       });
     }
 
-    async function loadRelatedPosts(excludeId) {
+    function loadRelatedPosts(excludeId, currentTitle) {
       const relatedContainer = document.getElementById('related-posts');
+      if (!relatedContainer) return;
       relatedContainer.innerHTML = '';
 
-      const filtered = cachedPosts.filter(p => p._id !== excludeId).slice(0, 3);
+      const fallbackList = [
+        {
+          _id: 'sample-1',
+          title: "AI Myths and Facts: Separating What's Real from the Hype",
+          category: "AI & ML",
+          date: "Aug 27, 2026",
+          readTime: "6 min read"
+        },
+        {
+          _id: 'sample-2',
+          title: "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models",
+          category: "AI & ML",
+          date: "Aug 30, 2026",
+          readTime: "7 min read"
+        },
+        {
+          _id: 'sample-3',
+          title: "Can We Trust AI-Generated Information?",
+          category: "AI & ML",
+          date: "Sep 2, 2026",
+          readTime: "8 min read"
+        },
+        {
+          _id: 'sample-4',
+          title: "Can AI Actually Be Creative?",
+          category: "Tech & Design",
+          date: "Sep 5, 2026",
+          readTime: "7 min read"
+        }
+      ];
+
+      let pool = (cachedPosts && cachedPosts.length > 0) ? [...cachedPosts] : [...fallbackList];
+      
+      fallbackList.forEach(fb => {
+        if (!pool.some(p => p._id === fb._id || (p.title && p.title.toLowerCase().trim() === fb.title.toLowerCase().trim()))) {
+          pool.push(fb);
+        }
+      });
+
+      const normalizeStr = s => (s || '').toLowerCase().replace(/[\u2018\u2019']/g, "'").replace(/[\u201C\u201D"]/g, '"').trim();
+      const targetTitleNorm = currentTitle ? normalizeStr(currentTitle) : '';
+
+      let filtered = pool.filter(p => {
+        if (excludeId && (p._id === excludeId || p.id === excludeId)) return false;
+        if (targetTitleNorm && p.title && normalizeStr(p.title) === targetTitleNorm) return false;
+        return true;
+      });
 
       if (filtered.length === 0) {
-        relatedContainer.innerHTML = '<p class="text-xs text-sub">No related posts found.</p>';
-        return;
+        filtered = fallbackList.filter(p => p._id !== excludeId && (!targetTitleNorm || normalizeStr(p.title) !== targetTitleNorm));
       }
 
-      filtered.forEach(p => {
+      const displayItems = filtered.slice(0, 3);
+
+      relatedContainer.innerHTML = displayItems.map(p => {
         const displayDate = getOverrideDate(p.title, p.date || 'Sep 2026');
-        const card = document.createElement('a');
-        card.href = `blog.html?id=${p._id}`;
-        card.className = 'flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface border border-transparent hover:border-color transition group';
-        card.innerHTML = `
-          <div class="w-10 h-10 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center shrink-0 text-cyan-500 text-xs font-bold">
-            <i class="fa-solid fa-brain"></i>
-          </div>
-          <div class="overflow-hidden">
-            <span class="text-[10px] text-cyan-500 font-bold uppercase block">${p.category || 'AI & ML'}</span>
-            <h4 class="text-xs font-bold text-main group-hover:text-cyan-500 truncate">${p.title}</h4>
-            <span class="text-[10px] text-sub">${displayDate} • ${p.readTime || '5 min'}</span>
-          </div>
+        const targetId = p._id || p.id || 'sample-1';
+        return `
+          <a href="blog.html?id=${targetId}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface border border-transparent hover:border-color transition group">
+            <div class="w-10 h-10 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center shrink-0 text-cyan-500 text-xs font-bold">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="overflow-hidden">
+              <span class="text-[10px] text-cyan-500 font-bold uppercase block">${p.category || 'AI & ML'}</span>
+              <h4 class="text-xs font-bold text-main group-hover:text-cyan-500 truncate">${p.title}</h4>
+              <span class="text-[10px] text-sub">${displayDate} • ${p.readTime || '5 min'}</span>
+            </div>
+          </a>
         `;
-        relatedContainer.appendChild(card);
-      });
+      }).join('');
     }
 
     async function handleNavSearch() {
