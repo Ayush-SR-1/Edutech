@@ -1,121 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ayush Singh Rathor - Developer, Explorer & Writer</title>
+  <title>EduByte - Home</title>
   
-  <!-- SEO & Basic Meta Tags -->
-  <meta name="description" content="Ayush Singh Rathor - Developer, Explorer & Writer. Building digital experiences, exploring artificial intelligence, and sharing tech knowledge.">
-  
-  <!-- Open Graph / Social Link Previews -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ayush-sr-1.github.io/Edutech/index.html">
-  <meta property="og:title" content="Ayush Singh Rathor - Everyday Insights & Engineering">
-  <meta property="og:description" content="Building digital experiences, exploring artificial intelligence, and sharing tech knowledge on EduByte.">
-  <meta property="og:image" content="https://ayush-sr-1.github.io/Edutech/preview.png">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Ayush Singh Rathor - Developer & Writer">
-  <meta name="twitter:description" content="Building digital experiences and sharing tech knowledge on EduByte.">
-
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
-    body {
-      background-color: #f7f4ed;
-      color: #2b2623;
-      font-family: 'Georgia', serif;
-      background-image: radial-gradient(#e2dcd2 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
-    .text-sans {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    .btn-primary {
-      background-color: #c25732;
-      color: #ffffff;
-    }
-    .btn-primary:hover {
-      background-color: #a84725;
-    }
-    .accent-color {
-      color: #c25732;
-    }
-    .border-card {
-      border: 1px solid #e2dcd2;
-    }
+    .dark body { background-color: #070b12; color: #94a3b8; }
+    .dark .bg-surface { background-color: #070b12; }
+    .dark .bg-card { background-color: rgba(13, 19, 33, 0.75); backdrop-filter: blur(12px); }
+    .dark .border-color { border-color: rgba(255, 255, 255, 0.08); }
+    .dark .text-main { color: #f8fafc; }
+    .dark .text-sub { color: #cbd5e1; }
+
+    html:not(.dark) body { background-color: #f8fafc; color: #334155; }
+    html:not(.dark) .bg-surface { background-color: #ffffff; }
+    html:not(.dark) .bg-card { background-color: #ffffff; }
+    html:not(.dark) .border-color { border-color: #e2e8f0; }
+    html:not(.dark) .text-main { color: #0f172a; }
+    html:not(.dark) .text-sub { color: #475569; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-6 sm:p-12 md:p-20">
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
 
-  <!-- Main Container -->
-  <main class="max-w-4xl mx-auto w-full space-y-12 my-auto">
-    
-    <!-- Hero Title Section -->
-    <section class="text-center space-y-4">
-      <span class="text-xs uppercase tracking-widest text-sans text-stone-500 font-semibold">Everyday Insights & Engineering</span>
-      <h1 class="text-4xl sm:text-6xl font-normal text-stone-900 tracking-tight">
-        Ayush Singh Rathor
-      </h1>
-      <div class="flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-sans accent-color font-bold">
-        <span class="w-8 h-[1px] bg-amber-800/40"></span>
-        DEVELOPER, EXPLORER & WRITER
-        <span class="w-8 h-[1px] bg-amber-800/40"></span>
-      </div>
-      <p class="italic text-stone-600 text-lg sm:text-xl max-w-2xl mx-auto pt-4 leading-relaxed">
-        Building digital experiences, exploring artificial intelligence, and sharing tech knowledge.
-      </p>
-      
-      <!-- Primary Blog Button -->
-      <div class="pt-4">
-        <a href="blogs.html" class="inline-block btn-primary text-sans text-sm font-semibold px-6 py-3 rounded-xl shadow-md transition-all hover:shadow-lg">
-          Read EduByte Blog
+  <!-- Navigation Bar -->
+  <nav class="border-b border-color bg-surface/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-8">
+        <a href="index.html" class="text-xl font-black text-main tracking-wide flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-cyan-400 text-slate-950 flex items-center justify-center font-extrabold text-sm">E</span>
+          Edu<span class="text-cyan-500">Byte</span>
         </a>
-      </div>
-    </section>
-
-    <!-- Cards Grid -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sans pt-8">
-      
-      <!-- Publication Card -->
-      <div class="bg-white/80 backdrop-blur-sm border-card rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:border-amber-700/40 transition">
-        <div>
-          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">
-            <span>Publication</span>
-            <a href="blogs.html" class="accent-color hover:underline flex items-center gap-1">Explore &rarr;</a>
-          </div>
-          <h3 class="text-2xl font-bold accent-color font-serif">EduByte</h3>
-          <p class="text-sm text-stone-600 italic mt-2 leading-relaxed">
-            Everyday insights on technology, AI breakdowns, and tech simplified.
-          </p>
+        <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
+          <a href="index.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Home</a>
+          <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+          <a href="#" class="hover:text-main transition">About</a>
         </div>
       </div>
-
-      <!-- Social Links & Email Card -->
-      <div class="bg-white/80 backdrop-blur-sm border-card rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:border-amber-700/40 transition">
-        <div>
-          <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Connect</span>
-          <h3 class="text-2xl font-bold text-stone-800 font-serif mt-1 mb-4">Social Links</h3>
-          <div class="flex flex-wrap items-center gap-3 text-sm font-medium accent-color">
-            <a href="https://github.com/ayush-sr-1" target="_blank" class="hover:underline">GitHub</a>
-            <span class="text-stone-300">•</span>
-            <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" class="hover:underline">LinkedIn</a>
-            <span class="text-stone-300">•</span>
-            <a href="mailto:ayushsinghrathor18@gmail.com" class="hover:underline font-semibold">Email</a>
-          </div>
-        </div>
+      <div class="flex items-center space-x-3">
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="px-3 py-1.5 rounded-xl border border-color text-xs font-semibold text-sub hover:text-main transition flex items-center gap-1.5">
+          <i class="fa-solid fa-user-shield text-cyan-400"></i> <span id="admin-status-text">Admin</span>
+        </button>
+        <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
+          <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
+        </button>
       </div>
+    </div>
+  </nav>
 
-    </section>
+  <!-- Hero Section -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex-grow w-full text-center space-y-6">
+    <h1 class="text-4xl sm:text-6xl font-black text-main tracking-tight">Welcome to <span class="text-cyan-500">EduByte</span></h1>
+    <p class="text-lg text-sub max-w-2xl mx-auto">Explore technology, AI, software development, and deep technical articles.</p>
+    <div class="pt-4">
+      <a href="blogs.html" class="px-6 py-3 rounded-2xl bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/20">Explore All Articles →</a>
+    </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="max-w-4xl mx-auto w-full pt-12 border-t border-stone-300/60 flex items-center justify-between text-xs text-sans text-stone-500">
-    <p>© 2026 Ayush Singh Rathor</p>
-    <p class="font-medium text-stone-600">EduByte Connected</p>
+  <footer class="border-t border-color bg-surface/80 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sub">
+      <p>© 2026 EduByte. All rights reserved.</p>
+      <div class="flex items-center space-x-6">
+        <a href="index.html" class="hover:text-main transition">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+      </div>
+    </div>
   </footer>
 
+  <script>
+    function isAdmin() {
+      return localStorage.getItem('edubyte_admin_mode') === 'true';
+    }
+
+    function updateAdminUI() {
+      const statusText = document.getElementById('admin-status-text');
+      const btn = document.getElementById('admin-toggle-btn');
+      if (isAdmin()) {
+        statusText.innerText = 'Admin ON';
+        btn.className = 'px-3 py-1.5 rounded-xl border border-cyan-500/50 bg-cyan-500/10 text-xs font-bold text-cyan-400 transition flex items-center gap-1.5';
+      } else {
+        statusText.innerText = 'Admin';
+        btn.className = 'px-3 py-1.5 rounded-xl border border-color text-xs font-semibold text-sub hover:text-main transition flex items-center gap-1.5';
+      }
+    }
+
+    function toggleAdminMode() {
+      if (!isAdmin()) {
+        const pass = prompt("Enter Admin Passcode:");
+        if (pass === "admin123") {
+          localStorage.setItem('edubyte_admin_mode', 'true');
+          alert("Admin Mode Activated!");
+        } else if (pass !== null) {
+          alert("Incorrect Passcode!");
+        }
+      } else {
+        localStorage.setItem('edubyte_admin_mode', 'false');
+        alert("Admin Mode Deactivated.");
+      }
+      updateAdminUI();
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'edubyte_admin_mode') {
+        updateAdminUI();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        updateAdminUI();
+      }
+    });
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateAdminUI();
+    });
+  </script>
 </body>
 </html>
