@@ -118,15 +118,13 @@
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <!-- Admin Toggle Button -->
-
         <div class="relative hidden sm:block">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
           <input id="nav-search-input" type="text" oninput="handleNavSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
           <div id="search-dropdown" class="hidden absolute top-11 left-0 w-80 bg-surface border border-color rounded-xl shadow-2xl z-50 p-2 max-h-80 overflow-y-auto space-y-2"></div>
         </div>
         
-        <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
+        <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark theme" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
         </button>
       </div>
@@ -167,6 +165,15 @@
           <h1 id="post-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-main tracking-tight leading-tight">
             Loading Article...
           </h1>
+
+          <!-- Author byline -->
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-500 flex items-center justify-center text-slate-950 font-extrabold text-xs shrink-0">AS</div>
+            <div class="leading-tight">
+              <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-main hover:text-cyan-500 transition">Ayush Singh Rathor</a>
+              <p class="text-[10px] text-sub">Author</p>
+            </div>
+          </div>
 
           <!-- Minimal Metadata Bar -->
           <div class="flex items-center text-xs text-sub gap-4 p-3 rounded-xl bg-card border border-color w-fit">
@@ -300,15 +307,29 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-color bg-surface/80 py-6 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sub">
-      <p>© 2026 EduByte. All rights reserved.</p>
+  <footer class="border-t border-color bg-surface/80 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-xs text-sub">
+      <div class="space-y-1">
+        <p class="text-main font-bold flex items-center gap-1.5">
+          <span class="w-5 h-5 rounded-md bg-cyan-400 text-slate-950 flex items-center justify-center font-extrabold text-[10px]">E</span>
+          EduByte
+        </p>
+        <p class="text-sub">Deep dives into AI, ML, and software engineering — written by Ayush Singh Rathor.</p>
+        <p>© 2026 EduByte. All rights reserved.</p>
+      </div>
       <div class="flex items-center space-x-6">
         <a href="index.html" class="hover:text-main transition">Home</a>
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5">
+          <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+        </a>
         <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5">
           <i class="fa-brands fa-github"></i> GitHub
         </a>
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()" title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition">
+          <i class="fa-solid fa-gear text-xs"></i>
+          <span id="admin-status-text" class="sr-only">Admin</span>
+        </button>
       </div>
     </div>
   </footer>
@@ -449,26 +470,42 @@
               { id: 'c1', author: 'Sarah Jenkins', text: 'Great breakdown on hallucination!', date: 'Sep 10, 2026' }
             ],
             content: `
-              <h2>1. From JEE Problems to AI Prompts: An Introduction</h2>
-              <p>Despite taking several years to prepare, I finally succeeded in getting into the engineering branch where I had set my sights. VIT has a CSE program in CSEN, which includes specialized courses in Artificial Intelligence and Machine Learning.</p>
-              <p>Like many other engineering students, I was raised around technology and gadgets, programming especially, but AI always had its own distinct feel to it. The appearance of machines that could think, create, and converse seemed to be straight from a science fiction perspective.</p>
-              
-              <blockquote>"The magic of AI is not that it thinks like a human, but that it processes patterns at a scale humans never could."</blockquote>
+              <p><b>By Ayush Singh Rathor, B.Tech CSE (AI & ML), VIT</b></p>
+              <h3>From JEE Problems to AI Prompts: An Introduction</h3>
+              <p>Despite taking several years to prepare, I finally succeeded in getting into the engineering branch where I had set my sights. VIT has a CSE program in CSEN, which includes courses in Artificial Intelligence and Machine Learning. Like many other engineering students, I was raised around technology and gadgets, programming especially, but AI always had its own distinct feel to it. The appearance of machines that could think, create, and converse seemed to be from a science fiction perspective.</p>
+              <p>In the present day, AI is ubiquitous. You can count on it to suggest the next video you watch, navigate traffic properly, filter out spam emails or junk mail, modify photos, write essays, and create art. ChatGPT, machine learning and generative AI have become terms that are used in everyday conversation within a few years.</p>
+              <p>Despite the excitement, there is a great deal of confusion. However, it is believed by some that AI may soon take over the world. Others believe it's always correct. The general belief is that it can solely be used by individuals in the programming and technology fields. There is a much more captivating and less dramatic reality.</p>
+              <p>I want to dispel some of the biggest misconceptions about AI and differentiate between reality and fiction in this blog.</p>
 
-              <h2>2. What Exactly Is AI?</h2>
-              <p>At its core, modern Artificial Intelligence—specifically Large Language Models (LLMs)—is driven by complex statistical probabilities. Given a massive corpus of text, the model predicts the most statistically likely next word or token.</p>
+              <h3>What Exactly Is AI?</h3>
+              <p>Artificial Intelligence, or AI, is a broad term used for computer systems that perform tasks requiring human-like intelligence. These tasks include learning from data, recognising patterns, understanding language, making recommendations, and solving problems.</p>
+              <p>AI isn't a new concept. Simple AI has been present in video games, search engines, automated customer service systems, and recommendation systems for decades. Moreover, many advanced AI technologies are still being developed.</p>
+              <p><img src="https://res.cloudinary.com/dbef59ec/image/upload/v1788944842/Fundamental-concept-of-Ai.png" alt="Fundamental Concept of AI" style="width:100%; max-width:700px; margin: 20px 0; border-radius: 8px;" /></p>
+              <p>Nowadays, when people talk about AI, they tend to make a big deal about it. <b>Machine Learning (ML):</b> An area of artificial intelligence where systems learn from data and improve over time rather than following fixed instructions.</p>
+              <p>Having grasped the basics of AI, let's decipher some familiar myths.</p>
 
-              <h2>3. Myth #1: AI is set to dominate the world.</h2>
-              <p>One of the most persistent sci-fi tropes is Artificial General Intelligence (AGI) taking over human tasks completely. While AI is capable of automating repetitive workflows, it lacks genuine intent, emotional intelligence, and real-world common sense.</p>
+              <h3>Myth #1: AI is set to dominate the world.</h3>
+              <p>This is probably the most popular myth, thanks to movies and science fiction stories. The idea of super-intelligent machines controlling humanity sounds exciting, but it is far from reality. Modern AI systems are engineered to serve a purpose for specific tasks. A text-generating AI cannot operate a car, bank account, or power grids without human intervention.</p>
+              <p>AI lacks any specific aims, feelings, goals, or desires. It doesn't "want" anything. The system's functionality is based on its ability to recognise patterns from data and react to the input it receives.</p>
+              <p>This isn't a takeover by AI; it's just about solving the real problem.</p>
+              <p><img src="https://res.cloudinary.com/dbef59ec/image/upload/v1788944905/original.webp" alt="AI Takeover Myth" style="width:100%; max-width:700px; margin: 20px 0; border-radius: 8px;" /></p>
+              <p>Science-fiction scenarios are not as important as issues of misinformation, privacy, bias in algorithms, and excessive reliance on AI. <b>Fact:</b> AI is a system that is designed and engineered by humans. People are always responsible for its actions, not machines.</p>
 
-              <h2>4. Myth #2: Artificial Intelligence Is Always Correct.</h2>
-              <p>A major challenge in modern LLMs is <strong>hallucination</strong>. Because models prioritize generating plausible sounding text over verified truth, they can confidently output false citations, incorrect math, or invented historical facts.</p>
+              <h3>Myth #2: Artificial Intelligence Is Always Correct.</h3>
+              <p>Many people assume that if an AI can provide a response with confidence, it must be accurate. Unfortunately, that isn't true.</p>
+              <p>Patterns acquired from vast amounts of text are used in ChatGPT, a language model that predicts the most probable arrangement of words. Unlike humans, they lack the ability to comprehend facts.</p>
+              <p><img src="https://res.cloudinary.com/dbef59ec/image/upload/v1788944905/examples-of-ai-hallucination-explained-1536x851.png" alt="AI Hallucination" style="width:100%; max-width:700px; margin: 20px 0; border-radius: 8px;" /></p>
+              <p>This leads to the creation of information that appears convincing but is entirely inaccurate, generated by AI. False dates, references to other sources, or inaccurate explanations may be generated by it. An umbrella term is frequently used to describe this phenomenon: <b>AI hallucination</b>.</p>
+              <p>The limitations of AI are due to biases or inaccuracies in training data, outdated information, or complex reasoning challenges. <b>Fact:</b> It is crucial to ensure that you are getting the correct information, particularly in fields like academia, law, healthcare, finance, and research.</p>
 
-              <h2>5. Myth #3: Only technologists are allowed to use AI.</h2>
-              <p>With natural language prompt interfaces, AI tools have become accessible to writers, designers, educators, and students alike. You don't need a PhD in computer science to leverage AI for brainstorming or research.</p>
+              <h3>Myth #3: Only technologists are allowed to use AI.</h3>
+              <p>This myth could not be further from the truth. AI tools of today are available to anyone—students, artists, teachers, entrepreneurs, and professionals. You are capable of using AI by typing a question in everyday language.</p>
+              <p><img src="https://res.cloudinary.com/dbef59ec/image/upload/v1788944775/ai-learning-classroom-innovation.jpg" alt="AI Tools Accessibility" style="width:100%; max-width:700px; margin: 20px 0; border-radius: 8px;" /></p>
+              <p>You are already utilising AI on a daily basis: Google Maps suggests routes, Netflix recommends movies, your phone organises photos, email filters spam, and voice assistants answer questions. <b>Fact:</b> AI can be used effectively without coding knowledge. Asking the right questions is crucial.</p>
 
-              <h2>6. The Bigger Picture</h2>
-              <p>Understanding both the capabilities and constraints of AI allows us to use it as a powerful co-pilot rather than a crutch. As student developers, our goal is to build responsible systems that augment human intelligence.</p>
+              <h3>The Bigger Picture</h3>
+              <p>There is no magic formula for every problem or threat, and AI is not a machine to be conquered. Education, business, healthcare, entertainment, and daily life are all being transformed by this powerful tool. The study of AI and ML is no longer solely the responsibility of engineers; this is becoming a fundamental ability for all.</p>
+              <p>We are only now entering the realm of AI. Until then, stay curious, continue to learn, and remember: <b>AI's objective is to enhance human intelligence, not to replace it.</b> Thanks for reading! 🚀</p>
             `
           },
           {
