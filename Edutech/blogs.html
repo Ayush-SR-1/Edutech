@@ -206,22 +206,22 @@
       }
     ];
 
-    const DATE_OVERRIDES = {
-      "Why Does AI \"Lie\"? Understanding Hallucination in Large Language Models": "Aug 30, 2026",
-      "Why Does AI \"Lie\"? Understanding Hallucination in LLMs": "Aug 30, 2026",
-      "AI Myths and Facts: Separating What's Real from the Hype": "Aug 27, 2026",
-      "Can We Trust AI-Generated Information?": "Sep 2, 2026",
-      "Can AI Actually Be Creative?": "Sep 5, 2026"
-    };
+    function getOverrideDate(title, fallbackDate) {
+      if (!title) return fallbackDate;
+      const t = title.toLowerCase().replace(/[\u2018\u2019']/g, "'").replace(/[\u201C\u201D"]/g, '"');
+      
+      if (t.includes("ai myths and facts")) return "Aug 27, 2026";
+      if (t.includes("why does ai") && (t.includes("lie") || t.includes("hallucination"))) return "Aug 30, 2026";
+      if (t.includes("can we trust ai")) return "Sep 2, 2026";
+      if (t.includes("can ai") && t.includes("creative")) return "Sep 5, 2026";
+      
+      return fallbackDate;
+    }
 
     function normalizePosts(posts) {
       if (!posts) return [];
       return posts.map(p => {
-        const titleKey = p.title ? p.title.trim() : '';
-        if (DATE_OVERRIDES[titleKey]) {
-          return { ...p, date: DATE_OVERRIDES[titleKey] };
-        }
-        return p;
+        return { ...p, date: getOverrideDate(p.title, p.date) };
       });
     }
 
@@ -378,7 +378,7 @@
             <p class="text-xs sm:text-sm text-slate-400 line-clamp-2 mb-6 font-normal leading-relaxed">${p.excerpt || ''}</p>
 
             <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
-              <span>${p.date || 'Sep 10, 2026'}</span>
+              <span>${getOverrideDate(p.title, p.date || 'Sep 10, 2026')}</span>
               <span class="flex items-center gap-2 font-medium text-cyan-400 group-hover:translate-x-1 transition">
                 <span><i class="fa-regular fa-eye text-cyan-400 mr-1"></i>${formatCount(p.views || 0)} views</span> • 
                 <span><i class="fa-solid fa-heart text-rose-500 mr-1"></i>${formatCount(p.likes || 0)} likes</span> • 
@@ -416,7 +416,7 @@
             <p class="text-xs text-sub line-clamp-2 mb-4 leading-relaxed">${p.excerpt || ''}</p>
           </div>
           <div class="flex items-center justify-between text-[10px] text-sub pt-3 border-t border-color">
-            <span>${p.date || 'Sep 2026'}</span>
+            <span>${getOverrideDate(p.title, p.date || 'Sep 2026')}</span>
             <span class="text-cyan-500 font-semibold flex items-center gap-1">Read <i class="fa-solid fa-chevron-right text-[8px]"></i></span>
           </div>
         </a>
