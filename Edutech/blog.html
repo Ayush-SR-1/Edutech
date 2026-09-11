@@ -333,6 +333,18 @@
       return num.toString();
     }
 
+    function getOverrideDate(title, fallbackDate) {
+      if (!title) return fallbackDate;
+      const t = title.toLowerCase().replace(/[\u2018\u2019']/g, "'").replace(/[\u201C\u201D"]/g, '"');
+      
+      if (t.includes("ai myths and facts")) return "Aug 27, 2026";
+      if (t.includes("why does ai") && (t.includes("lie") || t.includes("hallucination"))) return "Aug 30, 2026";
+      if (t.includes("can we trust ai")) return "Sep 2, 2026";
+      if (t.includes("can ai") && t.includes("creative")) return "Sep 5, 2026";
+      
+      return fallbackDate;
+    }
+
     window.addEventListener('scroll', () => {
       const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -464,13 +476,20 @@
           },
           {
             _id: 'sample-2',
-            title: 'Why Does AI "Lie"? Understanding Hallucination in LLMs',
+            title: 'Why Does AI "Lie"? Understanding Hallucination in Large Language Models',
             category: 'AI & ML',
             date: 'Aug 30, 2026',
             readTime: '7 min read'
           },
           {
             _id: 'sample-3',
+            title: 'Can We Trust AI-Generated Information?',
+            category: 'AI & ML',
+            date: 'Sep 2, 2026',
+            readTime: '8 min read'
+          },
+          {
+            _id: 'sample-4',
             title: 'Can AI Actually Be Creative?',
             category: 'Tech & Design',
             date: 'Sep 5, 2026',
@@ -500,18 +519,6 @@
           if (response.ok) post = await response.json();
         } catch (e) {}
       }
-
-    function getOverrideDate(title, fallbackDate) {
-      if (!title) return fallbackDate;
-      const t = title.toLowerCase().replace(/[\u2018\u2019']/g, "'").replace(/[\u201C\u201D"]/g, '"');
-      
-      if (t.includes("ai myths and facts")) return "Aug 27, 2026";
-      if (t.includes("why does ai") && (t.includes("lie") || t.includes("hallucination"))) return "Aug 30, 2026";
-      if (t.includes("can we trust ai")) return "Sep 2, 2026";
-      if (t.includes("can ai") && t.includes("creative")) return "Sep 5, 2026";
-      
-      return fallbackDate;
-    }
 
       if (!post) {
         post = cachedPosts.find(p => p._id === currentPostId) || cachedPosts[0];
