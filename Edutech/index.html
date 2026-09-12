@@ -1,9 +1,9 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduByte - Home (Preview)</title>
+<title>EduByte - Home</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config = { darkMode: 'class' }</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&display=swap">
@@ -15,7 +15,6 @@
   .dark .border-color { border-color: rgba(255, 255, 255, 0.08); }
   .dark .text-main { color: #f8fafc; }
   .dark .text-sub { color: #cbd5e1; }
-  .preview-banner { background: linear-gradient(90deg,#06b6d4,#6366f1); }
 
   .editorial-eyebrow { font-family: 'Playfair Display', serif; font-style: italic; }
   .editorial-title { font-family: 'Playfair Display', serif; font-weight: 600; }
@@ -25,34 +24,45 @@
 
   #neural-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-  /* Expanded 3D scene & enlarged elements */
-  .scene { perspective: 1000px; position: relative; width: 320px; height: 320px; display: flex; items-center: center; justify-content: center; }
-  
+  .scene {
+    perspective: 1000px; position: relative;
+    width: clamp(200px, 55vw, 340px); height: clamp(200px, 55vw, 340px);
+    display: flex; align-items: center; justify-content: center;
+    --cube-size: clamp(150px, 40vw, 260px);
+    --sphere-size: clamp(190px, 50vw, 340px);
+  }
+
+  #tilt-target {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
   .cube {
-    width: 260px; height: 260px;
+    width: var(--cube-size); height: var(--cube-size);
     position: relative;
     transform-style: preserve-3d;
     animation: spin 16s linear infinite;
   }
   .cube__face {
-    position: absolute; width: 260px; height: 260px;
+    position: absolute; width: var(--cube-size); height: var(--cube-size);
     border: 1.5px solid rgba(34,211,238,0.6);
     background: rgba(34,211,238,0.04);
     backdrop-filter: blur(3px);
     box-shadow: inset 0 0 20px rgba(34,211,238,0.15);
   }
-  .cube__face--front  { transform: translateZ(130px); }
-  .cube__face--back   { transform: rotateY(180deg) translateZ(130px); }
-  .cube__face--right  { transform: rotateY(90deg) translateZ(130px); }
-  .cube__face--left   { transform: rotateY(-90deg) translateZ(130px); }
-  .cube__face--top    { transform: rotateX(90deg) translateZ(130px); }
-  .cube__face--bottom { transform: rotateX(-90deg) translateZ(130px); }
+  .cube__face--front  { transform: translateZ(calc(var(--cube-size) / 2)); }
+  .cube__face--back   { transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
+  .cube__face--right  { transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
+  .cube__face--left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+  .cube__face--top    { transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2)); }
+  .cube__face--bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
 
-  /* Large glowing sphere element behind/around cube */
   .glowing-sphere {
     position: absolute;
-    width: 340px;
-    height: 340px;
+    width: var(--sphere-size);
+    height: var(--sphere-size);
     border-radius: 50%;
     background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(6,182,212,0.1) 50%, transparent 70%);
     border: 1px dashed rgba(34,211,238,0.3);
@@ -73,14 +83,9 @@
     100% { transform: scale(1.1); opacity: 1; }
   }
 
-  /* Scroll reveal */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
-  /* Tilt card */
-  .tilt-card { transform-style: preserve-3d; transition: transform 0.15s ease-out, border-color 0.2s ease; will-change: transform; }
-
-  /* Pulsing CTA */
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.45); }
     50% { box-shadow: 0 0 0 10px rgba(34,211,238,0); }
@@ -90,10 +95,6 @@
 </head>
 <body class="min-h-screen flex flex-col transition-colors duration-200 selection:bg-cyan-500 selection:text-slate-950">
 
-  <div class="preview-banner text-slate-950 text-center text-xs font-bold py-1.5 tracking-wide">
-    PREVIEW ONLY — not yet applied to your live site
-  </div>
-
   <!-- Ambient Glow Orbs -->
   <div class="fixed top-0 left-1/4 w-96 h-96 bg-cyan-600/10 rounded-full filter blur-[120px] pointer-events-none"></div>
   <div class="fixed top-1/3 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-[120px] pointer-events-none"></div>
@@ -102,33 +103,49 @@
   <nav class="border-b border-color bg-surface/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-8">
-        <a href="#" class="text-xl font-black text-main tracking-wide flex items-center gap-2">
+        <a href="index.html" class="text-xl font-black text-main tracking-wide flex items-center gap-2">
           <span class="w-7 h-7 rounded-lg bg-cyan-400 text-slate-950 flex items-center justify-center font-extrabold text-sm">E</span>
           Edu<span class="text-cyan-500">Byte</span>
         </a>
         <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
-          <a href="#" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Home</a>
-          <a href="#" class="hover:text-main transition">Blogs</a>
-          <a href="#" class="hover:text-main transition">About</a>
+          <a href="index.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Home</a>
+          <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+          <a href="blogs.html" class="hover:text-main transition">About</a>
         </div>
       </div>
       <div class="flex items-center space-x-4">
         <div class="relative hidden sm:block">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
-          <input type="text" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
+          <input id="home-search-input" type="text" onkeydown="if(event.key==='Enter') goToBlogsSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
         </div>
         <button title="Toggle light / dark theme" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i class="fa-regular fa-sun text-yellow-400"></i>
         </button>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu" class="md:hidden text-sub hover:text-main p-2 rounded-xl border border-color transition">
+          <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu panel -->
+    <div id="mobile-menu-panel" class="hidden md:hidden border-t border-color bg-surface px-4 py-4 space-y-4">
+      <div class="flex flex-col space-y-3 text-sm font-medium text-sub">
+        <a href="index.html" class="text-cyan-500 font-semibold">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="blogs.html" class="hover:text-main transition">About</a>
+      </div>
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
+        <input id="mobile-search-input" type="text" onkeydown="if(event.key==='Enter') goToBlogsSearchMobile()" placeholder="Search blogs, topics..." class="w-full bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 transition">
       </div>
     </div>
   </nav>
 
-  <!-- Hero with neural network canvas & enlarged 3D scene -->
+  <!-- Hero with neural network canvas & 3D scene -->
   <section class="relative overflow-hidden border-b border-color">
     <canvas id="neural-canvas"></canvas>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 grid lg:grid-cols-2 gap-12 items-center">
-      <div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+      <div class="text-center lg:text-left">
         <span class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold px-4 py-1.5 rounded-full mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-2.5 h-2.5 fill-current"><path d="M184 0c30.9 0 56 25.1 56 56V456c0 30.9-25.1 56-56 56c-28.9 0-52.7-21.9-55.7-50.1c-5.2 1.4-10.7 2.1-16.3 2.1c-35.3 0-64-28.7-64-64c0-7.4 1.3-14.6 3.6-21.2C21.4 367.4 0 338.2 0 304c0-31.9 18.7-59.5 45.8-72.3C37.1 220.8 32 207 32 192c0-30.7 21.6-56.3 50.4-62.6C80.8 123.9 80 118 80 112c0-29.9 20.6-55 48.3-61.9C131.3 21.9 155.1 0 184 0zM328 0c28.9 0 52.6 21.9 55.7 49.9c27.8 6.9 48.3 32 48.3 61.9c0 6-.8 11.9-2.4 17.4c28.8 6.2 50.4 31.9 50.4 62.6c0 15-5.1 28.8-13.8 39.7C493.3 244.5 512 272.1 512 304c0 34.2-21.4 63.4-51.6 74.8c2.3 6.6 3.6 13.8 3.6 21.2c0 35.3-28.7 64-64 64c-5.6 0-11.1-.7-16.3-2.1c-3 28.2-26.8 50.1-55.7 50.1c-30.9 0-56-25.1-56-56V56c0-30.9 25.1-56 56-56z"/></svg>
           4 articles and counting
@@ -136,25 +153,26 @@
         <h1 class="text-4xl sm:text-6xl font-black text-main tracking-tight leading-tight mb-4">
           Welcome to <span class="text-cyan-500">EduByte</span>
         </h1>
-        <p class="text-sub text-base sm:text-lg max-w-xl mb-8">
+        <p class="text-sub text-base sm:text-lg max-w-xl mx-auto lg:mx-0 mb-8">
           Explore technology, AI, software development, and deep technical articles.
         </p>
-        <a href="#" class="pulse-cta inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
+        <a href="blogs.html" class="pulse-cta inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
           Explore All Articles <i class="fa-solid fa-arrow-right text-xs"></i>
         </a>
       </div>
 
-      <!-- Enlarged 3D Scene with Cube and Sphere -->
-      <div class="hidden lg:flex justify-center items-center">
+      <div class="flex justify-center items-center">
         <div class="scene">
-          <div class="glowing-sphere"></div>
-          <div class="cube">
-            <div class="cube__face cube__face--front"></div>
-            <div class="cube__face cube__face--back"></div>
-            <div class="cube__face cube__face--right"></div>
-            <div class="cube__face cube__face--left"></div>
-            <div class="cube__face cube__face--top"></div>
-            <div class="cube__face cube__face--bottom"></div>
+          <div id="tilt-target">
+            <div class="glowing-sphere"></div>
+            <div class="cube">
+              <div class="cube__face cube__face--front"></div>
+              <div class="cube__face cube__face--back"></div>
+              <div class="cube__face cube__face--right"></div>
+              <div class="cube__face cube__face--left"></div>
+              <div class="cube__face cube__face--top"></div>
+              <div class="cube__face cube__face--bottom"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -165,19 +183,19 @@
 
     <!-- Category chips -->
     <div class="reveal flex flex-wrap justify-center gap-3 py-10">
-      <a href="#" class="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold">All</a>
-      <a href="#" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">AI & ML</a>
-      <a href="#" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">Tech & Design</a>
-      <a href="#" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">Software Dev</a>
+      <a href="blogs.html" class="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold">All</a>
+      <a href="blogs.html?category=AI%20%26%20ML" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">AI & ML</a>
+      <a href="blogs.html?category=Tech%20%26%20Design" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">Tech & Design</a>
+      <a href="blogs.html?category=Software%20Dev" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">Software Dev</a>
     </div>
 
-    <!-- Resized Editorial Picks Grid (Compact Cards) -->
+    <!-- Editorial Picks Grid -->
     <div class="reveal pb-20">
       <p class="editorial-eyebrow text-sm text-sub mb-6">Editor's <span class="text-cyan-400">Picks</span></p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-        <a href="#" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e1a2b,#164e63 60%,#0891b2);">
+        <a href="blog.html?id=sample-1" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e1a2b,#164e63 60%,#0891b2);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-brain text-cyan-300/20 text-6xl"></i>
           </div>
@@ -186,11 +204,11 @@
             <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider">AI & ML</span>
             <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-cyan-300 transition line-clamp-1">AI Myths and Facts</h3>
             <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Separating real AI capabilities from common hype.</p>
-            <span class="editorial-date text-[10px] text-slate-400">August 27, 2026</span>
+            <span class="text-[10px] text-slate-400">August 27, 2026</span>
           </div>
         </a>
 
-        <a href="#" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#1b0e2b,#4c1d95 60%,#7c3aed);">
+        <a href="blog.html?id=sample-2" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#1b0e2b,#4c1d95 60%,#7c3aed);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-triangle-exclamation text-violet-300/20 text-6xl"></i>
           </div>
@@ -199,11 +217,11 @@
             <span class="text-[9px] text-violet-400 font-bold uppercase tracking-wider">AI & ML</span>
             <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-violet-300 transition line-clamp-1">Why Does AI "Lie"?</h3>
             <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Understanding hallucinations in large language models.</p>
-            <span class="editorial-date text-[10px] text-slate-400">August 30, 2026</span>
+            <span class="text-[10px] text-slate-400">August 30, 2026</span>
           </div>
         </a>
 
-        <a href="#" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e2b1e,#065f46 60%,#10b981);">
+        <a href="blog.html?id=sample-3" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e2b1e,#065f46 60%,#10b981);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-shield-halved text-emerald-300/20 text-6xl"></i>
           </div>
@@ -212,11 +230,11 @@
             <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">AI & ML</span>
             <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-emerald-300 transition line-clamp-1">Trusting AI Info</h3>
             <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Verification & fact-checking in generative AI.</p>
-            <span class="editorial-date text-[10px] text-slate-400">September 2, 2026</span>
+            <span class="text-[10px] text-slate-400">September 2, 2026</span>
           </div>
         </a>
 
-        <a href="#" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#2b1a0e,#92400e 60%,#f59e0b);">
+        <a href="blog.html?id=sample-4" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#2b1a0e,#92400e 60%,#f59e0b);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-palette text-amber-300/20 text-6xl"></i>
           </div>
@@ -225,14 +243,14 @@
             <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Tech & Design</span>
             <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-amber-300 transition line-clamp-1">AI & Creativity</h3>
             <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Exploring generation vs genuine human creativity.</p>
-            <span class="editorial-date text-[10px] text-slate-400">September 5, 2026</span>
+            <span class="text-[10px] text-slate-400">September 5, 2026</span>
           </div>
         </a>
 
       </div>
 
       <div class="flex justify-center mt-8">
-        <a href="#" class="pulse-cta inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
+        <a href="blogs.html" class="pulse-cta inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
           More Articles <i class="fa-solid fa-arrow-right text-xs"></i>
         </a>
       </div>
@@ -251,12 +269,13 @@
         <p>© 2026 EduByte. All rights reserved.</p>
       </div>
       <div class="flex items-center space-x-6">
-        <a href="#" class="hover:text-main transition">Home</a>
-        <a href="#" class="hover:text-main transition">Blogs</a>
-        <a href="#" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
-        <a href="#" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
-        <button title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition">
+        <a href="index.html" class="hover:text-main transition">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()" title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition">
           <i class="fa-solid fa-gear text-xs"></i>
+          <span id="admin-status-text" class="sr-only">Admin</span>
         </button>
       </div>
     </div>
@@ -273,42 +292,31 @@
     w = canvas.width = rect.width;
     h = canvas.height = rect.height;
   }
-
   function initNodes() {
     const count = Math.min(60, Math.floor((w * h) / 18000));
     nodes = Array.from({ length: count }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
     }));
   }
-
   const mouse = { x: null, y: null };
   canvas.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
+    mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
   });
   canvas.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
-
   function tick() {
     ctx.clearRect(0, 0, w, h);
     for (const n of nodes) {
       n.x += n.vx; n.y += n.vy;
       if (n.x < 0 || n.x > w) n.vx *= -1;
       if (n.y < 0 || n.y > h) n.vy *= -1;
-
       if (mouse.x !== null) {
         const dx = n.x - mouse.x, dy = n.y - mouse.y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 120) {
-          n.x += dx / dist * 0.6;
-          n.y += dy / dist * 0.6;
-        }
+        if (dist < 120) { n.x += dx / dist * 0.6; n.y += dy / dist * 0.6; }
       }
     }
-
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         const a = nodes[i], b = nodes[j];
@@ -316,55 +324,112 @@
         if (dist < 140) {
           ctx.strokeStyle = `rgba(34,211,238,${0.18 * (1 - dist / 140)})`;
           ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
       }
     }
-
     for (const n of nodes) {
       ctx.fillStyle = 'rgba(34,211,238,0.55)';
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 1.8, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x, n.y, 1.8, 0, Math.PI * 2); ctx.fill();
     }
-
     requestAnimationFrame(tick);
   }
-
-  resize();
-  initNodes();
-  tick();
+  resize(); initNodes(); tick();
   window.addEventListener('resize', () => { resize(); initNodes(); });
 
   // ---- Scroll reveal ----
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
 
-  // ---- Tilt cards ----
-  document.querySelectorAll('.tilt-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const rotateX = ((y / rect.height) - 0.5) * -10;
-      const rotateY = ((x / rect.width) - 0.5) * 10;
-      card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) translateY(0)';
-    });
-  });
+  // ---- Search: send query to blogs.html ----
+  function goToBlogsSearch() {
+    const q = document.getElementById('home-search-input').value.trim();
+    window.location.href = q ? `blogs.html?search=${encodeURIComponent(q)}` : 'blogs.html';
+  }
+
+  // ---- Mobile nav menu ----
+  function toggleMobileMenu() {
+    const panel = document.getElementById('mobile-menu-panel');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isOpen = !panel.classList.contains('hidden');
+    panel.classList.toggle('hidden', isOpen);
+    icon.className = isOpen ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+  }
+  function goToBlogsSearchMobile() {
+    const q = document.getElementById('mobile-search-input').value.trim();
+    window.location.href = q ? `blogs.html?search=${encodeURIComponent(q)}` : 'blogs.html';
+  }
+
+  // ---- Cube tilt: same cursor-following behavior the sphere used, plus touch support ----
+  (function setupTilt() {
+    const tiltTarget = document.getElementById('tilt-target');
+    if (!tiltTarget) return;
+
+    let targetRotX = 0, targetRotY = 0, curRotX = 0, curRotY = 0;
+    const maxTilt = 16; // degrees
+
+    function updateTargetFromPoint(clientX, clientY) {
+      const nx = (clientX / window.innerWidth) * 2 - 1;   // -1..1
+      const ny = (clientY / window.innerHeight) * 2 - 1;  // -1..1
+      targetRotY = nx * maxTilt;
+      targetRotX = -ny * maxTilt;
+    }
+
+    // Desktop: mouse follows cursor anywhere on the page
+    window.addEventListener('mousemove', (e) => updateTargetFromPoint(e.clientX, e.clientY));
+
+    // Mobile/touch: finger drag tilts it, passive so page scroll is never blocked
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches[0]) updateTargetFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    // Ease back to neutral once touch ends (no lingering cursor on mobile)
+    window.addEventListener('touchend', () => { targetRotX = 0; targetRotY = 0; });
+
+    function tiltLoop() {
+      curRotX += (targetRotX - curRotX) * 0.08;
+      curRotY += (targetRotY - curRotY) * 0.08;
+      tiltTarget.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
+      requestAnimationFrame(tiltLoop);
+    }
+    tiltLoop();
+  })();
+
+  let isAdmin = false;
+  function toggleAdminMode() {
+    if (!isAdmin) {
+      const password = prompt('Enter Admin Passcode:');
+      if (password === 'admin123') {
+        isAdmin = true;
+        localStorage.setItem('edubyte_admin_mode', 'true');
+        document.getElementById('admin-toggle-btn').classList.add('border-cyan-500', 'text-cyan-400');
+        alert('Admin Mode Activated!');
+      } else if (password !== null) {
+        alert('Incorrect Passcode');
+      }
+    } else {
+      isAdmin = false;
+      localStorage.setItem('edubyte_admin_mode', 'false');
+      document.getElementById('admin-toggle-btn').classList.remove('border-cyan-500', 'text-cyan-400');
+      alert('Admin Mode Deactivated.');
+    }
+  }
+  function syncAdminFromStorage() {
+    isAdmin = localStorage.getItem('edubyte_admin_mode') === 'true';
+    const btn = document.getElementById('admin-toggle-btn');
+    if (btn) {
+      btn.classList.toggle('border-cyan-500', isAdmin);
+      btn.classList.toggle('text-cyan-400', isAdmin);
+    }
+  }
+  window.addEventListener('storage', (e) => { if (e.key === 'edubyte_admin_mode') syncAdminFromStorage(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) syncAdminFromStorage(); });
+  document.addEventListener('DOMContentLoaded', syncAdminFromStorage);
 </script>
 </body>
 </html>

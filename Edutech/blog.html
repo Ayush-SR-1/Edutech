@@ -92,9 +92,12 @@
       padding-left: 0.75rem;
       font-weight: 700;
     }
+    #neural-canvas-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between transition-colors duration-200 selection:bg-cyan-500 selection:text-slate-950">
+
+  <canvas id="neural-canvas-bg"></canvas>
 
   <!-- TOP READING PROGRESS BAR -->
   <div id="reading-progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-400 via-teal-400 to-indigo-500 z-50 transition-all duration-100" style="width: 0%;"></div>
@@ -400,6 +403,7 @@
         const password = prompt('Enter Admin Passcode:');
         if (password === 'admin123') {
           isAdmin = true;
+          localStorage.setItem('edubyte_admin_mode', 'true');
           document.getElementById('admin-status-text').innerText = 'Admin ON';
           document.getElementById('admin-toggle-btn').classList.add('border-cyan-500', 'text-cyan-400');
           document.getElementById('edit-date-btn').classList.remove('hidden');
@@ -409,12 +413,37 @@
         }
       } else {
         isAdmin = false;
+        localStorage.setItem('edubyte_admin_mode', 'false');
         document.getElementById('admin-status-text').innerText = 'Admin';
         document.getElementById('admin-toggle-btn').classList.remove('border-cyan-500', 'text-cyan-400');
         document.getElementById('edit-date-btn').classList.add('hidden');
         renderComments();
       }
     }
+
+    function syncAdminFromStorage() {
+      isAdmin = localStorage.getItem('edubyte_admin_mode') === 'true';
+      const statusText = document.getElementById('admin-status-text');
+      const btn = document.getElementById('admin-toggle-btn');
+      const editBtn = document.getElementById('edit-date-btn');
+      if (statusText) statusText.innerText = isAdmin ? 'Admin ON' : 'Admin';
+      if (btn) btn.classList.toggle('border-cyan-500', isAdmin);
+      if (btn) btn.classList.toggle('text-cyan-400', isAdmin);
+      if (editBtn) editBtn.classList.toggle('hidden', !isAdmin);
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'edubyte_admin_mode') {
+        syncAdminFromStorage();
+        renderComments();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        syncAdminFromStorage();
+      }
+    });
 
     async function editPostDate() {
       if (!isAdmin) return;
@@ -916,8 +945,65 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      syncAdminFromStorage();
       loadPost();
+      initNeuralBackground();
     });
+
+    // ---- Interactive neural-network background (matches index.html) ----
+    function initNeuralBackground() {
+      const canvas = document.getElementById('neural-canvas-bg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w, h, nodes;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      function initNodes() {
+        const count = Math.min(60, Math.floor((w * h) / 18000));
+        nodes = Array.from({ length: count }, () => ({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+        }));
+      }
+      const mouse = { x: null, y: null };
+      window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+      window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+      function tick() {
+        ctx.clearRect(0, 0, w, h);
+        for (const n of nodes) {
+          n.x += n.vx; n.y += n.vy;
+          if (n.x < 0 || n.x > w) n.vx *= -1;
+          if (n.y < 0 || n.y > h) n.vy *= -1;
+          if (mouse.x !== null) {
+            const dx = n.x - mouse.x, dy = n.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 120) { n.x += dx / dist * 0.6; n.y += dy / dist * 0.6; }
+          }
+        }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j];
+            const dist = Math.hypot(a.x - b.x, a.y - b.y);
+            if (dist < 140) {
+              ctx.strokeStyle = `rgba(34,211,238,${0.18 * (1 - dist / 140)})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+        }
+        for (const n of nodes) {
+          ctx.fillStyle = 'rgba(34,211,238,0.55)';
+          ctx.beginPath(); ctx.arc(n.x, n.y, 1.8, 0, Math.PI * 2); ctx.fill();
+        }
+        requestAnimationFrame(tick);
+      }
+      resize(); initNodes(); tick();
+      window.addEventListener('resize', () => { resize(); initNodes(); });
+    }
   </script>
 </body>
 </html>
