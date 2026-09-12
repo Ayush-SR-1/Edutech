@@ -30,6 +30,17 @@
     display: flex; align-items: center; justify-content: center;
     --cube-size: clamp(150px, 40vw, 260px);
     --sphere-size: clamp(190px, 50vw, 340px);
+    cursor: pointer;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s ease;
+  }
+  .scene.bursting {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  .scene:focus-visible {
+    outline: 2px solid rgba(34,211,238,0.6);
+    outline-offset: 6px;
+    border-radius: 16px;
   }
 
   #tilt-target {
@@ -161,8 +172,8 @@
         </a>
       </div>
 
-      <div class="flex justify-center items-center">
-        <div class="scene">
+      <div class="flex flex-col items-center justify-center">
+        <div id="hero-scene" class="scene" onclick="burstToBlog()" onkeydown="if(event.key==='Enter'||event.key===' ') burstToBlog()" role="button" tabindex="0" aria-label="Open a featured article" title="Click to open an article">
           <div id="tilt-target">
             <div class="glowing-sphere"></div>
             <div class="cube">
@@ -175,6 +186,7 @@
             </div>
           </div>
         </div>
+        <p class="text-[11px] text-sub/60 mt-3 tracking-wide uppercase">Click to explore <i class="fa-solid fa-arrow-right text-[10px]"></i></p>
       </div>
     </div>
   </section>
@@ -363,6 +375,16 @@
   function goToBlogsSearchMobile() {
     const q = document.getElementById('mobile-search-input').value.trim();
     window.location.href = q ? `blogs.html?search=${encodeURIComponent(q)}` : 'blogs.html';
+  }
+
+  // ---- Cube "burst" on click: scales up and fades, then navigates to blog.html ----
+  function burstToBlog() {
+    const scene = document.getElementById('hero-scene');
+    if (!scene || scene.classList.contains('bursting')) return; // prevent double-clicks re-triggering
+    scene.classList.add('bursting');
+    setTimeout(() => {
+      window.location.href = 'blog.html';
+    }, 650); // matches the .scene transition duration in CSS
   }
 
   // ---- Cube tilt: same cursor-following behavior the sphere used, plus touch support ----
