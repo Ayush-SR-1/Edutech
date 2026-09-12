@@ -69,6 +69,17 @@
   }
   #burst-flash.show { opacity: 1; }
 
+  #scroll-top-btn {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
+  #scroll-top-btn.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
   #tilt-target {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
@@ -129,6 +140,7 @@
   }
   .pulse-cta { animation: pulse-glow 2.4s ease-out infinite; }
 </style>
+<link rel="alternate" type="application/rss+xml" title="EduByte RSS Feed" href="feed.xml">
 </head>
 <body class="min-h-screen flex flex-col transition-colors duration-200 selection:bg-cyan-500 selection:text-slate-950">
 
@@ -157,9 +169,6 @@
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
           <input id="home-search-input" type="text" onkeydown="if(event.key==='Enter') goToBlogsSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
         </div>
-        <button title="Toggle light / dark theme" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
-          <i class="fa-regular fa-sun text-yellow-400"></i>
-        </button>
         <button id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu" class="md:hidden text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
         </button>
@@ -311,6 +320,7 @@
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
         <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
         <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="feed.xml" title="Subscribe via RSS" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-solid fa-rss"></i> RSS</a>
         <button id="admin-toggle-btn" onclick="toggleAdminMode()" title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition">
           <i class="fa-solid fa-gear text-xs"></i>
           <span id="admin-status-text" class="sr-only">Admin</span>
@@ -318,6 +328,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- Scroll-to-top button: hidden until you've scrolled past the hero -->
+  <button id="scroll-top-btn" onclick="scrollToTop()" title="Back to top" aria-label="Scroll back to top" class="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-400/30 flex items-center justify-center transition-all duration-300">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
 
 <script>
   // ---- Neural network canvas background ----
@@ -387,6 +402,16 @@
   }
 
   // ---- Mobile nav menu ----
+  // ---- Scroll-to-top button ----
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scroll-top-btn');
+    if (!btn) return;
+    btn.classList.toggle('show', window.scrollY > 500);
+  });
+
   function toggleMobileMenu() {
     const panel = document.getElementById('mobile-menu-panel');
     const icon = document.getElementById('mobile-menu-icon');
