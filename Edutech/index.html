@@ -31,17 +31,43 @@
     --cube-size: clamp(150px, 40vw, 260px);
     --sphere-size: clamp(190px, 50vw, 340px);
     cursor: pointer;
-    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s ease;
   }
   .scene.bursting {
-    transform: scale(2.4);
-    opacity: 0;
+    opacity: 0; /* transform for both the fly-to-center and pop phases is set via JS inline style */
   }
   .scene:focus-visible {
     outline: 2px solid rgba(34,211,238,0.6);
     outline-offset: 6px;
     border-radius: 16px;
   }
+
+  /* Shockwave rings spawned on click, centered on the cube */
+  .burst-ring {
+    position: fixed;
+    width: 24px; height: 24px;
+    margin-left: -12px; margin-top: -12px;
+    border: 2px solid rgba(34,211,238,0.85);
+    border-radius: 50%;
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: none;
+    z-index: 60;
+    animation: burst-ring-expand 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes burst-ring-expand {
+    to { transform: scale(15); opacity: 0; border-width: 0.5px; }
+  }
+
+  /* Radial color flash at the click origin */
+  #burst-flash {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle at var(--fx, 50%) var(--fy, 50%), rgba(34,211,238,0.4), rgba(2,6,23,0) 55%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 55;
+    transition: opacity 0.3s ease;
+  }
+  #burst-flash.show { opacity: 1; }
 
   #tilt-target {
     width: 100%; height: 100%;
@@ -373,14 +399,64 @@
     window.location.href = q ? `blogs.html?search=${encodeURIComponent(q)}` : 'blogs.html';
   }
 
-  // ---- Cube "burst" on click: scales up and fades, then navigates to blog.html ----
+  // ---- Cube "burst" on click: spin-up, shockwave rings, flash, then navigate ----
   function burstToBlog() {
     const scene = document.getElementById('hero-scene');
-    if (!scene || scene.classList.contains('bursting')) return; // prevent double-clicks re-triggering
-    scene.classList.add('bursting');
+    if (!scene || scene.classList.contains('flying') || scene.classList.contains('bursting')) return; // prevent re-triggering
+
+    const cube = scene.querySelector('.cube');
+    window.__tiltFrozen = true; // stop the per-frame tilt so it doesn't fight this animation
+
+    // ---- Phase 1: fly from its current spot to the exact center of the viewport ----
+    const rect = scene.getBoundingClientRect();
+    const startCx = rect.left + rect.width / 2;
+    const startCy = rect.top + rect.height / 2;
+    const viewportCx = window.innerWidth / 2;
+    const viewportCy = window.innerHeight / 2;
+    const dx = viewportCx - startCx;
+    const dy = viewportCy - startCy;
+
+    scene.classList.add('flying');
+    scene.style.zIndex = '70';
+    scene.style.transition = 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)';
+    scene.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.15)`;
+    if (cube) cube.style.animationDuration = '2s'; // spin picks up speed while it travels
+
+    const FLY_DURATION = 550;
+
     setTimeout(() => {
-      window.location.href = 'blog.html';
-    }, 650); // matches the .scene transition duration in CSS
+      // ---- Phase 2: it has arrived at center — now actually burst ----
+      if (cube) cube.style.animationDuration = '0.3s'; // rapid wind-up spin right before popping
+      scene.classList.add('bursting');
+      scene.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease 0.2s';
+      scene.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(0.85)`;
+
+      // Expanding shockwave rings from the viewport center
+      for (let i = 0; i < 3; i++) {
+        const ring = document.createElement('div');
+        ring.className = 'burst-ring';
+        ring.style.left = viewportCx + 'px';
+        ring.style.top = viewportCy + 'px';
+        ring.style.animationDelay = (i * 0.09) + 's';
+        document.body.appendChild(ring);
+        setTimeout(() => ring.remove(), 1200);
+      }
+
+      // Radial color flash at the same center point
+      let flash = document.getElementById('burst-flash');
+      if (!flash) {
+        flash = document.createElement('div');
+        flash.id = 'burst-flash';
+        document.body.appendChild(flash);
+      }
+      flash.style.setProperty('--fx', viewportCx + 'px');
+      flash.style.setProperty('--fy', viewportCy + 'px');
+      requestAnimationFrame(() => flash.classList.add('show'));
+
+      setTimeout(() => {
+        window.location.href = 'blog.html';
+      }, 820);
+    }, FLY_DURATION);
   }
 
   // ---- Cube tilt: same cursor-following behavior the sphere used, plus touch support ----
@@ -410,9 +486,11 @@
     window.addEventListener('touchend', () => { targetRotX = 0; targetRotY = 0; });
 
     function tiltLoop() {
-      curRotX += (targetRotX - curRotX) * 0.08;
-      curRotY += (targetRotY - curRotY) * 0.08;
-      tiltTarget.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
+      if (!window.__tiltFrozen) {
+        curRotX += (targetRotX - curRotX) * 0.08;
+        curRotY += (targetRotY - curRotY) * 0.08;
+        tiltTarget.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
+      }
       requestAnimationFrame(tiltLoop);
     }
     tiltLoop();
