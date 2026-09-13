@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayush-sr-1.github.io/Edutech/sitemap.xml
