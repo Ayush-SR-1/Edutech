@@ -657,11 +657,11 @@
           <div>
             <div class="flex items-center gap-2 mb-1">
               <span class="text-xs font-bold text-main">${c.author}</span>
-              <span class="text-[10px] text-sub">• ${c.date}</span>
+              <span class="text-[10px] text-sub">• ${c.date || ''}</span>
             </div>
-            <p class="text-xs text-sub leading-relaxed">${c.text}</p>
+            <p class="text-xs text-sub leading-relaxed">${c.content || c.text}</p>
           </div>
-          ${isAdmin ? `<button onclick="deleteComment('${c.id}')" class="text-rose-500 hover:text-rose-400 text-xs p-1" title="Delete Comment"><i class="fa-solid fa-trash"></i></button>` : ''}
+          ${isAdmin ? `<button onclick="deleteComment('${c._id || c.id}')" class="text-rose-500 hover:text-rose-400 text-xs p-1" title="Delete Comment"><i class="fa-solid fa-trash"></i></button>` : ''}
         </div>
       `).join('');
     }
@@ -676,43 +676,62 @@
       }
 
       const author = document.getElementById('comment-author').value.trim();
-      const text = document.getElementById('comment-text').value.trim();
+      const content = document.getElementById('comment-text').value.trim();
 
-      const newComment = {
-        id: 'c_' + Date.now(),
+      // Optimistic local placeholder so the UI feels instant — replaced with the real
+      // server-saved comment (with its real MongoDB _id) once the request succeeds.
+      const optimisticComment = {
+        id: 'pending_' + Date.now(),
         author,
-        text,
+        text: content,
         date: 'Sep 10, 2026'
       };
-
-      postComments.unshift(newComment);
+      postComments.unshift(optimisticComment);
       renderComments();
-      document.getElementById('comment-form').reset();
-
-      if (!isAdmin) {
-        userComments[currentPostId] = true;
-        localStorage.setItem('user_comments', JSON.stringify(userComments));
-      }
 
       try {
-        await fetch(`${API_BASE}/posts/${currentPostId}/comments`, {
+        const response = await fetch(`${API_BASE}/posts/${currentPostId}/comment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newComment)
+          body: JSON.stringify({ author, content })
         });
-      } catch (e) {}
+
+        if (!response.ok) throw new Error('Server rejected the comment');
+
+        const updatedPost = await response.json();
+        // Replace local state with the server's canonical comment list (real _ids included)
+        postComments = (updatedPost.comments || []).slice().reverse();
+        renderComments();
+
+        document.getElementById('comment-form').reset();
+        if (!isAdmin) {
+          userComments[currentPostId] = true;
+          localStorage.setItem('user_comments', JSON.stringify(userComments));
+        }
+      } catch (err) {
+        // Roll back the optimistic comment and tell the user it actually failed
+        postComments = postComments.filter(c => c.id !== optimisticComment.id);
+        renderComments();
+        alert('Your comment could not be saved — please try again in a moment.');
+      }
     }
 
     async function deleteComment(commentId) {
       if (!isAdmin) return;
-      postComments = postComments.filter(c => c.id !== commentId);
+      const previousComments = postComments;
+      postComments = postComments.filter(c => (c._id || c.id) !== commentId);
       renderComments();
 
       try {
-        await fetch(`${API_BASE}/posts/${currentPostId}/comments/${commentId}`, {
+        const response = await fetch(`${API_BASE}/posts/${currentPostId}/comments/${commentId}`, {
           method: 'DELETE'
         });
-      } catch (e) {}
+        if (!response.ok) throw new Error('Server rejected the delete');
+      } catch (err) {
+        postComments = previousComments;
+        renderComments();
+        alert('Could not delete the comment — please try again.');
+      }
     }
 
     async function likePost() {
