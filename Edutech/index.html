@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EduByte - Home</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2322d3ee'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='58' font-weight='900' fill='%23020617' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://ayush-sr-1.github.io/Edutech/index.html">
+<meta name="theme-color" content="#070b12">
 
 <!-- SEO & Basic Meta Tags -->
 <meta name="description" content="EduByte - Deep dives into Artificial Intelligence, Machine Learning, software engineering trends, and interactive tech insights by Ayush Singh Rathor.">
@@ -186,7 +189,7 @@
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
           <input id="home-search-input" type="text" onkeydown="if(event.key==='Enter') goToBlogsSearch()" placeholder="Search blogs, topics..." class="bg-card border border-color text-xs rounded-xl pl-8 pr-4 py-2 text-main focus:outline-none focus:border-cyan-500 w-64 transition">
         </div>
-        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu" class="md:hidden text-sub hover:text-main p-2 rounded-xl border border-color transition">
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu" aria-label="Open navigation menu" aria-expanded="false" class="md:hidden text-sub hover:text-main p-2 rounded-xl border border-color transition">
           <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
         </button>
       </div>
@@ -270,7 +273,7 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-        <a href="blog.html?id=sample-1" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e1a2b,#164e63 60%,#0891b2);">
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb6" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e1a2b,#164e63 60%,#0891b2);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-brain text-cyan-300/20 text-6xl"></i>
           </div>
@@ -283,7 +286,7 @@
           </div>
         </a>
 
-        <a href="blog.html?id=sample-2" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#1b0e2b,#4c1d95 60%,#7c3aed);">
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb5" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#1b0e2b,#4c1d95 60%,#7c3aed);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-triangle-exclamation text-violet-300/20 text-6xl"></i>
           </div>
@@ -296,7 +299,7 @@
           </div>
         </a>
 
-        <a href="blog.html?id=sample-3" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e2b1e,#065f46 60%,#10b981);">
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb4" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e2b1e,#065f46 60%,#10b981);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-shield-halved text-emerald-300/20 text-6xl"></i>
           </div>
@@ -309,7 +312,7 @@
           </div>
         </a>
 
-        <a href="blog.html?id=sample-4" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#2b1a0e,#92400e 60%,#f59e0b);">
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb3" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#2b1a0e,#92400e 60%,#f59e0b);">
           <div class="aspect-video flex items-start justify-end p-3 relative">
             <i class="fa-solid fa-palette text-amber-300/20 text-6xl"></i>
           </div>
@@ -443,9 +446,11 @@
   function toggleMobileMenu() {
     const panel = document.getElementById('mobile-menu-panel');
     const icon = document.getElementById('mobile-menu-icon');
+    const btn = document.getElementById('mobile-menu-btn');
     const isOpen = !panel.classList.contains('hidden');
     panel.classList.toggle('hidden', isOpen);
     icon.className = isOpen ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+    if (btn) btn.setAttribute('aria-expanded', String(!isOpen));
   }
   function goToBlogsSearchMobile() {
     const q = document.getElementById('mobile-search-input').value.trim();
