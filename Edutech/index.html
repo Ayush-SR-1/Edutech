@@ -39,6 +39,10 @@
   .editorial-eyebrow { font-family: 'Playfair Display', serif; font-style: italic; }
   .editorial-title { font-family: 'Playfair Display', serif; font-weight: 600; }
   .editorial-excerpt { font-family: 'Playfair Display', serif; font-style: italic; }
+  .dot-pattern {
+    background-image: radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
   .editorial-card { transition: transform 0.35s ease, box-shadow 0.35s ease; }
   .editorial-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.5); }
 
@@ -267,62 +271,59 @@
       <a href="blogs.html?category=Software%20Dev" class="px-4 py-2 rounded-xl bg-card border border-color text-sub hover:text-main text-xs font-bold transition">Software Dev</a>
     </div>
 
-    <!-- Editorial Picks Grid -->
+    <!-- Editorial Picks -->
     <div class="reveal pb-20">
       <p class="editorial-eyebrow text-sm text-sub mb-6">Editor's <span class="text-cyan-400">Picks</span></p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <!-- Featured (most recent) -->
+      <a href="blog.html?id=6aa6b46df87a3367e624ebb3" class="editorial-card group relative rounded-2xl overflow-hidden border border-color bg-card flex flex-col md:flex-row mb-4">
+        <div class="dot-pattern relative w-full md:w-2/5 aspect-video md:aspect-auto flex items-center p-6" style="background: linear-gradient(135deg,#0a0f1a,#0e1a2b);">
+          <div class="w-14 h-14 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400 text-xl shrink-0">
+            <i class="fa-solid fa-palette"></i>
+          </div>
+        </div>
+        <div class="p-6 flex flex-col justify-center flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[9px] text-slate-950 bg-cyan-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Latest</span>
+            <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Tech &amp; Design</span>
+          </div>
+          <h3 class="editorial-title text-main text-2xl mb-2 leading-snug group-hover:text-amber-300 transition">AI &amp; Creativity</h3>
+          <p class="editorial-excerpt text-sub text-sm mb-3 max-w-lg">Exploring generation vs genuine human creativity — where AI tools actually fit into the creative process.</p>
+          <span class="text-xs text-sub/70">September 5, 2026</span>
+        </div>
+      </a>
 
-        <a href="blog.html?id=6aa6b46df87a3367e624ebb6" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e1a2b,#164e63 60%,#0891b2);">
-          <div class="aspect-video flex items-start justify-end p-3 relative">
-            <i class="fa-solid fa-brain text-cyan-300/20 text-6xl"></i>
+      <!-- Secondary picks -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb6" class="editorial-card group relative rounded-2xl overflow-hidden border border-color bg-card p-5 flex flex-col dot-pattern">
+          <div class="w-10 h-10 rounded-lg bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-400 mb-4">
+            <i class="fa-solid fa-brain"></i>
           </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
-          <div class="relative mt-auto p-4 z-10">
-            <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider">AI & ML</span>
-            <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-cyan-300 transition line-clamp-1">AI Myths and Facts</h3>
-            <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Separating real AI capabilities from common hype.</p>
-            <span class="text-[10px] text-slate-400">August 27, 2026</span>
-          </div>
+          <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider mb-1">AI &amp; ML</span>
+          <h3 class="editorial-title text-main text-base mb-1.5 leading-snug group-hover:text-cyan-400 transition">AI Myths and Facts</h3>
+          <p class="editorial-excerpt text-sub text-xs mb-3 flex-grow">Separating real AI capabilities from common hype.</p>
+          <span class="text-[10px] text-sub/70">August 27, 2026</span>
         </a>
 
-        <a href="blog.html?id=6aa6b46df87a3367e624ebb5" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#1b0e2b,#4c1d95 60%,#7c3aed);">
-          <div class="aspect-video flex items-start justify-end p-3 relative">
-            <i class="fa-solid fa-triangle-exclamation text-violet-300/20 text-6xl"></i>
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb5" class="editorial-card group relative rounded-2xl overflow-hidden border border-color bg-card p-5 flex flex-col dot-pattern">
+          <div class="w-10 h-10 rounded-lg bg-violet-400/10 border border-violet-400/25 flex items-center justify-center text-violet-400 mb-4">
+            <i class="fa-solid fa-triangle-exclamation"></i>
           </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
-          <div class="relative mt-auto p-4 z-10">
-            <span class="text-[9px] text-violet-400 font-bold uppercase tracking-wider">AI & ML</span>
-            <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-violet-300 transition line-clamp-1">Why Does AI "Lie"?</h3>
-            <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Understanding hallucinations in large language models.</p>
-            <span class="text-[10px] text-slate-400">August 30, 2026</span>
-          </div>
+          <span class="text-[9px] text-violet-400 font-bold uppercase tracking-wider mb-1">AI &amp; ML</span>
+          <h3 class="editorial-title text-main text-base mb-1.5 leading-snug group-hover:text-violet-400 transition">Why Does AI "Lie"?</h3>
+          <p class="editorial-excerpt text-sub text-xs mb-3 flex-grow">Understanding hallucinations in large language models.</p>
+          <span class="text-[10px] text-sub/70">August 30, 2026</span>
         </a>
 
-        <a href="blog.html?id=6aa6b46df87a3367e624ebb4" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#0e2b1e,#065f46 60%,#10b981);">
-          <div class="aspect-video flex items-start justify-end p-3 relative">
-            <i class="fa-solid fa-shield-halved text-emerald-300/20 text-6xl"></i>
+        <a href="blog.html?id=6aa6b46df87a3367e624ebb4" class="editorial-card group relative rounded-2xl overflow-hidden border border-color bg-card p-5 flex flex-col dot-pattern">
+          <div class="w-10 h-10 rounded-lg bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-400 mb-4">
+            <i class="fa-solid fa-shield-halved"></i>
           </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
-          <div class="relative mt-auto p-4 z-10">
-            <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">AI & ML</span>
-            <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-emerald-300 transition line-clamp-1">Trusting AI Info</h3>
-            <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Verification & fact-checking in generative AI.</p>
-            <span class="text-[10px] text-slate-400">September 2, 2026</span>
-          </div>
-        </a>
-
-        <a href="blog.html?id=6aa6b46df87a3367e624ebb3" class="editorial-card group relative rounded-xl overflow-hidden border border-color flex flex-col" style="background: linear-gradient(135deg,#2b1a0e,#92400e 60%,#f59e0b);">
-          <div class="aspect-video flex items-start justify-end p-3 relative">
-            <i class="fa-solid fa-palette text-amber-300/20 text-6xl"></i>
-          </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
-          <div class="relative mt-auto p-4 z-10">
-            <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Tech & Design</span>
-            <h3 class="editorial-title text-white text-base mt-1 mb-1 leading-snug group-hover:text-amber-300 transition line-clamp-1">AI & Creativity</h3>
-            <p class="editorial-excerpt text-slate-300 text-xs mb-2 line-clamp-2">Exploring generation vs genuine human creativity.</p>
-            <span class="text-[10px] text-slate-400">September 5, 2026</span>
-          </div>
+          <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider mb-1">AI &amp; ML</span>
+          <h3 class="editorial-title text-main text-base mb-1.5 leading-snug group-hover:text-emerald-400 transition">Trusting AI Info</h3>
+          <p class="editorial-excerpt text-sub text-xs mb-3 flex-grow">Verification &amp; fact-checking in generative AI.</p>
+          <span class="text-[10px] text-sub/70">September 2, 2026</span>
         </a>
 
       </div>
