@@ -469,15 +469,21 @@
     async function editPostDate() {
       if (!isAdmin) return;
       const newDate = prompt('Enter new date (e.g., Sep 10, 2026):');
-      if (newDate) {
-        document.getElementById('post-date').innerText = newDate;
-        try {
-          await fetch(`${API_BASE}/posts/${currentPostId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: newDate })
-          });
-        } catch (e) {}
+      if (!newDate) return;
+
+      const previousDate = document.getElementById('post-date').innerText;
+      document.getElementById('post-date').innerText = newDate;
+
+      try {
+        const response = await fetch(`${API_BASE}/posts/${currentPostId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date: newDate })
+        });
+        if (!response.ok) throw new Error('Server rejected the update');
+      } catch (err) {
+        document.getElementById('post-date').innerText = previousDate;
+        alert('Could not save the new date — please try again.');
       }
     }
 
@@ -506,6 +512,13 @@
 
       if (!cachedPosts || cachedPosts.length === 0) {
         cachedPosts = [
+          {
+            _id: '6aa7bba27db39195b93fd5f2',
+            title: 'Is AI Making Students Smarter or More Dependent?',
+            category: 'AI & ML',
+            date: 'Sep 8, 2026',
+            readTime: '5 min read'
+          },
           {
             _id: '6aa6b46df87a3367e624ebb6',
             title: 'AI Myths and Facts: Separating What\'s Real from the Hype',
@@ -858,6 +871,13 @@
       relatedContainer.innerHTML = '';
 
       const fallbackList = [
+        {
+          _id: '6aa7bba27db39195b93fd5f2',
+          title: "Is AI Making Students Smarter or More Dependent?",
+          category: "AI & ML",
+          date: "Sep 8, 2026",
+          readTime: "5 min read"
+        },
         {
           _id: '6aa6b46df87a3367e624ebb6',
           title: "AI Myths and Facts: Separating What's Real from the Hype",
