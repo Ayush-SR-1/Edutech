@@ -63,7 +63,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200 selection:bg-cyan-500 selection:text-slate-950">
 
   <canvas id="neural-canvas-bg"></canvas>
 
@@ -106,7 +106,7 @@
           <h1 class="text-3xl sm:text-4xl font-black text-main tracking-tight mt-1">Top Reader Picks</h1>
         </div>
 
-        <div class="flex items-center p-1.5 bg-[#0b1322] border border-cyan-500/20 rounded-2xl w-fit">
+        <div class="flex items-center p-1.5 bg-card border border-color rounded-2xl w-fit">
           <button id="tab-latest" onclick="switchHighlightTab('latest')" class="tab-btn active text-xs px-4 py-2 font-medium flex items-center gap-2">
             <i class="fa-solid fa-clock text-[11px]"></i> Latest
           </button>
@@ -411,7 +411,7 @@
         const categoryClass = p.category === 'Tech & Design' ? 'text-rose-400' : 'text-cyan-400';
 
         return `
-          <a href="blog.html?id=${p._id}" class="group block p-6 sm:p-7 rounded-2xl bg-[#090f1d]/80 border border-cyan-500/10 hover:border-cyan-500/30 transition duration-300 relative">
+          <a href="blog.html?id=${p._id}" class="group block p-6 sm:p-7 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition duration-300 relative">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold ${categoryClass}">${p.category || 'AI & ML'}</span>
               ${idx === 0 ? `
@@ -456,7 +456,7 @@
       }
 
       container.innerHTML = filtered.map(p => `
-        <a href="blog.html?id=${p._id}" class="group flex flex-col justify-between p-5 rounded-2xl bg-card border border-color hover:border-cyan-500/40 transition duration-200">
+        <a href="blog.html?id=${p._id}" class="group flex flex-col justify-between p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition duration-200">
           <div>
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] font-bold text-cyan-500 uppercase">${p.category || 'AI & ML'}</span>
