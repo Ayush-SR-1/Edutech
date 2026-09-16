@@ -41,6 +41,7 @@
       background: transparent;
       transition: all 0.2s ease;
     }
+    html:not(.dark) .tab-btn { color: #64748b; }
     .tab-btn.active {
       background-color: #06b6d4;
       color: #020617;
@@ -89,7 +90,7 @@
           <i class="fa-brands fa-github text-base"></i>
         </a>
         <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
-          <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
+          <i id="theme-toggle-icon" class="fa-solid fa-sun text-yellow-400"></i>
         </button>
       </div>
     </div>
@@ -329,7 +330,7 @@
     function updateThemeIcon(isDark) {
       const icon = document.getElementById('theme-toggle-icon');
       if (icon) {
-        icon.className = isDark ? 'fa-regular fa-sun text-yellow-400' : 'fa-regular fa-moon text-slate-700';
+        icon.className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-slate-700';
       }
     }
 
@@ -421,9 +422,9 @@
             </div>
 
             <h2 class="text-xl sm:text-2xl font-bold text-main group-hover:text-cyan-400 transition mb-2 tracking-tight">${p.title}</h2>
-            <p class="text-xs sm:text-sm text-slate-400 line-clamp-2 mb-6 font-normal leading-relaxed">${p.excerpt || ''}</p>
+            <p class="text-xs sm:text-sm text-sub line-clamp-2 mb-6 font-normal leading-relaxed">${p.excerpt || ''}</p>
 
-            <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+            <div class="flex items-center justify-between text-xs text-sub pt-2">
               <span>${getOverrideDate(p.title, p.date || 'Sep 10, 2026')}</span>
               <span class="flex items-center gap-2 font-medium text-cyan-400 group-hover:translate-x-1 transition">
                 <span><i class="fa-regular fa-eye text-cyan-400 mr-1"></i>${formatCount(p.views || 0)} views</span> • 

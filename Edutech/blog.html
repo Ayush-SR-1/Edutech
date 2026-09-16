@@ -141,7 +141,7 @@
         </div>
         
         <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark theme" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
-          <i id="theme-toggle-icon" class="fa-regular fa-sun text-yellow-400"></i>
+          <i id="theme-toggle-icon" class="fa-solid fa-sun text-yellow-400"></i>
         </button>
       </div>
     </div>
@@ -166,18 +166,23 @@
       
       <!-- Content Column -->
       <article class="lg:col-span-8 space-y-6">
-        <div id="latest-preview-banner" class="hidden p-4 rounded-xl border border-cyan-500/30 bg-cyan-500/10 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <span class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Latest Release</span>
-            <p id="latest-preview-title" class="text-xs text-main font-medium truncate max-w-sm"></p>
+        <div id="latest-preview-banner" class="hidden p-4 rounded-xl border border-cyan-500/30 bg-cyan-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap shrink-0">Latest Release</span>
+            <p id="latest-preview-title" class="text-xs text-main font-medium truncate min-w-0"></p>
           </div>
-          <a id="latest-preview-link" href="#" class="text-xs text-cyan-500 hover:underline font-semibold flex items-center gap-1">Read Now <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          <a id="latest-preview-link" href="#" class="text-xs text-cyan-500 hover:underline font-semibold flex items-center gap-1 whitespace-nowrap self-end sm:self-auto shrink-0">Read Now <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
         </div>
 
         <div id="post-header" class="space-y-4">
-          <span id="post-category" class="inline-block bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 text-xs font-bold px-3 py-1 rounded-full">
-            AI & ML
-          </span>
+          <div class="flex items-center justify-between gap-3">
+            <span id="post-category" class="inline-block bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 text-xs font-bold px-3 py-1 rounded-full">
+              AI & ML
+            </span>
+            <a href="index.html" class="md:hidden inline-flex items-center gap-1.5 text-xs text-sub hover:text-main border border-color px-3 py-1 rounded-full transition shrink-0">
+              <i class="fa-solid fa-house text-[10px]"></i> Home
+            </a>
+          </div>
           <h1 id="post-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-main tracking-tight leading-tight">
             Loading Article...
           </h1>
@@ -415,7 +420,7 @@
     function updateThemeIcon(isDark) {
       const icon = document.getElementById('theme-toggle-icon');
       if (icon) {
-        icon.className = isDark ? 'fa-regular fa-sun text-yellow-400' : 'fa-regular fa-moon text-slate-700';
+        icon.className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-slate-700';
       }
     }
 
