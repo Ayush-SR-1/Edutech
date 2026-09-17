@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduByte - About</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2322d3ee'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='58' font-weight='900' fill='%23020617' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+  <link rel="canonical" href="https://ayush-sr-1.github.io/Edutech/about.html">
+  <meta name="theme-color" content="#070b12">
+
+  <meta name="description" content="About EduByte — a blog on AI, machine learning, and software engineering written by Ayush Singh Rathor.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EduByte - About">
+  <meta property="og:description" content="The story and the person behind EduByte — everyday insights on AI, tech, and how it actually works.">
+  <meta property="og:image" content="https://ayush-sr-1.github.io/Edutech/preview.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .dark body { background-color: #070b12; color: #94a3b8; }
+    .dark .bg-surface { background-color: #070b12; }
+    .dark .bg-card { background-color: rgba(13, 19, 33, 0.75); backdrop-filter: blur(12px); }
+    .dark .border-color { border-color: rgba(255, 255, 255, 0.08); }
+    .dark .text-main { color: #f8fafc; }
+    .dark .text-sub { color: #cbd5e1; }
+
+    html:not(.dark) body { background-color: #f8fafc; color: #334155; }
+    html:not(.dark) .bg-surface { background-color: #ffffff; }
+    html:not(.dark) .bg-card { background-color: #ffffff; }
+    html:not(.dark) .border-color { border-color: #e2e8f0; }
+    html:not(.dark) .text-main { color: #0f172a; }
+    html:not(.dark) .text-sub { color: #475569; }
+
+    #neural-canvas-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
+    #scroll-top-btn {
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+    }
+    #scroll-top-btn.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200 selection:bg-cyan-500 selection:text-slate-950">
+
+  <canvas id="neural-canvas-bg"></canvas>
+
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-cyan-600/10 rounded-full filter blur-[120px] pointer-events-none"></div>
+  <div class="fixed top-1/3 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-[120px] pointer-events-none"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="border-b border-color bg-surface/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-8">
+        <a href="index.html" class="text-xl font-black text-main tracking-wide flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-cyan-400 text-slate-950 flex items-center justify-center font-extrabold text-sm">E</span>
+          Edu<span class="text-cyan-500">Byte</span>
+        </a>
+        <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
+          <a href="index.html" class="hover:text-main transition">Home</a>
+          <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+          <a href="about.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">About</a>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="text-sub hover:text-main p-2 transition" aria-label="GitHub">
+          <i class="fa-brands fa-github text-base"></i>
+        </a>
+        <button id="theme-toggle" onclick="toggleTheme()" class="text-sub hover:text-main p-2 rounded-xl border border-color transition">
+          <i id="theme-toggle-icon" class="fa-solid fa-sun text-yellow-400"></i>
+        </button>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu" aria-label="Open navigation menu" aria-expanded="false" class="md:hidden text-sub hover:text-main p-2 rounded-xl border border-color transition">
+          <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu panel -->
+    <div id="mobile-menu-panel" class="hidden md:hidden border-t border-color bg-surface px-4 py-4 space-y-4">
+      <div class="flex flex-col space-y-3 text-sm font-medium text-sub">
+        <a href="index.html" class="hover:text-main transition">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="about.html" class="text-cyan-500 font-semibold">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 flex-grow w-full space-y-14">
+
+    <!-- Hero -->
+    <section class="space-y-5 text-center max-w-2xl mx-auto">
+      <span class="inline-block text-[11px] font-mono font-bold tracking-widest text-cyan-500 uppercase border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 rounded-full">About EduByte</span>
+      <h1 class="text-3xl sm:text-5xl font-black text-main tracking-tight leading-tight">Everyday insights on AI, tech, and how it actually works.</h1>
+      <p class="text-sm sm:text-base text-sub leading-relaxed">
+        EduByte is a personal blog where I break down AI, machine learning, and software engineering topics —
+        not as headlines, but as things worth actually understanding.
+      </p>
+    </section>
+
+    <!-- Author card -->
+    <section class="bg-card border border-color rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+      <div class="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-500 flex items-center justify-center text-slate-950 font-extrabold text-2xl shrink-0">
+        AS
+      </div>
+      <div class="space-y-2 text-center sm:text-left">
+        <h2 class="text-lg font-bold text-main">Ayush Singh Rathor</h2>
+        <p class="text-xs text-sub">B.Tech CSE (AI &amp; ML), VIT</p>
+        <p class="text-sm text-sub leading-relaxed">
+          I write EduByte to think out loud about AI and technology — testing ideas, digging into research,
+          and working out what's genuinely useful versus what's just noise. Writing it down is how I make
+          sure I actually understand it.
+        </p>
+        <div class="flex items-center justify-center sm:justify-start gap-3 pt-2">
+          <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl border border-color hover:border-cyan-500/40 text-sub hover:text-main transition">
+            <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+          </a>
+          <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl border border-color hover:border-cyan-500/40 text-sub hover:text-main transition">
+            <i class="fa-brands fa-github"></i> GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- What this blog covers -->
+    <section class="space-y-6">
+      <h2 class="text-xl sm:text-2xl font-bold text-main text-center">What you'll find here</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-card border border-color rounded-2xl p-5 space-y-2">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <h3 class="text-sm font-bold text-main">AI &amp; Machine Learning</h3>
+          <p class="text-xs text-sub leading-relaxed">Breakdowns of research, models, and the ideas behind how AI actually learns and fails.</p>
+        </div>
+        <div class="bg-card border border-color rounded-2xl p-5 space-y-2">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <h3 class="text-sm font-bold text-main">Software Engineering</h3>
+          <p class="text-xs text-sub leading-relaxed">Practical notes on building things, from real projects and the mistakes made along the way.</p>
+        </div>
+        <div class="bg-card border border-color rounded-2xl p-5 space-y-2">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <h3 class="text-sm font-bold text-main">Tech, Honestly Examined</h3>
+          <p class="text-xs text-sub leading-relaxed">Looking past the hype cycle to ask what a new tool actually changes — for better or worse.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="text-center bg-cyan-500/10 border border-cyan-500/20 rounded-2xl p-8 space-y-4">
+      <h2 class="text-lg sm:text-xl font-bold text-main">Have a topic you'd like covered?</h2>
+      <p class="text-sm text-sub max-w-md mx-auto">Reach out on LinkedIn or GitHub, or just dive into the articles below.</p>
+      <a href="blogs.html" class="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-cyan-400/20">
+        Read the Blog <i class="fa-solid fa-arrow-right text-xs"></i>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-color bg-surface/80 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sub">
+      <p>© 2026 EduByte. All rights reserved.</p>
+      <div class="grid grid-cols-3 gap-x-2 gap-y-3 w-full text-center sm:w-auto sm:flex sm:items-center sm:space-x-6 sm:gap-0 sm:text-left">
+        <a href="index.html" class="hover:text-main transition">Home</a>
+        <a href="blogs.html" class="hover:text-main transition">Blogs</a>
+        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5">
+          <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+        </a>
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+        <a href="feed.xml" title="Subscribe via RSS" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5">
+          <i class="fa-solid fa-rss"></i> RSS
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll-to-top button -->
+  <button id="scroll-top-btn" onclick="scrollToTop()" title="Back to top" aria-label="Scroll back to top" class="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-400/30 flex items-center justify-center transition-all duration-300">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <script>
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-toggle-icon');
+      if (icon) {
+        icon.className = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-slate-700';
+      }
+    }
+
+    function toggleMobileMenu() {
+      const panel = document.getElementById('mobile-menu-panel');
+      const icon = document.getElementById('mobile-menu-icon');
+      const btn = document.getElementById('mobile-menu-btn');
+      const isHidden = panel.classList.toggle('hidden');
+      icon.className = isHidden ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+      btn.setAttribute('aria-expanded', String(!isHidden));
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scroll-top-btn');
+      if (!btn) return;
+      btn.classList.toggle('show', window.scrollY > 500);
+    });
+
+    // ---- Interactive neural-network background (matches index.html) ----
+    function initNeuralBackground() {
+      const canvas = document.getElementById('neural-canvas-bg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w, h, nodes;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      function initNodes() {
+        const count = Math.min(60, Math.floor((w * h) / 18000));
+        nodes = Array.from({ length: count }, () => ({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+        }));
+      }
+      const mouse = { x: null, y: null };
+      window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+      window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+      function tick() {
+        ctx.clearRect(0, 0, w, h);
+        for (const n of nodes) {
+          n.x += n.vx; n.y += n.vy;
+          if (n.x < 0 || n.x > w) n.vx *= -1;
+          if (n.y < 0 || n.y > h) n.vy *= -1;
+          if (mouse.x !== null) {
+            const dx = n.x - mouse.x, dy = n.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 120) { n.x += dx / dist * 0.6; n.y += dy / dist * 0.6; }
+          }
+        }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j];
+            const dist = Math.hypot(a.x - b.x, a.y - b.y);
+            if (dist < 140) {
+              ctx.strokeStyle = `rgba(34,211,238,${0.18 * (1 - dist / 140)})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+        }
+        for (const n of nodes) {
+          ctx.fillStyle = 'rgba(34,211,238,0.55)';
+          ctx.beginPath(); ctx.arc(n.x, n.y, 1.8, 0, Math.PI * 2); ctx.fill();
+        }
+        requestAnimationFrame(tick);
+      }
+      resize(); initNodes(); tick();
+      window.addEventListener('resize', () => { resize(); initNodes(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initNeuralBackground();
+    });
+  </script>
+</body>
+</html>

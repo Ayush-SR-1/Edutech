@@ -185,7 +185,7 @@
         <div class="hidden md:flex space-x-6 text-sm font-medium text-sub">
           <a href="index.html" class="text-cyan-500 border-b-2 border-cyan-500 pb-1 font-semibold">Home</a>
           <a href="blogs.html" class="hover:text-main transition">Blogs</a>
-          <a href="blogs.html" class="hover:text-main transition">About</a>
+          <a href="about.html" class="hover:text-main transition">About</a>
         </div>
       </div>
       <div class="flex items-center space-x-4">
@@ -204,7 +204,7 @@
       <div class="flex flex-col space-y-3 text-sm font-medium text-sub">
         <a href="index.html" class="text-cyan-500 font-semibold">Home</a>
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
-        <a href="blogs.html" class="hover:text-main transition">About</a>
+        <a href="about.html" class="hover:text-main transition">About</a>
       </div>
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-sub"></i>
@@ -359,13 +359,13 @@
         <p class="text-sub">Deep dives into AI, ML, and software engineering — written by Ayush Singh Rathor.</p>
         <p>© 2026 EduByte. All rights reserved.</p>
       </div>
-      <div class="flex items-center space-x-6">
+      <div class="grid grid-cols-3 gap-x-2 gap-y-3 w-full text-center sm:w-auto sm:flex sm:items-center sm:space-x-6 sm:gap-0 sm:text-left">
         <a href="index.html" class="hover:text-main transition">Home</a>
         <a href="blogs.html" class="hover:text-main transition">Blogs</a>
-        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
-        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
-        <a href="feed.xml" title="Subscribe via RSS" class="hover:text-main transition flex items-center gap-1.5"><i class="fa-solid fa-rss"></i> RSS</a>
-        <button id="admin-toggle-btn" onclick="toggleAdminMode()" title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition">
+        <a href="https://www.linkedin.com/in/ayush-singh-rathor-11aba4429/" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+        <a href="https://github.com/ayush-sr-1" target="_blank" rel="noopener noreferrer" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="feed.xml" title="Subscribe via RSS" class="hover:text-main transition flex items-center justify-center sm:justify-start gap-1.5"><i class="fa-solid fa-rss"></i> RSS</a>
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()" title="" class="text-sub/40 hover:text-cyan-400 p-1.5 rounded-lg border border-transparent hover:border-color transition mx-auto sm:mx-0">
           <i class="fa-solid fa-gear text-xs"></i>
           <span id="admin-status-text" class="sr-only">Admin</span>
         </button>
@@ -567,21 +567,35 @@
     tiltLoop();
   })();
 
+  const ADMIN_API_BASE = 'https://edubyte-backend-x0up.onrender.com/api';
   let isAdmin = false;
-  function toggleAdminMode() {
+  async function toggleAdminMode() {
     if (!isAdmin) {
       const password = prompt('Enter Admin Passcode:');
-      if (password === 'admin123') {
-        isAdmin = true;
-        localStorage.setItem('edubyte_admin_mode', 'true');
-        document.getElementById('admin-toggle-btn').classList.add('border-cyan-500', 'text-cyan-400');
-        alert('Admin Mode Activated!');
-      } else if (password !== null) {
-        alert('Incorrect Passcode');
+      if (password === null) return;
+      try {
+        const res = await fetch(`${ADMIN_API_BASE}/admin/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode: password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          isAdmin = true;
+          localStorage.setItem('edubyte_admin_mode', 'true');
+          localStorage.setItem('edubyte_admin_key', password);
+          document.getElementById('admin-toggle-btn').classList.add('border-cyan-500', 'text-cyan-400');
+          alert('Admin Mode Activated!');
+        } else {
+          alert('Incorrect Passcode');
+        }
+      } catch (err) {
+        alert('Could not reach the server to verify the passcode — try again in a moment.');
       }
     } else {
       isAdmin = false;
       localStorage.setItem('edubyte_admin_mode', 'false');
+      localStorage.removeItem('edubyte_admin_key');
       document.getElementById('admin-toggle-btn').classList.remove('border-cyan-500', 'text-cyan-400');
       alert('Admin Mode Deactivated.');
     }
